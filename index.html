@@ -34,8 +34,8 @@ a{text-decoration:none;color:inherit} img{max-width:100%;display:block}
 header{position:fixed;z-index:100;top:0;left:0;right:0;padding:22px 0;transition:.35s}
 header.scrolled{background:rgba(11,10,9,.92);backdrop-filter:blur(18px);padding:13px 0;border-bottom:1px solid var(--line)}
 .nav{display:flex;align-items:center;justify-content:space-between}
-.logo{font-family:var(--serif);font-size:2rem;font-weight:600;letter-spacing:.01em;color:#fff}
-.logo small{display:block;font-family:var(--sans);font-size:.51rem;letter-spacing:.34em;text-transform:uppercase;color:var(--champagne);font-weight:700;text-align:center}
+.logo{display:inline-flex;flex-direction:column;align-items:flex-start;justify-content:center;font-family:var(--serif);font-size:2rem;line-height:1;color:#fff!important;font-weight:600;letter-spacing:.01em;text-decoration:none;position:relative;z-index:101;text-shadow:0 2px 18px rgba(0,0,0,.55)}
+.logo small{display:block;margin-top:7px;font-family:var(--sans);font-size:.52rem;line-height:1;letter-spacing:.28em;text-transform:uppercase;color:var(--champagne)!important;font-weight:800;text-align:left}
 .nav-links{display:flex;gap:34px;list-style:none;color:#eee;font-size:.73rem;text-transform:uppercase;letter-spacing:.13em;font-weight:600}
 .nav-links a{opacity:.85;transition:.25s} .nav-links a:hover{color:var(--champagne);opacity:1}
 .nav-cta{border:1px solid var(--champagne);color:var(--champagne);padding:11px 17px;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700}
@@ -193,14 +193,14 @@ footer{background:#090807;color:#fff;padding:48px 0 25px;border-top:1px solid va
 .admin-card{background:#fff;border:1px solid #ddd2c3;padding:15px;margin:10px 0}.admin-card strong{font-family:var(--serif);font-size:1.4rem}.admin-card p{font-size:.8rem;color:#71695f}
 .admin-actions{display:flex;gap:6px;flex-wrap:wrap}.admin-msg{min-height:20px;font-size:.78rem;margin-top:8px}.admin-note{background:#fff6df;border-left:3px solid #c9a66b;padding:10px;font-size:.75rem;margin:15px 0}
 .admin-status{padding:8px 20px;font-size:.7rem;color:#71695f}.admin-preview{width:65px;height:65px;object-fit:cover}
-@media(max-width:700px){.admin-grid{grid-template-columns:1fr}.admin-login{padding:30px 16px}.admin-content{padding:14px}}
+@media(max-width:700px){header{padding:16px 0}.logo{font-size:1.72rem}.logo small{font-size:.46rem;letter-spacing:.24em}.admin-grid{grid-template-columns:1fr}.admin-login{padding:30px 16px}.admin-content{padding:14px}}
 </style>
 </head>
 
 <body>
 <header id="header">
  <div class="container nav" id="nav">
-  <a class="logo" href="#accueil">Charly's Couture<small>Maison • Sur mesure</small></a>
+  <a class="logo" id="main-logo" href="#accueil" aria-label="Charly's Couture — 7 clics pour administration">Charly's Couture<small>Atelier • Sur mesure</small></a>
   <ul class="nav-links">
    <li><a href="#atelier">La Maison</a></li>
    <li><a href="#services">Savoir-faire</a></li>
@@ -376,24 +376,24 @@ function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&l
 function wa(number,msg){return "https://wa.me/"+(number||"22965035450").replace(/\D/g,"")+"?text="+encodeURIComponent(msg||"Bonjour Charly's Couture.");}
 function observe(){const o=new IntersectionObserver(es=>es.forEach(e=>e.isIntersecting&&e.target.classList.add("show")),{threshold:.12});document.querySelectorAll(".reveal").forEach(e=>o.observe(e));}
 
-const logo=document.querySelector("header .logo");
+const logo=document.getElementById("main-logo");
 let singleClickTimer=null;
-logo.onclick=e=>{
+logo.addEventListener("click",e=>{
  e.preventDefault();
- const n=Date.now();
- clicks=clicks.filter(x=>n-x<10000);
- clicks.push(n);
- if(clicks.length>=7){
+ const now=Date.now();
+ clicks=clicks.filter(t=>now-t<=10000);
+ clicks.push(now);
+ if(clicks.length===7){
    clearTimeout(singleClickTimer);
    clicks=[];
    openAdmin();
    return;
  }
  clearTimeout(singleClickTimer);
- if(clicks.length===1){
-   singleClickTimer=setTimeout(()=>{ location.reload(); },500);
- }
-};
+ singleClickTimer=setTimeout(()=>{
+   if(clicks.length<7){ clicks=[]; location.reload(); }
+ },450);
+});
 
 async function loadSite(){
  if(!sb){fallback();return;}
