@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Administration — Charly's Couture</title>
+  <meta name="description" content="Administration privée de Charly's Couture">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <main class="admin-shell">
+    <section id="login-view" class="panel login-panel">
+      <p class="eyebrow">CHARLY'S COUTURE</p>
+      <h1>Administration</h1>
+      <p>Accès réservé à l'administrateur de la maison.</p>
+
+      <form id="login-form">
+        <label>
+          Adresse e-mail
+          <input id="email" type="email" autocomplete="username" required>
+        </label>
+
+        <label>
+          Mot de passe
+          <input id="password" type="password" autocomplete="current-password" required>
+        </label>
+
+        <button type="submit">Se connecter</button>
+        <p id="login-message" class="message" role="alert"></p>
+      </form>
+    </section>
+
+    <section id="dashboard-view" class="dashboard hidden">
+      <header class="dashboard-header">
+        <div>
+          <p class="eyebrow">CHARLY'S COUTURE</p>
+          <h1>Tableau de bord</h1>
+        </div>
+        <button id="logout-btn" class="button-secondary">Déconnexion</button>
+      </header>
+
+      <nav class="tabs" aria-label="Administration">
+        <button class="tab active" data-section="content">Textes du site</button>
+        <button class="tab" data-section="models">Modèles</button>
+        <button class="tab" data-section="services">Services</button>
+        <button class="tab" data-section="messages">Messages</button>
+        <button class="tab" data-section="settings">Coordonnées</button>
+      </nav>
+
+      <section id="section-content" class="admin-section">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">CONTENU</p>
+            <h2>Textes du site</h2>
+          </div>
+          <button id="save-content-btn">Enregistrer les modifications</button>
+        </div>
+        <div id="content-list" class="card-list"></div>
+      </section>
+
+      <section id="section-models" class="admin-section hidden">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">COLLECTION</p>
+            <h2>Modèles</h2>
+            <p>Ajoutez autant de modèles que nécessaire.</p>
+          </div>
+          <button id="new-model-btn">+ Nouveau modèle</button>
+        </div>
+        <div id="models-list" class="card-list"></div>
+      </section>
+
+      <section id="section-services" class="admin-section hidden">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">SAVOIR-FAIRE</p>
+            <h2>Services</h2>
+          </div>
+          <button id="new-service-btn">+ Nouveau service</button>
+        </div>
+        <div id="services-list" class="card-list"></div>
+      </section>
+
+      <section id="section-messages" class="admin-section hidden">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">CONTACT</p>
+            <h2>Messages reçus</h2>
+          </div>
+          <button id="refresh-messages-btn" class="button-secondary">Actualiser</button>
+        </div>
+        <div id="messages-list" class="card-list"></div>
+      </section>
+
+      <section id="section-settings" class="admin-section hidden">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">MAISON</p>
+            <h2>Coordonnées et paramètres</h2>
+          </div>
+          <button id="save-settings-btn">Enregistrer</button>
+        </div>
+        <div id="settings-form" class="form-grid"></div>
+      </section>
+
+      <p id="global-message" class="message" role="status"></p>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>
