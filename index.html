@@ -174,6 +174,27 @@ footer{background:#090807;color:#fff;padding:48px 0 25px;border-top:1px solid va
  .footer-links{flex-direction:column;gap:12px}
 }
 </style>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+.admin-overlay{display:none;position:fixed;inset:0;z-index:1000;background:#000b;backdrop-filter:blur(12px);padding:12px;overflow:auto}
+.admin-overlay.open{display:block}.admin-panel{max-width:1150px;margin:15px auto;background:#f8f4ec;border:1px solid #c9a66b;box-shadow:0 30px 100px #0009}
+.admin-head{background:#0b0a09;color:#fff;padding:18px 22px;display:flex;justify-content:space-between;align-items:center}
+.admin-head h2{font-family:var(--serif);font-size:2rem}.admin-head small{color:#c9a66b;text-transform:uppercase;letter-spacing:.15em;font-size:.6rem}
+.admin-close{background:none;border:1px solid #ffffff33;color:#fff;width:40px;height:40px;font-size:1.1rem}
+.admin-login{max-width:480px;margin:auto;padding:45px 25px}.admin-login h3,.admin-content h3{font-family:var(--serif);font-size:2.3rem;margin-bottom:8px}
+.admin-login p{color:#71695f}.admin-field{display:grid;gap:6px;margin:12px 0}.admin-field label{font-size:.65rem;text-transform:uppercase;letter-spacing:.12em;font-weight:700}
+.admin-field input,.admin-field textarea{width:100%;padding:12px;border:1px solid #d3c5b2;background:#fff;font:inherit}.admin-field textarea{min-height:100px}
+.admin-btn{border:0;background:#0b0a09;color:#fff;padding:11px 15px;cursor:pointer;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+.admin-btn.gold{background:#c9a66b;color:#17120d}.admin-btn.danger{background:#7c261e}.admin-btn.ghost{background:#fff;color:#171310;border:1px solid #d3c5b2}
+.admin-toolbar{padding:12px 20px;background:#fff;border-bottom:1px solid #ddd2c3;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.admin-tabs{display:flex;flex-wrap:wrap;gap:6px}.admin-tab{padding:9px 11px;border:1px solid #d3c5b2;background:#fff;font-size:.62rem;text-transform:uppercase}.admin-tab.active{background:#0b0a09;color:#fff}
+.admin-content{padding:22px}.admin-section{display:none}.admin-section.active{display:block}.admin-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.admin-card{background:#fff;border:1px solid #ddd2c3;padding:15px;margin:10px 0}.admin-card strong{font-family:var(--serif);font-size:1.4rem}.admin-card p{font-size:.8rem;color:#71695f}
+.admin-actions{display:flex;gap:6px;flex-wrap:wrap}.admin-msg{min-height:20px;font-size:.78rem;margin-top:8px}.admin-note{background:#fff6df;border-left:3px solid #c9a66b;padding:10px;font-size:.75rem;margin:15px 0}
+.admin-status{padding:8px 20px;font-size:.7rem;color:#71695f}.admin-preview{width:65px;height:65px;object-fit:cover}
+@media(max-width:700px){.admin-grid{grid-template-columns:1fr}.admin-login{padding:30px 16px}.admin-content{padding:14px}}
+</style>
 </head>
 
 <body>
@@ -264,30 +285,13 @@ footer{background:#090807;color:#fff;padding:48px 0 25px;border-top:1px solid va
    <div><span class="eyebrow">Le lookbook</span><h2>Les modèles<br>à découvrir.</h2></div>
    <p>Explorez nos inspirations et contactez directement l'atelier pour discuter du modèle qui vous plaît.</p>
   </div>
-  <div class="gallery" id="models-gallery">
-    <!--
-      Les modèles seront chargés depuis Supabase.
-      Le nombre de modèles n'est pas limité : l'administration pourra
-      en ajouter autant que nécessaire.
-    -->
-    <a class="gallery-item g1 reveal" href="https://wa.me/22965035450?text=Bonjour%20Charly%27s%20Couture%2C%20je%20suis%20int%C3%A9ress%C3%A9%20par%20le%20mod%C3%A8le%201." target="_blank">
-      <div class="fabric fabric-1"></div><span class="gallery-label">Modèle 01</span>
-    </a>
-    <a class="gallery-item g2 reveal" href="https://wa.me/22965035450?text=Bonjour%20Charly%27s%20Couture%2C%20je%20suis%20int%C3%A9ress%C3%A9%20par%20le%20mod%C3%A8le%202." target="_blank">
-      <div class="fabric fabric-2"></div><span class="gallery-label">Modèle 02</span>
-    </a>
-    <a class="gallery-item g3 reveal" href="https://wa.me/22965035450?text=Bonjour%20Charly%27s%20Couture%2C%20je%20suis%20int%C3%A9ress%C3%A9%20par%20le%20mod%C3%A8le%203." target="_blank">
-      <div class="fabric fabric-3"></div><span class="gallery-label">Modèle 03</span>
-    </a>
-    <a class="gallery-item g4 reveal" href="https://wa.me/22965035450?text=Bonjour%20Charly%27s%20Couture%2C%20je%20suis%20int%C3%A9ress%C3%A9%20par%20le%20mod%C3%A8le%204." target="_blank">
-      <div class="fabric fabric-4"></div><span class="gallery-label">Modèle 04</span>
-    </a>
-    <a class="gallery-item g5 reveal" href="https://wa.me/22965035450?text=Bonjour%20Charly%27s%20Couture%2C%20je%20suis%20int%C3%A9ress%C3%A9%20par%20le%20mod%C3%A8le%205." target="_blank">
-      <div class="fabric fabric-5"></div><span class="gallery-label">Modèle 05</span>
-    </a>
-    <a class="gallery-item g6 reveal" href="https://wa.me/22965035450?text=Bonjour%20Charly%27s%20Couture%2C%20je%20suis%20int%C3%A9ress%C3%A9%20par%20le%20mod%C3%A8le%206." target="_blank">
-      <div class="fabric fabric-6"></div><span class="gallery-label">Modèle 06</span>
-    </a>
+  <div class="gallery">
+<a class="gallery-item g1 reveal" href="https://wa.me/22965035450?text=Bonjour%20Charly%27s%20Couture%2C%20je%20suis%20int%C3%A9ress%C3%A9%20par%20le%20mod%C3%A8le%201." target="_blank"><div class="fabric fabric-1"></div><span class="gallery-label">Modèle 01</span></a>
+      <a class="gallery-item g2 reveal" href="https://wa.me/22965035450?text=Bonjour%20Charly%27s%20Couture%2C%20je%20suis%20int%C3%A9ress%C3%A9%20par%20le%20mod%C3%A8le%202." target="_blank"><div class="fabric fabric-2"></div><span class="gallery-label">Modèle 02</span></a>
+      <a class="gallery-item g3 reveal" href="https://wa.me/22965035450?text=Bonjour%20Charly%27s%20Couture%2C%20je%20suis%20int%C3%A9ress%C3%A9%20par%20le%20mod%C3%A8le%203." target="_blank"><div class="fabric fabric-3"></div><span class="gallery-label">Modèle 03</span></a>
+      <a class="gallery-item g4 reveal" href="https://wa.me/22965035450?text=Bonjour%20Charly%27s%20Couture%2C%20je%20suis%20int%C3%A9ress%C3%A9%20par%20le%20mod%C3%A8le%204." target="_blank"><div class="fabric fabric-4"></div><span class="gallery-label">Modèle 04</span></a>
+      <a class="gallery-item g5 reveal" href="https://wa.me/22965035450?text=Bonjour%20Charly%27s%20Couture%2C%20je%20suis%20int%C3%A9ress%C3%A9%20par%20le%20mod%C3%A8le%205." target="_blank"><div class="fabric fabric-5"></div><span class="gallery-label">Modèle 05</span></a>
+      <a class="gallery-item g6 reveal" href="https://wa.me/22965035450?text=Bonjour%20Charly%27s%20Couture%2C%20je%20suis%20int%C3%A9ress%C3%A9%20par%20le%20mod%C3%A8le%206." target="_blank"><div class="fabric fabric-6"></div><span class="gallery-label">Modèle 06</span></a>
   </div>
  </div>
 </section>
@@ -354,20 +358,163 @@ footer{background:#090807;color:#fff;padding:48px 0 25px;border-top:1px solid va
 
 <a class="whatsapp" href="https://wa.me/22965035450?text=Bonjour%20Charly%27s%20Couture%2C%20je%20souhaite%20avoir%20plus%20d%27informations." target="_blank" aria-label="Contacter Charly's Couture sur WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
 
-<!--
-  CHARLY'S COUTURE — SITE VISITEUR
-  Cette page est publique.
-  L'administration sera une interface séparée (/admin) et protégée par Supabase Auth.
-  Les données permanentes du site seront ensuite chargées depuis Supabase.
--->
+
 <script>
-const header=document.getElementById('header');
-const nav=document.getElementById('nav');
-document.querySelector('.menu').addEventListener('click',()=>nav.classList.toggle('open'));
-document.querySelectorAll('.nav-links a').forEach(a=>a.addEventListener('click',()=>nav.classList.remove('open')));
-window.addEventListener('scroll',()=>header.classList.toggle('scrolled',scrollY>30));
-const obs=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('show')}),{threshold:.12});
-document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+const SUPABASE_URL="https://VOTRE-PROJET.supabase.co";
+const SUPABASE_ANON_KEY="VOTRE_CLE_ANON_OU_PUBLISHABLE";
+const sb = (!SUPABASE_URL.includes("VOTRE-PROJET") && !SUPABASE_ANON_KEY.includes("VOTRE_CLE"))
+  ? window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY) : null;
+const ADMIN_EMAIL="coucou@charlyscouture.local";
+let cache={content:[],services:[],models:[],experience:[],contact:null}, clicks=[];
+
+const header=document.getElementById("header"),nav=document.getElementById("nav");
+document.querySelector(".menu").onclick=()=>nav.classList.toggle("open");
+document.querySelectorAll(".nav-links a").forEach(a=>a.onclick=()=>nav.classList.remove("open"));
+window.addEventListener("scroll",()=>header.classList.toggle("scrolled",scrollY>30));
+
+function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));}
+function wa(number,msg){return "https://wa.me/"+(number||"22965035450").replace(/\D/g,"")+"?text="+encodeURIComponent(msg||"Bonjour Charly's Couture.");}
+function observe(){const o=new IntersectionObserver(es=>es.forEach(e=>e.isIntersecting&&e.target.classList.add("show")),{threshold:.12});document.querySelectorAll(".reveal").forEach(e=>o.observe(e));}
+
+const logo=document.querySelector("header .logo");
+let singleClickTimer=null;
+logo.onclick=e=>{
+ e.preventDefault();
+ const n=Date.now();
+ clicks=clicks.filter(x=>n-x<10000);
+ clicks.push(n);
+ if(clicks.length>=7){
+   clearTimeout(singleClickTimer);
+   clicks=[];
+   openAdmin();
+   return;
+ }
+ clearTimeout(singleClickTimer);
+ if(clicks.length===1){
+   singleClickTimer=setTimeout(()=>{ location.reload(); },500);
+ }
+};
+
+async function loadSite(){
+ if(!sb){fallback();return;}
+ try{
+  const [c,s,m,e,ct]=await Promise.all([
+   sb.from("site_content").select("*"),sb.from("services").select("*").eq("is_active",true).order("display_order"),
+   sb.from("models").select("*").eq("is_published",true).order("display_order"),
+   sb.from("experience_steps").select("*").eq("is_active",true).order("display_order"),
+   sb.from("contact_settings").select("*").eq("id",1).maybeSingle()
+  ]);
+  for(const x of [c,s,m,e,ct])if(x.error)throw x.error;
+  cache={content:c.data||[],services:s.data||[],models:m.data||[],experience:e.data||[],contact:ct.data};renderSite();
+ }catch(err){console.error(err);fallback();}
+}
+function fallback(){
+ const s=[["Couture Dame","Robes, jupes, ensembles et tenues traditionnelles ou modernes.","fa-person-dress"],["Couture Homme","Chemises, pantalons, costumes et tenues traditionnelles.","fa-user-tie"],["Couture Enfant","Des vêtements confortables et soignés, adaptés aux enfants.","fa-child"],["Retouches","Ajustement, réparation et transformation.","fa-scissors"]];
+ document.getElementById("services-grid").innerHTML=s.map((x,i)=>`<article class="service reveal"><span class="num">0${i+1}</span><i class="fa-solid ${x[2]}"></i><h3>${x[0]}</h3><p>${x[1]}</p></article>`).join("");
+ document.getElementById("models-gallery").innerHTML='<div style="grid-column:1/-1;color:#aaa;padding:30px;text-align:center">Les modèles seront affichés après la connexion à Supabase.</div>';
+ observe();
+}
+function renderSite(){
+ const t=Object.fromEntries(cache.content.map(x=>[x.content_key,x.content_value]));
+ if(t.hero_eyebrow)document.querySelector(".hero-kicker").textContent=t.hero_eyebrow;
+ if(t.hero_title)document.querySelector(".hero h1").innerHTML=esc(t.hero_title).replace(/\n/g,"<br>");
+ if(t.hero_text)document.querySelector(".hero-content p").textContent=t.hero_text;
+ if(t.about_title)document.querySelector(".about-copy h2").textContent=t.about_title;
+ if(t.about_text)document.querySelector(".about-copy p").textContent=t.about_text;
+ if(t.philosophy_quote)document.querySelector(".quote blockquote").textContent="« "+t.philosophy_quote+" »";
+ if(t.contact_title)document.querySelector(".contact h2").innerHTML=esc(t.contact_title).replace(/\n/g,"<br>");
+ if(t.footer_text)document.querySelector(".footer-tag").textContent=t.footer_text;
+ const c=cache.contact||{},number=c.whatsapp||"+229 65 03 54 50";
+ const rows=document.querySelectorAll(".contact-row");
+ if(rows[0])rows[0].querySelector("span").innerHTML="<strong>Adresse</strong><br>"+esc(c.address||"Parakou, Dokparou, Bénin");
+ if(rows[1])rows[1].querySelector("span").innerHTML="<strong>Téléphone</strong><br>"+esc(c.phone||"+229 01 65 03 54 50");
+ if(rows[2])rows[2].querySelector("span").innerHTML="<strong>WhatsApp</strong><br>"+esc(number);
+ if(rows[3])rows[3].querySelector("span").innerHTML="<strong>Horaires</strong><br>"+esc(c.opening_hours||"Lundi – Samedi : 8h – 19h");
+ if(c.map_embed_url)document.querySelector(".map iframe").src=c.map_embed_url;
+ document.querySelectorAll('a[href*="wa.me"]').forEach(a=>a.href=wa(number,decodeURIComponent((a.href.split("text=")[1]||"").replace(/\+/g," "))));
+ document.getElementById("services-grid").innerHTML=cache.services.map((x,i)=>`<article class="service reveal"><span class="num">${String(i+1).padStart(2,"0")}</span><i class="fa-solid ${["fa-person-dress","fa-user-tie","fa-child","fa-scissors"][i%4]}"></i><h3>${esc(x.title)}</h3><p>${esc(x.description)}</p></article>`).join("")||"<div>Aucun service.</div>";
+ document.getElementById("models-gallery").innerHTML=cache.models.map((x,i)=>`<a class="gallery-item reveal g${i%6+1}" href="${wa(number,x.whatsapp_message||"Bonjour Charly's Couture, je suis intéressé par ce modèle.")}" target="_blank">${x.image_url?`<img src="${esc(x.image_url)}" alt="${esc(x.title)}" loading="lazy">`:`<div class="fabric fabric-${i%6+1}"></div>`}<span class="gallery-label">${esc(x.title)}</span></a>`).join("")||'<div style="grid-column:1/-1;color:#aaa;padding:30px;text-align:center">Aucun modèle publié.</div>';
+ document.getElementById("experience-grid").innerHTML=cache.experience.map((x,i)=>`<article class="experience-card reveal"><div class="experience-number">${String(x.step_number||i+1).padStart(2,"0")}</div><h3>${esc(x.title)}</h3><p>${esc(x.description)}</p></article>`).join("");
+ observe();
+}
+
+const overlay=document.getElementById("admin-overlay");
+function openAdmin(){overlay.classList.add("open");document.body.style.overflow="hidden";}
+function closeAdmin(){overlay.classList.remove("open");document.body.style.overflow="";}
+document.getElementById("admin-close").onclick=closeAdmin;
+function msg(id,t,err=false){const e=document.getElementById(id);e.textContent=t;e.style.color=err?"#a32c20":"#46734c";}
+async function isAdmin(){
+ if(!sb)return false;const {data:{session}}=await sb.auth.getSession();if(!session)return false;
+ const {data}=await sb.from("admins").select("user_id").eq("user_id",session.user.id).maybeSingle();return !!data;
+}
+document.getElementById("admin-login-btn").onclick=async()=>{
+ if(!sb){msg("admin-login-msg","Configurez les clés Supabase dans le HTML.",true);return;}
+ if(document.getElementById("admin-username").value.trim()!=="coucou"){msg("admin-login-msg","Nom d'utilisateur incorrect.",true);return;}
+ const {error}=await sb.auth.signInWithPassword({email:ADMIN_EMAIL,password:document.getElementById("admin-password").value});
+ if(error){msg("admin-login-msg",error.message,true);return;}
+ if(!(await isAdmin())){await sb.auth.signOut();msg("admin-login-msg","Compte non autorisé.",true);return;}
+ document.getElementById("admin-login-view").style.display="none";document.getElementById("admin-dashboard-view").style.display="block";await loadAdmin();
+};
+document.getElementById("admin-logout-btn").onclick=async()=>{await sb.auth.signOut();document.getElementById("admin-dashboard-view").style.display="none";document.getElementById("admin-login-view").style.display="block";};
+
+document.querySelectorAll(".admin-tab").forEach(b=>b.onclick=()=>{document.querySelectorAll(".admin-tab").forEach(x=>x.classList.remove("active"));document.querySelectorAll(".admin-section").forEach(x=>x.classList.remove("active"));b.classList.add("active");document.querySelector(`[data-section="${b.dataset.tab}"]`).classList.add("active");});
+
+async function loadAdmin(){
+ if(!(await isAdmin()))return;
+ const [c,s,m,e,ct]=await Promise.all([sb.from("site_content").select("*").order("section"),sb.from("services").select("*").order("display_order"),sb.from("models").select("*").order("display_order"),sb.from("experience_steps").select("*").order("display_order"),sb.from("contact_settings").select("*").eq("id",1).maybeSingle()]);
+ for(const x of [c,s,m,e,ct])if(x.error)throw x.error;
+ cache={content:c.data||[],services:s.data||[],models:m.data||[],experience:e.data||[],contact:ct.data};renderAdmin();
+}
+function renderAdmin(){
+ document.getElementById("admin-stats").innerHTML=[["Textes",cache.content.length],["Services",cache.services.length],["Modèles",cache.models.length],["Étapes",cache.experience.length]].map(x=>`<div class="admin-card"><b>${x[1]}</b><p>${x[0]}</p></div>`).join("");
+ document.getElementById("content-list").innerHTML=cache.content.map(x=>`<div class="admin-card"><div class="admin-field"><label>${esc(x.label)}</label><textarea data-id="${x.id}">${esc(x.content_value)}</textarea></div><button class="admin-btn gold save-content" data-id="${x.id}">Enregistrer</button></div>`).join("");
+ document.querySelectorAll(".save-content").forEach(b=>b.onclick=async()=>{const v=document.querySelector(`textarea[data-id="${b.dataset.id}"]`).value;await sb.from("site_content").update({content_value:v}).eq("id",b.dataset.id);await loadAdmin();await loadSite();});
+ document.getElementById("services-admin-list").innerHTML=cache.services.map(x=>`<div class="admin-card"><b>${esc(x.title)}</b><p>${esc(x.description)}</p><div class="admin-actions"><button class="admin-btn ghost edit-s" data-id="${x.id}">Modifier</button><button class="admin-btn danger del-s" data-id="${x.id}">Supprimer</button></div></div>`).join("");
+ document.querySelectorAll(".edit-s").forEach(b=>b.onclick=async()=>{const x=cache.services.find(v=>v.id===b.dataset.id),title=prompt("Titre",x.title),description=prompt("Description",x.description);if(title!==null&&description!==null){await sb.from("services").update({title,description}).eq("id",x.id);await loadAdmin();await loadSite();}});
+ document.querySelectorAll(".del-s").forEach(b=>b.onclick=async()=>{if(confirm("Supprimer ?")){await sb.from("services").delete().eq("id",b.dataset.id);await loadAdmin();await loadSite();}});
+ document.getElementById("models-admin-list").innerHTML=cache.models.map(x=>`<div class="admin-card">${x.image_url?`<img class="admin-preview" src="${esc(x.image_url)}">`:``}<b>${esc(x.title)}</b><p>${esc(x.category)} • ${x.is_published?"Publié":"Brouillon"}</p><div class="admin-actions"><button class="admin-btn gold pub-m" data-id="${x.id}">${x.is_published?"Dépublier":"Publier"}</button><button class="admin-btn ghost edit-m" data-id="${x.id}">Modifier</button><button class="admin-btn danger del-m" data-id="${x.id}">Supprimer</button></div></div>`).join("");
+ document.querySelectorAll(".pub-m").forEach(b=>b.onclick=async()=>{const x=cache.models.find(v=>v.id===b.dataset.id);await sb.from("models").update({is_published:!x.is_published}).eq("id",x.id);await loadAdmin();await loadSite();});
+ document.querySelectorAll(".edit-m").forEach(b=>b.onclick=async()=>{const x=cache.models.find(v=>v.id===b.dataset.id);const title=prompt("Nom",x.title),image_url=prompt("URL image",x.image_url||""),description=prompt("Description",x.description);if(title!==null&&image_url!==null&&description!==null){await sb.from("models").update({title,image_url,description}).eq("id",x.id);await loadAdmin();await loadSite();}});
+ document.querySelectorAll(".del-m").forEach(b=>b.onclick=async()=>{if(confirm("Supprimer définitivement ?")){await sb.from("models").delete().eq("id",b.dataset.id);await loadAdmin();await loadSite();}});
+ document.getElementById("experience-admin-list").innerHTML=cache.experience.map(x=>`<div class="admin-card"><b>${esc(x.step_number)} — ${esc(x.title)}</b><p>${esc(x.description)}</p><button class="admin-btn ghost edit-e" data-id="${x.id}">Modifier</button><button class="admin-btn danger del-e" data-id="${x.id}">Supprimer</button></div>`).join("");
+ document.querySelectorAll(".edit-e").forEach(b=>b.onclick=async()=>{const x=cache.experience.find(v=>v.id===b.dataset.id),title=prompt("Titre",x.title),description=prompt("Description",x.description);if(title!==null&&description!==null){await sb.from("experience_steps").update({title,description}).eq("id",x.id);await loadAdmin();await loadSite();}});
+ document.querySelectorAll(".del-e").forEach(b=>b.onclick=async()=>{if(confirm("Supprimer ?")){await sb.from("experience_steps").delete().eq("id",b.dataset.id);await loadAdmin();await loadSite();}});
+ const c=cache.contact||{};["address","phone","whatsapp","opening_hours","map_embed_url"].forEach((k,i)=>document.getElementById(["contact-address","contact-phone","contact-whatsapp","contact-hours","contact-map"][i]).value=c[k]||"");
+}
+document.getElementById("svc-add").onclick=async()=>{const title=document.getElementById("svc-title").value.trim(),description=document.getElementById("svc-desc").value.trim(),display_order=+document.getElementById("svc-order").value;if(!title)return;await sb.from("services").insert({title,description,display_order});await loadAdmin();await loadSite();};
+document.getElementById("model-add").onclick=async()=>{const title=document.getElementById("model-title").value.trim();if(!title)return alert("Nom obligatoire.");await sb.from("models").insert({title,category:document.getElementById("model-category").value,image_url:document.getElementById("model-image").value,description:document.getElementById("model-desc").value,whatsapp_message:document.getElementById("model-wa").value,display_order:+document.getElementById("model-order").value,is_published:false});await loadAdmin();await loadSite();};
+document.getElementById("exp-add").onclick=async()=>{const title=document.getElementById("exp-title").value.trim();if(!title)return;await sb.from("experience_steps").insert({step_number:+document.getElementById("exp-number").value,title,description:document.getElementById("exp-desc").value,display_order:+document.getElementById("exp-order").value});await loadAdmin();await loadSite();};
+document.getElementById("contact-save").onclick=async()=>{const payload={id:1,address:document.getElementById("contact-address").value,phone:document.getElementById("contact-phone").value,whatsapp:document.getElementById("contact-whatsapp").value,opening_hours:document.getElementById("contact-hours").value,map_embed_url:document.getElementById("contact-map").value};const r=await sb.from("contact_settings").upsert(payload);msg("contact-msg",r.error?r.error.message:"Enregistré.",!!r.error);await loadAdmin();await loadSite();};
+loadSite();
 </script>
+
+<div class="admin-overlay" id="admin-overlay">
+<div class="admin-panel">
+<div class="admin-head"><div><small>Administration privée</small><h2>Charly's Couture</h2></div><button class="admin-close" id="admin-close">×</button></div>
+<div id="admin-login-view"><div class="admin-login">
+<h3>Connexion</h3><p>Accès réservé à l'administrateur unique.</p>
+<div class="admin-note">Nom d'utilisateur : <b>coucou</b>. Le mot de passe est vérifié par Supabase Auth et n'est pas stocké dans cette page.</div>
+<div class="admin-field"><label>Nom d'utilisateur</label><input id="admin-username" value="coucou"></div>
+<div class="admin-field"><label>Mot de passe</label><input id="admin-password" type="password"></div>
+<button class="admin-btn gold" id="admin-login-btn">Se connecter</button><div class="admin-msg" id="admin-login-msg"></div>
+</div></div>
+<div id="admin-dashboard-view" style="display:none">
+<div class="admin-toolbar"><div class="admin-tabs">
+<button class="admin-tab active" data-tab="dashboard">Accueil</button><button class="admin-tab" data-tab="content">Textes</button><button class="admin-tab" data-tab="services">Services</button><button class="admin-tab" data-tab="models">Modèles</button><button class="admin-tab" data-tab="experience">Expérience</button><button class="admin-tab" data-tab="contact">Contact</button><button class="admin-tab" data-tab="messages">Messages</button>
+</div><button class="admin-btn ghost" id="admin-logout-btn">Déconnexion</button></div>
+<div class="admin-status" id="admin-status"></div>
+<div class="admin-content">
+<section class="admin-section active" data-section="dashboard"><h3>Tableau de bord</h3><p>Tout est géré depuis ce panneau.</p><div class="admin-grid" id="admin-stats"></div></section>
+<section class="admin-section" data-section="content"><h3>Textes</h3><div id="content-list"></div></section>
+<section class="admin-section" data-section="services"><h3>Services</h3>
+<div class="admin-card"><div class="admin-grid"><div class="admin-field"><label>Titre</label><input id="svc-title"></div><div class="admin-field"><label>Ordre</label><input id="svc-order" type="number" value="1"></div></div><div class="admin-field"><label>Description</label><textarea id="svc-desc"></textarea></div><button class="admin-btn gold" id="svc-add">Ajouter</button></div><div id="services-admin-list"></div></section>
+<section class="admin-section" data-section="models"><h3>Modèles</h3>
+<div class="admin-card"><div class="admin-grid"><div class="admin-field"><label>Nom</label><input id="model-title"></div><div class="admin-field"><label>Catégorie</label><input id="model-category"></div><div class="admin-field"><label>URL image</label><input id="model-image"></div><div class="admin-field"><label>Ordre</label><input id="model-order" type="number" value="1"></div></div><div class="admin-field"><label>Description</label><textarea id="model-desc"></textarea></div><div class="admin-field"><label>Message WhatsApp</label><input id="model-wa" value="Bonjour Charly's Couture, je suis intéressé par ce modèle."></div><button class="admin-btn gold" id="model-add">Ajouter le modèle</button></div><div id="models-admin-list"></div></section>
+<section class="admin-section" data-section="experience"><h3>Expérience</h3>
+<div class="admin-card"><div class="admin-grid"><div class="admin-field"><label>Numéro</label><input id="exp-number" type="number" value="1"></div><div class="admin-field"><label>Titre</label><input id="exp-title"></div><div class="admin-field"><label>Ordre</label><input id="exp-order" type="number" value="1"></div></div><div class="admin-field"><label>Description</label><textarea id="exp-desc"></textarea></div><button class="admin-btn gold" id="exp-add">Ajouter</button></div><div id="experience-admin-list"></div></section>
+<section class="admin-section" data-section="contact"><h3>Contact</h3><div class="admin-card">
+<div class="admin-field"><label>Adresse</label><input id="contact-address"></div><div class="admin-field"><label>Téléphone</label><input id="contact-phone"></div><div class="admin-field"><label>WhatsApp</label><input id="contact-whatsapp"></div><div class="admin-field"><label>Horaires</label><input id="contact-hours"></div><div class="admin-field"><label>Google Maps</label><input id="contact-map"></div><button class="admin-btn gold" id="contact-save">Enregistrer</button><div class="admin-msg" id="contact-msg"></div></div></section>
+<section class="admin-section" data-section="messages"><h3>Messages visiteurs</h3><div id="messages-admin-list"></div></section>
+</div></div></div></div>
 </body>
 </html>
