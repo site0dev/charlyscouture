@@ -31,8 +31,8 @@ a{text-decoration:none;color:inherit} img{max-width:100%;display:block}
 .btn-dark:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
 .btn-line{border:1px solid rgba(255,255,255,.35);color:#fff}
 .btn-line:hover{background:#fff;color:#111;border-color:#fff}
-header{position:fixed;z-index:100;top:0;left:0;right:0;padding:22px 0;transition:.35s}
-header.scrolled{background:rgba(11,10,9,.92);backdrop-filter:blur(18px);padding:13px 0;border-bottom:1px solid var(--line)}
+header{position:fixed;z-index:100;top:0;left:0;right:0;padding:13px 0;background:rgba(11,10,9,.97);backdrop-filter:blur(18px);border-bottom:1px solid var(--line);transition:.35s}
+header.scrolled{background:rgba(11,10,9,.99);padding:10px 0;border-bottom:1px solid var(--line)}
 .nav{display:flex;align-items:center;justify-content:space-between}
 .logo{display:inline-flex;flex-direction:column;align-items:flex-start;justify-content:center;font-family:var(--serif);font-size:2rem;line-height:1;color:#fff!important;font-weight:600;letter-spacing:.01em;text-decoration:none;position:relative;z-index:101;text-shadow:0 2px 18px rgba(0,0,0,.55)}
 .logo small{display:block;margin-top:7px;font-family:var(--sans);font-size:.52rem;line-height:1;letter-spacing:.28em;text-transform:uppercase;color:var(--champagne)!important;font-weight:800;text-align:left}
@@ -364,6 +364,7 @@ const SUPABASE_URL="https://VOTRE-PROJET.supabase.co";
 const SUPABASE_ANON_KEY="VOTRE_CLE_ANON_OU_PUBLISHABLE";
 const sb = (!SUPABASE_URL.includes("VOTRE-PROJET") && !SUPABASE_ANON_KEY.includes("VOTRE_CLE"))
   ? window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY) : null;
+const ADMIN_USERNAME="coucou";
 const ADMIN_EMAIL="coucou@charlyscouture.local";
 let cache={content:[],services:[],models:[],experience:[],contact:null}, clicks=[];
 
@@ -377,22 +378,24 @@ function wa(number,msg){return "https://wa.me/"+(number||"22965035450").replace(
 function observe(){const o=new IntersectionObserver(es=>es.forEach(e=>e.isIntersecting&&e.target.classList.add("show")),{threshold:.12});document.querySelectorAll(".reveal").forEach(e=>o.observe(e));}
 
 const logo=document.getElementById("main-logo");
-let singleClickTimer=null;
 logo.addEventListener("click",e=>{
  e.preventDefault();
  const now=Date.now();
  clicks=clicks.filter(t=>now-t<=10000);
  clicks.push(now);
- if(clicks.length===7){
-   clearTimeout(singleClickTimer);
+
+ // 7 clics en moins de 10 secondes = ouverture de l'administration.
+ if(clicks.length>=7){
    clicks=[];
    openAdmin();
    return;
  }
- clearTimeout(singleClickTimer);
- singleClickTimer=setTimeout(()=>{
-   if(clicks.length<7){ clicks=[]; location.reload(); }
- },450);
+
+ // 1 clic = retour à l'accueil, sans rechargement de la page.
+ if(clicks.length===1){
+   history.replaceState(null,"","#accueil");
+   window.scrollTo({top:0,behavior:"smooth"});
+ }
 });
 
 async function loadSite(){
@@ -449,7 +452,7 @@ async function isAdmin(){
 }
 document.getElementById("admin-login-btn").onclick=async()=>{
  if(!sb){msg("admin-login-msg","Configurez les clés Supabase dans le HTML.",true);return;}
- if(document.getElementById("admin-username").value.trim()!=="coucou"){msg("admin-login-msg","Nom d'utilisateur incorrect.",true);return;}
+ if(document.getElementById("admin-username").value.trim()!==ADMIN_USERNAME){msg("admin-login-msg","Nom d'utilisateur incorrect.",true);return;}
  const {error}=await sb.auth.signInWithPassword({email:ADMIN_EMAIL,password:document.getElementById("admin-password").value});
  if(error){msg("admin-login-msg",error.message,true);return;}
  if(!(await isAdmin())){await sb.auth.signOut();msg("admin-login-msg","Compte non autorisé.",true);return;}
