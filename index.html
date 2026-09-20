@@ -217,7 +217,7 @@ footer{background:#090807;color:#fff;padding:48px 0 25px;border-top:1px solid va
 <body>
 <header id="header">
  <div class="container nav" id="nav">
-  <a class="logo" id="main-logo" href="#accueil" aria-label="Charly's Couture — accès administration">Charly's Couture<small>Atelier • Sur mesure</small></a>
+  <a class="logo" id="main-logo" href="#accueil" aria-label="Charly's Couture — 6 clics pour accéder à l’administration">Charly's Couture<small>Atelier • Sur mesure</small></a>
   <ul class="nav-links">
    <li><a href="#atelier">La Maison</a></li>
    <li><a href="#services">Savoir-faire</a></li>
@@ -233,7 +233,6 @@ footer{background:#090807;color:#fff;padding:48px 0 25px;border-top:1px solid va
 <main>
 <section class="hero" id="accueil">
  <div class="container hero-content reveal">
-  <div class="hero-kicker">9JPW+MF · Parakou</div>
   <span class="eyebrow">Atelier de couture</span>
   <h1>L'art de la<br><em>belle couture.</em></h1>
   <p>Chez Charly's Couture, nous créons, ajustons et restaurons vos vêtements avec soin. Hommes, dames et enfants : chaque pièce est réalisée selon votre style, vos mesures et vos besoins.</p>
@@ -386,7 +385,6 @@ let cache={content:[],services:[],models:[],experience:[],contact:null}, clicks=
 
 // Contenu par défaut : le site reste complet même avant la première synchronisation Supabase.
 const DEFAULT_CONTENT={
- hero_eyebrow:"9JPW+MF · Parakou",
  hero_title:"L'art de la\nbelle couture.",
  hero_text:"Chez Charly's Couture, nous créons, ajustons et restaurons vos vêtements avec soin. Hommes, dames et enfants : chaque pièce est réalisée selon votre style, vos mesures et vos besoins.",
  about_title:"Votre vêtement mérite\nun travail soigné.",
@@ -418,16 +416,30 @@ function wa(number,msg){return "https://wa.me/"+(number||"2290165035450").replac
 function observe(){document.querySelectorAll(".reveal").forEach(e=>e.classList.add("show")); if("IntersectionObserver" in window){const o=new IntersectionObserver(es=>es.forEach(e=>e.isIntersecting&&e.target.classList.add("show")),{threshold:.08});document.querySelectorAll(".reveal").forEach(e=>o.observe(e));}}
 
 const logo=document.getElementById("main-logo");
-logo.addEventListener("click",function(e){
+function handleLogoClick(e){
  e.preventDefault();
  e.stopPropagation();
  const now=Date.now();
- clicks=clicks.filter(t=>now-t<5000);
+ clicks=clicks.filter(t=>now-t<=5000);
  clicks.push(now);
  if(refreshTimer){clearTimeout(refreshTimer);refreshTimer=null;}
- if(clicks.length===6){clicks=[];openAdmin();return;}
- if(clicks.length===1){refreshTimer=setTimeout(function(){if(clicks.length===1){clicks=[];window.location.reload();}refreshTimer=null;},3000);}
-});
+ if(clicks.length>=6){
+   clicks=[];
+   openAdmin();
+   return;
+ }
+ refreshTimer=setTimeout(()=>{
+   if(clicks.length>0){
+     clicks=[];
+     window.location.reload();
+   }
+   refreshTimer=null;
+ },3000);
+}
+logo.addEventListener("click",handleLogoClick,{passive:false});
+logo.addEventListener("touchend",function(e){
+ if(e.cancelable)e.preventDefault();
+},{passive:false});
 
 async function loadSite(){
  if(!sb){fallback();return;}
@@ -453,7 +465,6 @@ function fallback(){
 }
 function renderTextDefaults(extra={}){
  const t={...DEFAULT_CONTENT,...extra};
- document.querySelector(".hero-kicker").textContent=t.hero_eyebrow;
  document.querySelector(".hero h1").innerHTML=esc(t.hero_title).replace(/\n/g,"<br>");
  document.querySelector(".hero-content p").textContent=t.hero_text;
  document.querySelector(".about-copy h2").innerHTML=esc(t.about_title).replace(/\n/g,"<br>");
