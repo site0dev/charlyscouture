@@ -416,30 +416,28 @@ function wa(number,msg){return "https://wa.me/"+(number||"2290165035450").replac
 function observe(){document.querySelectorAll(".reveal").forEach(e=>e.classList.add("show")); if("IntersectionObserver" in window){const o=new IntersectionObserver(es=>es.forEach(e=>e.isIntersecting&&e.target.classList.add("show")),{threshold:.08});document.querySelectorAll(".reveal").forEach(e=>o.observe(e));}}
 
 const logo=document.getElementById("main-logo");
-function handleLogoClick(e){
- e.preventDefault();
- e.stopPropagation();
+const CLICK_WINDOW=5000, REFRESH_DELAY=3000;
+function resetLogoClicks(){
+ clicks=[];
+ if(refreshTimer){clearTimeout(refreshTimer);refreshTimer=null;}
+}
+async function handleLogoClick(e){
+ e.preventDefault(); e.stopPropagation();
  const now=Date.now();
- clicks=clicks.filter(t=>now-t<=5000);
+ clicks=clicks.filter(t=>now-t<=CLICK_WINDOW);
  clicks.push(now);
  if(refreshTimer){clearTimeout(refreshTimer);refreshTimer=null;}
  if(clicks.length>=6){
-   clicks=[];
-   openAdmin();
+   resetLogoClicks();
+   await openAdmin();
    return;
  }
  refreshTimer=setTimeout(()=>{
-   if(clicks.length>0){
-     clicks=[];
-     window.location.reload();
-   }
-   refreshTimer=null;
- },3000);
+   resetLogoClicks();
+   window.location.reload();
+ },REFRESH_DELAY);
 }
-logo.addEventListener("click",handleLogoClick,{passive:false});
-logo.addEventListener("touchend",function(e){
- if(e.cancelable)e.preventDefault();
-},{passive:false});
+logo.addEventListener("pointerup",handleLogoClick,{passive:false});
 
 async function loadSite(){
  if(!sb){fallback();return;}
@@ -506,25 +504,59 @@ function subscribeRealtime(){
 }
 
 const overlay=document.getElementById("admin-overlay");
-function openAdmin(){overlay.classList.add("open");document.body.style.overflow="hidden";}
+const adminLoginView=document.getElementById("admin-login-view");
+const adminDashboardView=document.getElementById("admin-dashboard-view");
+function showAdminLogin(){adminDashboardView.style.display="none";adminLoginView.style.display="block";}
+function showAdminDashboard(){adminLoginView.style.display="none";adminDashboardView.style.display="block";}
+async function openAdmin(){
+ overlay.classList.add("open"); document.body.style.overflow="hidden"; showAdminLogin();
+ if(!sb){msg("admin-login-msg","La connexion Supabase n'est pas configurée.",true);return;}
+ try{
+   if(await isAdmin()){showAdminDashboard();await loadAdmin();}
+ }catch(err){console.error("Session admin:",err);}
+}
 function closeAdmin(){overlay.classList.remove("open");document.body.style.overflow="";}
 document.getElementById("admin-close").onclick=closeAdmin;
-function msg(id,t,err=false){const e=document.getElementById(id);e.textContent=t;e.style.color=err?"#a32c20":"#46734c";}
+overlay.addEventListener("click",e=>{if(e.target===overlay)closeAdmin();});
+function msg(id,t,err=false){
+ const e=document.getElementById(id); if(!e)return;
+ e.textContent=t; e.style.color=err?"#a32c20":"#46734c";
+}
 async function isAdmin(){
- if(!sb)return false;const {data:{session}}=await sb.auth.getSession();if(!session)return false;
- const {data}=await sb.from("admins").select("user_id").eq("user_id",session.user.id).maybeSingle();return !!data;
+ if(!sb)return false;
+ const {data:{session},error:sessionError}=await sb.auth.getSession();
+ if(sessionError || !session)return false;
+ const {data,error}=await sb.from("admins").select("user_id").eq("user_id",session.user.id).maybeSingle();
+ if(error){console.error("Vérification admin:",error);return false;}
+ return !!data;
 }
 document.getElementById("admin-login-btn").onclick=async()=>{
- if(!sb){msg("admin-login-msg","Configurez l’URL Supabase et la clé publique dans le HTML.",true);return;}
- const email=document.getElementById("admin-username").value.trim();
+ if(!sb){msg("admin-login-msg","La connexion Supabase n'est pas configurée.",true);return;}
+ const email=document.getElementById("admin-email").value.trim();
  const password=document.getElementById("admin-password").value;
- if(!email || !password){msg("admin-login-msg","Saisissez votre e-mail et votre mot de passe Supabase.",true);return;}
- const {error}=await sb.auth.signInWithPassword({email,password});
- if(error){msg("admin-login-msg",error.message,true);return;}
- if(!(await isAdmin())){await sb.auth.signOut();msg("admin-login-msg","Compte non autorisé.",true);return;}
- document.getElementById("admin-login-view").style.display="none";document.getElementById("admin-dashboard-view").style.display="block";await loadAdmin();
+ if(!email || !password){msg("admin-login-msg","Saisissez votre e-mail et votre mot de passe.",true);return;}
+ const button=document.getElementById("admin-login-btn");
+ button.disabled=true; button.textContent="Connexion…";
+ try{
+   const {error}=await sb.auth.signInWithPassword({email,password});
+   if(error){msg("admin-login-msg",error.message,true);return;}
+   if(!(await isAdmin())){
+     await sb.auth.signOut();
+     msg("admin-login-msg","Compte non autorisé.",true);
+     return;
+   }
+   showAdminDashboard(); await loadAdmin();
+ }catch(err){
+   console.error("Connexion admin:",err);
+   msg("admin-login-msg","Une erreur est survenue pendant la connexion.",true);
+ }finally{
+   button.disabled=false; button.textContent="Se connecter";
+ }
 };
-document.getElementById("admin-logout-btn").onclick=async()=>{await sb.auth.signOut();document.getElementById("admin-dashboard-view").style.display="none";document.getElementById("admin-login-view").style.display="block";};
+document.getElementById("admin-logout-btn").onclick=async()=>{
+ if(sb)await sb.auth.signOut();
+ showAdminLogin();
+};
 
 document.querySelectorAll(".admin-tab").forEach(b=>b.onclick=()=>{document.querySelectorAll(".admin-tab").forEach(x=>x.classList.remove("active"));document.querySelectorAll(".admin-section").forEach(x=>x.classList.remove("active"));b.classList.add("active");document.querySelector(`[data-section="${b.dataset.tab}"]`).classList.add("active");});
 
