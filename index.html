@@ -83,11 +83,12 @@ header.scrolled{background:rgba(11,10,9,.99);padding:10px 0;border-bottom:1px so
 
 .services{background:#f7f2e9}
 .services-grid{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid #d9cdbc}
-.service{padding:38px 25px 45px;border-right:1px solid #d9cdbc;transition:.3s}
+.service{padding:0 0 32px;border-right:1px solid #d9cdbc;transition:.3s;overflow:hidden;position:relative;background:#f8f3ea}
 .service:first-child{border-left:1px solid #d9cdbc}
 .service:hover{background:#fff;transform:translateY(-5px);box-shadow:0 20px 45px rgba(0,0,0,.06)}
+.service-photo{height:250px;position:relative;overflow:hidden;background:#ddd}.service-photo img{width:100%;height:100%;object-fit:cover;display:block;transition:.6s}.service:hover .service-photo img{transform:scale(1.05)}.service-photo:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 45%,rgba(0,0,0,.38))}.service-body{padding:28px 25px 0}.service .num{display:block;margin-bottom:18px}
 .service .num{font-family:var(--serif);font-size:1.3rem;color:var(--champagne)}
-.service i{display:block;font-size:1.45rem;color:var(--champagne);margin:55px 0 25px}
+.service i{display:block;font-size:1.45rem;color:var(--champagne);margin:0 0 18px}
 .service h3{font-family:var(--serif);font-size:2rem;font-weight:600;margin-bottom:10px}
 .service p{font-size:.82rem;color:#766f66;line-height:1.8}
 
@@ -179,7 +180,7 @@ footer{background:#090807;color:#fff;padding:48px 0 25px;border-top:1px solid va
  .section-head{display:block;margin-bottom:38px} .section-head h2{font-size:clamp(2.7rem,12vw,4rem);line-height:.95} .section-head p{margin-top:22px;line-height:1.7}
  .intro h2{font-size:clamp(2.8rem,12vw,4rem)}
  .about-copy h2{font-size:clamp(2.7rem,11vw,4rem)}
- .service{padding:30px 22px 36px}
+ .service{padding:0 0 30px}.service-photo{height:230px}.service-body{padding:24px 22px 0}
  .service h3{font-size:1.8rem}
  .experience-card{padding:38px 26px}
  .quote{padding:95px 0}
@@ -285,10 +286,10 @@ footer{background:#090807;color:#fff;padding:48px 0 25px;border-top:1px solid va
    <p>Couture pour hommes, dames et enfants, retouches et réfections : un savoir-faire adapté à chaque vêtement et à chaque demande.</p>
   </div>
   <div class="services-grid" id="services-grid">
-   <article class="service reveal"><span class="num">01</span><i class="fa-solid fa-person-dress"></i><h3>Couture Dame</h3><p>Robes, jupes, ensembles et tenues traditionnelles ou modernes.</p></article>
-   <article class="service reveal"><span class="num">02</span><i class="fa-solid fa-user-tie"></i><h3>Couture Homme</h3><p>Chemises, pantalons, costumes et tenues traditionnelles.</p></article>
-   <article class="service reveal"><span class="num">03</span><i class="fa-solid fa-child"></i><h3>Couture Enfant</h3><p>Des vêtements confortables et soignés, adaptés aux enfants.</p></article>
-   <article class="service reveal"><span class="num">04</span><i class="fa-solid fa-scissors"></i><h3>Retouches</h3><p>Ajustement, réparation et transformation pour prolonger la vie de vos vêtements.</p></article>
+   <article class="service reveal"><div class="service-photo"><img src="https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=900&q=85" alt="Création couture dame" loading="lazy"></div><div class="service-body"><span class="num">01</span><i class="fa-solid fa-person-dress"></i><h3>Couture Dame</h3><p>Robes, jupes, ensembles et tenues traditionnelles ou modernes.</p></div></article>
+   <article class="service reveal"><div class="service-photo"><img src="https://images.unsplash.com/photo-1617137968427-85924c800a22?auto=format&fit=crop&w=900&q=85" alt="Création couture homme" loading="lazy"></div><div class="service-body"><span class="num">02</span><i class="fa-solid fa-user-tie"></i><h3>Couture Homme</h3><p>Chemises, pantalons, costumes et tenues traditionnelles.</p></div></article>
+   <article class="service reveal"><div class="service-photo"><img src="https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?auto=format&fit=crop&w=900&q=85" alt="Création couture enfant" loading="lazy"></div><div class="service-body"><span class="num">03</span><i class="fa-solid fa-child"></i><h3>Couture Enfant</h3><p>Des vêtements confortables et soignés, adaptés aux enfants.</p></div></article>
+   <article class="service reveal"><div class="service-photo"><img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=900&q=85" alt="Machine et travail de retouche couture" loading="lazy"></div><div class="service-body"><span class="num">04</span><i class="fa-solid fa-scissors"></i><h3>Retouches</h3><p>Ajustement, réparation et transformation pour prolonger la vie de vos vêtements.</p></div></article>
   </div>
  </div>
 </section>
@@ -296,8 +297,8 @@ footer{background:#090807;color:#fff;padding:48px 0 25px;border-top:1px solid va
 <section class="section section-dark lookbook" id="collection">
  <div class="container">
   <div class="section-head reveal">
-   <div><span class="eyebrow">Le lookbook</span><h2>Des modèles<br>à découvrir.</h2></div>
-   <p>Découvrez les modèles présentés par l'atelier. Pour une création personnalisée ou une demande particulière, contactez-nous directement sur WhatsApp.</p>
+   <div><span class="eyebrow">La galerie</span><h2>Nos créations<br>à découvrir.</h2></div>
+   <p>Découvrez les créations et réalisations de l’atelier. Les nouvelles photos ajoutées depuis l’administration apparaissent automatiquement ici.</p>
   </div>
   <div class="gallery" id="models-gallery">
 <a class="gallery-item g1 reveal" href="https://wa.me/2290165035450?text=Bonjour%20Charly%27s%20Couture%2C%20je%20suis%20int%C3%A9ress%C3%A9%20par%20le%20mod%C3%A8le%201." target="_blank"><div class="fabric fabric-1"></div><span class="gallery-label">Modèle 01</span></a>
@@ -479,7 +480,8 @@ function renderSite(){
   document.querySelector(".map iframe").src=c.map_embed_url||DEFAULT_CONTACT.map_embed_url;
   document.querySelectorAll('a[href*="wa.me"]').forEach(a=>a.href=wa(number,decodeURIComponent((a.href.split("text=")[1]||"").replace(/\+/g," "))));
  const services=cache.services.length?cache.services:DEFAULT_SERVICES;
- document.getElementById("services-grid").innerHTML=services.map((x,i)=>`<article class="service reveal"><span class="num">${String(i+1).padStart(2,"0")}</span><i class="fa-solid ${["fa-person-dress","fa-user-tie","fa-child","fa-scissors"][i%4]}"></i><h3>${esc(x.title)}</h3><p>${esc(x.description)}</p></article>`).join("");
+ const servicePhotos=["https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=900&q=85","https://images.unsplash.com/photo-1617137968427-85924c800a22?auto=format&fit=crop&w=900&q=85","https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?auto=format&fit=crop&w=900&q=85","https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=900&q=85"];
+ document.getElementById("services-grid").innerHTML=services.map((x,i)=>`<article class="service reveal"><div class="service-photo"><img src="${servicePhotos[i%servicePhotos.length]}" alt="${esc(x.title)}" loading="lazy"></div><div class="service-body"><span class="num">${String(i+1).padStart(2,"0")}</span><i class="fa-solid ${["fa-person-dress","fa-user-tie","fa-child","fa-scissors"][i%4]}"></i><h3>${esc(x.title)}</h3><p>${esc(x.description)}</p></div></article>`).join("");
  document.getElementById("models-gallery").innerHTML=cache.models.length?cache.models.map((x,i)=>`<a class="gallery-item reveal g${i%6+1}" href="${wa(number,x.whatsapp_message||"Bonjour Charly's Couture, je suis intéressé par ce modèle.")}" target="_blank">${x.image_url?`<img src="${esc(x.image_url)}" alt="${esc(x.title)}" loading="lazy">`:`<div class="fabric fabric-${i%6+1}"></div>`}<span class="gallery-label">${esc(x.title)}</span></a>`).join(""):`<div style="grid-column:1/-1;color:#aaa;padding:30px;text-align:center">Les modèles de l'atelier seront affichés ici. Les nouvelles photos ajoutées depuis l'administration apparaîtront automatiquement.</div>`;
  const exp=cache.experience.length?cache.experience:DEFAULT_EXPERIENCE;
  document.getElementById("experience-grid").innerHTML=exp.map((x,i)=>`<article class="experience-card reveal"><div class="experience-number">${String(x.step_number||i+1).padStart(2,"0")}</div><h3>${esc(x.title)}</h3><p>${esc(x.description)}</p></article>`).join("");
@@ -536,7 +538,7 @@ async function loadAdmin(){
  cache={content:c.data||[],services:s.data||[],models:m.data||[],experience:e.data||[],contact:ct.data};renderAdmin();
 }
 function renderAdmin(){
- document.getElementById("admin-stats").innerHTML=[["Textes",cache.content.length],["Services",cache.services.length],["Modèles",cache.models.length],["Étapes",cache.experience.length]].map(x=>`<div class="admin-card"><b>${x[1]}</b><p>${x[0]}</p></div>`).join("");
+ document.getElementById("admin-stats").innerHTML=[["Textes",cache.content.length],["Services",cache.services.length],["Photos galerie",cache.models.length],["Étapes",cache.experience.length]].map(x=>`<div class="admin-card"><b>${x[1]}</b><p>${x[0]}</p></div>`).join("");
  document.getElementById("content-list").innerHTML=cache.content.map(x=>`<div class="admin-card"><div class="admin-field"><label>${esc(x.label)}</label><textarea data-id="${x.id}">${esc(x.content_value)}</textarea></div><button class="admin-btn gold save-content" data-id="${x.id}">Enregistrer</button></div>`).join("");
  document.querySelectorAll(".save-content").forEach(b=>b.onclick=async()=>{const v=document.querySelector(`textarea[data-id="${b.dataset.id}"]`).value;const r=await sb.from("site_content").update({content_value:v}).eq("id",b.dataset.id);if(r.error){msg("admin-status",r.error.message,true);return;}msg("admin-status","Texte enregistré.");await loadAdmin();await loadSite();});
  document.getElementById("services-admin-list").innerHTML=cache.services.map(x=>`<div class="admin-card"><b>${esc(x.title)}</b><p>${esc(x.description)}</p><div class="admin-actions"><button class="admin-btn ghost edit-s" data-id="${x.id}">Modifier</button><button class="admin-btn danger del-s" data-id="${x.id}">Supprimer</button></div></div>`).join("");
@@ -599,7 +601,7 @@ subscribeRealtime();
 </div></div>
 <div id="admin-dashboard-view" style="display:none">
 <div class="admin-toolbar"><div class="admin-tabs">
-<button class="admin-tab active" data-tab="dashboard">Accueil</button><button class="admin-tab" data-tab="content">Textes</button><button class="admin-tab" data-tab="hero">Hero</button><button class="admin-tab" data-tab="services">Services</button><button class="admin-tab" data-tab="models">Modèles</button><button class="admin-tab" data-tab="experience">Expérience</button><button class="admin-tab" data-tab="contact">Contact</button><button class="admin-tab" data-tab="messages">Messages</button>
+<button class="admin-tab active" data-tab="dashboard">Accueil</button><button class="admin-tab" data-tab="content">Textes</button><button class="admin-tab" data-tab="hero">Hero</button><button class="admin-tab" data-tab="services">Services</button><button class="admin-tab" data-tab="gallery">Galerie</button><button class="admin-tab" data-tab="experience">Expérience</button><button class="admin-tab" data-tab="contact">Contact</button><button class="admin-tab" data-tab="messages">Messages</button>
 </div><button class="admin-btn ghost" id="admin-logout-btn">Déconnexion</button></div>
 <div class="admin-status" id="admin-status"></div>
 <div class="admin-content">
@@ -608,15 +610,15 @@ subscribeRealtime();
 <section class="admin-section" data-section="hero"><h3>Photo du hero</h3><div class="admin-card"><p>Cette photo s'affiche en arrière-plan du grand bandeau d'accueil.</p><img id="hero-image-preview" class="admin-hero-preview" src="https://upload.wikimedia.org/wikipedia/commons/9/95/A_sewing_studio_at_CBCC_and_CIHE.jpg" alt="Aperçu de l'atelier"><div class="admin-field"><label>URL de la photo</label><input id="hero-image-url" type="url" placeholder="https://..."><div class="admin-help">Vous pouvez coller une URL d'image ou choisir une photo depuis votre téléphone.</div></div><div class="admin-field"><label>Nouvelle photo</label><input id="hero-image-file" type="file" accept="image/*"></div><button class="admin-btn gold" id="hero-save">Enregistrer la photo</button><div class="admin-msg" id="hero-msg"></div></div></section>
 <section class="admin-section" data-section="services"><h3>Services</h3>
 <div class="admin-card"><div class="admin-grid"><div class="admin-field"><label>Titre</label><input id="svc-title"></div><div class="admin-field"><label>Ordre</label><input id="svc-order" type="number" value="1"></div></div><div class="admin-field"><label>Description</label><textarea id="svc-desc"></textarea></div><button class="admin-btn gold" id="svc-add">Ajouter</button></div><div id="services-admin-list"></div></section>
-<section class="admin-section" data-section="models"><h3>Modèles</h3>
+<section class="admin-section" data-section="gallery"><h3>Galerie</h3><p class="admin-help">Ajoutez, publiez, modifiez ou supprimez les photos qui apparaîtront dans la galerie publique.</p>
 <div class="admin-card"><div class="admin-grid">
-<div class="admin-field"><label>Nom</label><input id="model-title"></div>
+<div class="admin-field"><label>Titre de la photo</label><input id="model-title"></div>
 <div class="admin-field"><label>Catégorie</label><input id="model-category"></div>
 <div class="admin-field"><label>Photo</label><input id="model-file" type="file" accept="image/*"></div>
 <div class="admin-field"><label>Ordre</label><input id="model-order" type="number" value="1"></div>
 </div><div class="admin-field"><label>Description</label><textarea id="model-desc"></textarea></div>
 <div class="admin-field"><label>Message WhatsApp</label><input id="model-wa" value="Bonjour Charly's Couture, je suis intéressé par ce modèle."></div>
-<button class="admin-btn gold" id="model-add">Ajouter le modèle</button><div class="admin-msg" id="model-msg"></div></div>
+<button class="admin-btn gold" id="model-add">Ajouter à la galerie</button><div class="admin-msg" id="model-msg"></div></div>
 <div id="models-admin-list"></div></section>
 <section class="admin-section" data-section="experience"><h3>Expérience</h3>
 <div class="admin-card"><div class="admin-grid"><div class="admin-field"><label>Numéro</label><input id="exp-number" type="number" value="1"></div><div class="admin-field"><label>Titre</label><input id="exp-title"></div><div class="admin-field"><label>Ordre</label><input id="exp-order" type="number" value="1"></div></div><div class="admin-field"><label>Description</label><textarea id="exp-desc"></textarea></div><button class="admin-btn gold" id="exp-add">Ajouter</button></div><div id="experience-admin-list"></div></section>
