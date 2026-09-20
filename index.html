@@ -207,23 +207,37 @@ footer{background:#090807;color:#fff;padding:48px 0 25px;border-top:1px solid va
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-.admin-overlay{display:none;position:fixed;inset:0;z-index:1000;background:#000b;backdrop-filter:blur(12px);padding:12px;overflow:auto}
-.admin-overlay.open{display:block}.admin-panel{max-width:1150px;margin:15px auto;background:#f8f4ec;border:1px solid #c9a66b;box-shadow:0 30px 100px #0009}
-.admin-head{background:#0b0a09;color:#fff;padding:18px 22px;display:flex;justify-content:space-between;align-items:center}
-.admin-head h2{font-family:var(--serif);font-size:2rem}.admin-head small{color:#c9a66b;text-transform:uppercase;letter-spacing:.15em;font-size:.6rem}
-.admin-close{background:none;border:1px solid #ffffff33;color:#fff;width:40px;height:40px;font-size:1.1rem}
-.admin-login{max-width:480px;margin:auto;padding:45px 25px}.admin-login h3,.admin-content h3{font-family:var(--serif);font-size:2.3rem;margin-bottom:8px}
-.admin-help{color:#71695f;font-size:.85rem;margin:-2px 0 18px}.admin-login p{color:#71695f}.admin-field{display:grid;gap:6px;margin:12px 0}.admin-field label{font-size:.65rem;text-transform:uppercase;letter-spacing:.12em;font-weight:700}
-.admin-field input,.admin-field textarea{width:100%;padding:12px;border:1px solid #d3c5b2;background:#fff;font:inherit}.admin-field textarea{min-height:100px}
-.admin-btn{border:0;background:#0b0a09;color:#fff;padding:11px 15px;cursor:pointer;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+.admin-overlay{display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.78);backdrop-filter:blur(10px);padding:12px;overflow:auto}
+.admin-overlay.open{display:block}
+.admin-panel{width:min(1220px,100%);min-height:calc(100vh - 24px);margin:0 auto;background:#f7f2e9;border:1px solid #c9a66b;box-shadow:0 30px 100px rgba(0,0,0,.45);display:flex;flex-direction:column}
+.admin-head{background:#0b0a09;color:#fff;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;gap:15px;position:sticky;top:0;z-index:5}
+.admin-head h2{font-family:var(--serif);font-size:2rem;line-height:1}.admin-head small{display:block;color:#c9a66b;text-transform:uppercase;letter-spacing:.15em;font-size:.58rem;margin-bottom:5px}
+.admin-head-actions{display:flex;align-items:center;gap:8px}.admin-session{font-size:.62rem;color:#aaa;max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.admin-close{background:transparent;border:1px solid #ffffff33;color:#fff;width:40px;height:40px;font-size:1.25rem;cursor:pointer}
+.admin-login{width:min(480px,100%);margin:auto;padding:45px 25px}.admin-login h3,.admin-content h3{font-family:var(--serif);font-size:2.3rem;margin-bottom:8px}.admin-login p{color:#71695f}
+.admin-help{color:#71695f;font-size:.82rem;margin:-2px 0 18px}.admin-field{display:grid;gap:6px;margin:12px 0}.admin-field label{font-size:.64rem;text-transform:uppercase;letter-spacing:.12em;font-weight:700;color:#514a43}
+.admin-field input,.admin-field textarea,.admin-field select{width:100%;padding:12px;border:1px solid #d3c5b2;background:#fff;font:inherit;border-radius:2px}.admin-field textarea{min-height:100px;resize:vertical}
+.admin-field input:focus,.admin-field textarea:focus,.admin-field select:focus{outline:2px solid rgba(201,166,107,.25);border-color:#c9a66b}
+.admin-btn{border:0;background:#0b0a09;color:#fff;padding:11px 15px;cursor:pointer;font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;border-radius:2px;transition:.2s}
+.admin-btn:hover{transform:translateY(-1px)}.admin-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
 .admin-btn.gold{background:#c9a66b;color:#17120d}.admin-btn.danger{background:#7c261e}.admin-btn.ghost{background:#fff;color:#171310;border:1px solid #d3c5b2}
-.admin-toolbar{padding:12px 20px;background:#fff;border-bottom:1px solid #ddd2c3;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
-.admin-tabs{display:flex;flex-wrap:wrap;gap:6px}.admin-tab{padding:9px 11px;border:1px solid #d3c5b2;background:#fff;font-size:.62rem;text-transform:uppercase}.admin-tab.active{background:#0b0a09;color:#fff}
-.admin-content{padding:22px}.admin-section{display:none}.admin-section.active{display:block}.admin-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-.admin-card{background:#fff;border:1px solid #ddd2c3;padding:15px;margin:10px 0}.admin-card strong{font-family:var(--serif);font-size:1.4rem}.admin-card p{font-size:.8rem;color:#71695f}
-.admin-actions{display:flex;gap:6px;flex-wrap:wrap}.admin-msg{min-height:20px;font-size:.78rem;margin-top:8px}.admin-note{background:#fff6df;border-left:3px solid #c9a66b;padding:10px;font-size:.75rem;margin:15px 0}
-.admin-status{padding:8px 20px;font-size:.7rem;color:#71695f}.admin-preview{width:65px;height:65px;object-fit:cover}
-@media(max-width:700px){header{padding:16px 0}.logo{font-size:1.72rem}.logo small{font-size:.46rem;letter-spacing:.24em}.admin-grid{grid-template-columns:1fr}.admin-login{padding:30px 16px}.admin-content{padding:14px}}
+.admin-btn.small{padding:8px 10px;font-size:.58rem}
+.admin-toolbar{padding:10px 16px;background:#fff;border-bottom:1px solid #ddd2c3;display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;position:sticky;top:73px;z-index:4}
+.admin-tabs{display:flex;gap:6px;overflow-x:auto;max-width:100%;scrollbar-width:none}.admin-tabs::-webkit-scrollbar{display:none}
+.admin-tab{flex:0 0 auto;padding:9px 11px;border:1px solid #d3c5b2;background:#fff;color:#312c27;font-size:.6rem;text-transform:uppercase;letter-spacing:.05em;cursor:pointer;border-radius:2px}.admin-tab.active{background:#0b0a09;color:#fff;border-color:#0b0a09}
+.admin-content{padding:20px}.admin-section{display:none}.admin-section.active{display:block}.admin-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.admin-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:18px 0}.admin-stat{background:#fff;border:1px solid #ddd2c3;padding:17px}.admin-stat b{font-family:var(--serif);font-size:2rem;display:block;line-height:1}.admin-stat span{display:block;color:#71695f;font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;margin-top:7px}
+.admin-card{background:#fff;border:1px solid #ddd2c3;padding:16px;margin:10px 0}.admin-card strong{font-family:var(--serif);font-size:1.35rem}.admin-card p{font-size:.78rem;color:#71695f;margin:5px 0}
+.admin-list{display:grid;gap:10px}.admin-item{background:#fff;border:1px solid #ddd2c3;padding:14px;display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center}.admin-item-main{min-width:0}.admin-item-title{font-family:var(--serif);font-size:1.35rem;line-height:1.1}.admin-item-meta{font-size:.68rem;color:#8a8177;margin-top:5px}.admin-item-actions{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end}
+.admin-gallery-thumb{width:82px;height:82px;object-fit:cover;float:left;margin-right:13px;border:1px solid #ddd2c3}.admin-gallery-item{display:grid;grid-template-columns:82px 1fr auto;align-items:center;gap:13px}.admin-gallery-item .admin-gallery-thumb{float:none;margin:0}
+.admin-actions{display:flex;gap:6px;flex-wrap:wrap}.admin-msg{min-height:20px;font-size:.75rem;margin-top:8px}.admin-note{background:#fff6df;border-left:3px solid #c9a66b;padding:10px;font-size:.75rem;margin:15px 0}
+.admin-status{min-height:32px;padding:8px 20px;font-size:.7rem;color:#46734c;background:#f8f4ec;border-bottom:1px solid #ddd2c3}.admin-status.error{color:#a32c20}
+.admin-empty{padding:28px;text-align:center;color:#81786d;background:#fff;border:1px dashed #d3c5b2}.admin-preview{width:70px;height:70px;object-fit:cover;border:1px solid #ddd2c3}
+.admin-divider{height:1px;background:#e3d9ca;margin:18px 0}
+.admin-editor{display:none;position:fixed;inset:0;z-index:1100;background:rgba(0,0,0,.58);padding:15px;overflow:auto}.admin-editor.open{display:flex;align-items:center;justify-content:center}.admin-editor-box{width:min(650px,100%);max-height:92vh;overflow:auto;background:#f8f4ec;border:1px solid #c9a66b;box-shadow:0 25px 70px #0008}.admin-editor-head{background:#0b0a09;color:#fff;padding:14px 18px;display:flex;justify-content:space-between;align-items:center}.admin-editor-head h4{font-family:var(--serif);font-size:1.7rem}.admin-editor-body{padding:18px}.admin-editor-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}
+.admin-login-password{position:relative}.admin-login-password input{padding-right:48px}.admin-eye{position:absolute;right:0;top:0;height:100%;width:44px;border:0;background:transparent;cursor:pointer;color:#71695f}
+@media(max-width:800px){.admin-stats{grid-template-columns:repeat(2,1fr)}.admin-gallery-item{grid-template-columns:64px 1fr}.admin-gallery-thumb{width:64px;height:64px}.admin-gallery-item .admin-item-actions{grid-column:1/-1;justify-content:flex-start}.admin-toolbar{top:69px}}
+@media(max-width:700px){header{padding:16px 0}.logo{font-size:1.72rem}.logo small{font-size:.46rem;letter-spacing:.24em}.admin-grid{grid-template-columns:1fr}.admin-login{padding:30px 16px}.admin-content{padding:13px}.admin-panel{min-height:calc(100vh - 12px)}.admin-overlay{padding:6px}.admin-head{padding:13px 14px}.admin-head h2{font-size:1.65rem}.admin-session{display:none}.admin-content h3{font-size:2rem}.admin-item{grid-template-columns:1fr}.admin-item-actions{justify-content:flex-start}.admin-stats{gap:7px}.admin-stat{padding:13px}.admin-stat b{font-size:1.6rem}}
 </style>
 </head>
 
@@ -389,6 +403,143 @@ footer{background:#090807;color:#fff;padding:48px 0 25px;border-top:1px solid va
 <a class="whatsapp" href="https://wa.me/2290165035450?text=Bonjour%20Charly%27s%20Couture%2C%20je%20souhaite%20avoir%20plus%20d%27informations." target="_blank" aria-label="Contacter Charly's Couture sur WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
 
 
+<div class="admin-overlay" id="admin-overlay" aria-hidden="true">
+ <div class="admin-panel" role="dialog" aria-modal="true" aria-label="Administration Charly's Couture">
+  <div class="admin-head">
+   <div><small>Administration privée</small><h2>Charly's Couture</h2></div>
+   <div class="admin-head-actions"><span class="admin-session" id="admin-session-label"></span><button class="admin-close" id="admin-close" aria-label="Fermer">×</button></div>
+  </div>
+
+  <div id="admin-login-view">
+   <div class="admin-login">
+    <h3>Connexion</h3>
+    <p>Accès réservé au compte administrateur autorisé par Supabase.</p>
+    <div class="admin-note">La session est vérifiée côté Supabase et le compte doit également être présent dans la table <strong>admins</strong>.</div>
+    <div class="admin-field"><label for="admin-email">E-mail administrateur</label><input id="admin-email" type="email" autocomplete="username" inputmode="email"></div>
+    <div class="admin-field"><label for="admin-password">Mot de passe</label><div class="admin-login-password"><input id="admin-password" type="password" autocomplete="current-password"><button type="button" class="admin-eye" id="admin-eye" aria-label="Afficher le mot de passe"><i class="fa-solid fa-eye"></i></button></div></div>
+    <button class="admin-btn gold" id="admin-login-btn">Se connecter</button>
+    <div class="admin-msg" id="admin-login-msg"></div>
+   </div>
+  </div>
+
+  <div id="admin-dashboard-view" style="display:none">
+   <div class="admin-toolbar">
+    <div class="admin-tabs">
+     <button class="admin-tab active" data-tab="dashboard">Tableau de bord</button>
+     <button class="admin-tab" data-tab="content">Textes</button>
+     <button class="admin-tab" data-tab="services">Services</button>
+     <button class="admin-tab" data-tab="models">Galerie</button>
+     <button class="admin-tab" data-tab="experience">Expérience</button>
+     <button class="admin-tab" data-tab="contact">Contact</button>
+     <button class="admin-tab" data-tab="messages">Messages</button>
+    </div>
+    <button class="admin-btn ghost" id="admin-logout-btn">Déconnexion</button>
+   </div>
+   <div class="admin-status" id="admin-status"></div>
+
+   <div class="admin-content">
+    <section class="admin-section active" data-section="dashboard">
+     <h3>Tableau de bord</h3>
+     <p class="admin-help">Gérez le contenu visible du site sans modifier directement le code.</p>
+     <div class="admin-stats" id="admin-stats"></div>
+     <div class="admin-card">
+      <strong>Administration prête</strong>
+      <p>Les modifications sont enregistrées dans Supabase puis répercutées sur le site après actualisation des données.</p>
+     </div>
+    </section>
+
+    <section class="admin-section" data-section="content">
+     <h3>Textes du site</h3>
+     <p class="admin-help">Modifiez les textes existants puis cliquez sur Enregistrer. Les champs sont liés à la table <strong>site_content</strong>.</p>
+     <div id="content-list"></div>
+    </section>
+
+    <section class="admin-section" data-section="services">
+     <h3>Services</h3>
+     <p class="admin-help">Ajoutez, modifiez, activez, désactivez ou supprimez les services. Les flèches servent à changer leur ordre.</p>
+     <div class="admin-card">
+      <div class="admin-grid">
+       <div class="admin-field"><label for="svc-title">Titre</label><input id="svc-title"></div>
+       <div class="admin-field"><label for="svc-order">Ordre</label><input id="svc-order" type="number" min="1" value="1"></div>
+      </div>
+      <div class="admin-field"><label for="svc-desc">Description</label><textarea id="svc-desc"></textarea></div>
+      <button class="admin-btn gold" id="svc-add">Ajouter le service</button>
+      <div class="admin-msg" id="svc-msg"></div>
+     </div>
+     <div class="admin-list" id="services-admin-list"></div>
+    </section>
+
+    <section class="admin-section" data-section="models">
+     <h3>Galerie</h3>
+     <p class="admin-help">Ajoutez une photo, publiez-la quand elle est prête, modifiez ses informations et utilisez ↑ ↓ pour son ordre. La suppression retire également l'image du stockage lorsque le fichier provient du bucket <strong>models</strong>.</p>
+     <div class="admin-card">
+      <div class="admin-grid">
+       <div class="admin-field"><label for="model-title">Titre de la photo</label><input id="model-title"></div>
+       <div class="admin-field"><label for="model-category">Catégorie</label><input id="model-category"></div>
+       <div class="admin-field"><label for="model-file">Photo</label><input id="model-file" type="file" accept="image/*"></div>
+       <div class="admin-field"><label for="model-order">Ordre</label><input id="model-order" type="number" min="1" value="1"></div>
+      </div>
+      <div class="admin-field"><label for="model-desc">Description</label><textarea id="model-desc"></textarea></div>
+      <div class="admin-field"><label for="model-wa">Message WhatsApp</label><input id="model-wa" value="Bonjour Charly's Couture, je suis intéressé par cette création."></div>
+      <button class="admin-btn gold" id="model-add">Ajouter à la galerie</button>
+      <div class="admin-msg" id="model-msg"></div>
+     </div>
+     <div class="admin-list" id="models-admin-list"></div>
+    </section>
+
+    <section class="admin-section" data-section="experience">
+     <h3>Expérience</h3>
+     <p class="admin-help">Gérez les étapes « Échange », « Mesures » et « Finition » ou ajoutez vos propres étapes.</p>
+     <div class="admin-card">
+      <div class="admin-grid">
+       <div class="admin-field"><label for="exp-number">Numéro</label><input id="exp-number" type="number" min="1" value="1"></div>
+       <div class="admin-field"><label for="exp-title">Titre</label><input id="exp-title"></div>
+       <div class="admin-field"><label for="exp-order">Ordre</label><input id="exp-order" type="number" min="1" value="1"></div>
+      </div>
+      <div class="admin-field"><label for="exp-desc">Description</label><textarea id="exp-desc"></textarea></div>
+      <button class="admin-btn gold" id="exp-add">Ajouter l'étape</button>
+      <div class="admin-msg" id="exp-msg"></div>
+     </div>
+     <div class="admin-list" id="experience-admin-list"></div>
+    </section>
+
+    <section class="admin-section" data-section="contact">
+     <h3>Contact</h3>
+     <p class="admin-help">Ces informations alimentent directement la section Contact du site.</p>
+     <div class="admin-card">
+      <div class="admin-field"><label for="contact-address">Adresse</label><input id="contact-address"></div>
+      <div class="admin-grid">
+       <div class="admin-field"><label for="contact-phone">Téléphone</label><input id="contact-phone"></div>
+       <div class="admin-field"><label for="contact-whatsapp">WhatsApp</label><input id="contact-whatsapp"></div>
+      </div>
+      <div class="admin-field"><label for="contact-hours">Horaires</label><input id="contact-hours"></div>
+      <div class="admin-field"><label for="contact-map">Google Maps — URL d'intégration</label><input id="contact-map"></div>
+      <button class="admin-btn gold" id="contact-save">Enregistrer les coordonnées</button>
+      <div class="admin-msg" id="contact-msg"></div>
+     </div>
+    </section>
+
+    <section class="admin-section" data-section="messages">
+     <h3>Messages visiteurs</h3>
+     <p class="admin-help">Cette vue utilise la table <strong>messages</strong> si elle existe dans votre projet Supabase.</p>
+     <div id="messages-admin-list"><div class="admin-empty">Ouvrez cette rubrique pour charger les messages.</div></div>
+    </section>
+   </div>
+  </div>
+ </div>
+</div>
+
+<div class="admin-editor" id="admin-editor">
+ <div class="admin-editor-box">
+  <div class="admin-editor-head"><h4 id="editor-title">Modifier</h4><button class="admin-close" id="editor-close" aria-label="Fermer">×</button></div>
+  <div class="admin-editor-body">
+   <div id="editor-body"></div>
+   <div class="admin-editor-actions"><button class="admin-btn ghost" id="editor-cancel">Annuler</button><button class="admin-btn gold" id="editor-save">Enregistrer</button></div>
+  </div>
+ </div>
+</div>
+
+
 <script>
 const SUPABASE_URL="https://VOTRE-PROJET.supabase.co";
 const SUPABASE_PUBLIC_KEY="VOTRE_SB_PUBLISHABLE_KEY";
@@ -520,126 +671,411 @@ function subscribeRealtime(){
 const overlay=document.getElementById("admin-overlay");
 const adminLoginView=document.getElementById("admin-login-view");
 const adminDashboardView=document.getElementById("admin-dashboard-view");
-function showAdminLogin(){adminDashboardView.style.display="none";adminLoginView.style.display="block";}
-function showAdminDashboard(){adminLoginView.style.display="none";adminDashboardView.style.display="block";}
-async function openAdmin(){
- overlay.classList.add("open"); document.body.style.overflow="hidden"; showAdminLogin();
- if(!sb){msg("admin-login-msg","La connexion Supabase n'est pas configurée.",true);return;}
- try{
-   if(await isAdmin()){showAdminDashboard();await loadAdmin();}
- }catch(err){console.error("Session admin:",err);}
+let adminBusy=false;
+let adminEditor={type:null,id:null};
+
+function showAdminLogin(){
+ adminDashboardView.style.display="none";
+ adminLoginView.style.display="block";
 }
-function closeAdmin(){overlay.classList.remove("open");document.body.style.overflow="";}
+function showAdminDashboard(){
+ adminLoginView.style.display="none";
+ adminDashboardView.style.display="block";
+}
+function adminStatus(text,error=false){
+ const e=document.getElementById("admin-status");
+ if(!e)return;
+ e.textContent=text||"";
+ e.classList.toggle("error",!!error);
+}
+function setBusy(button,busy,label){
+ if(!button)return;
+ button.disabled=busy;
+ if(busy){button.dataset.oldLabel=button.textContent;button.textContent=label||"Patientez…";}
+ else if(button.dataset.oldLabel){button.textContent=button.dataset.oldLabel;delete button.dataset.oldLabel;}
+}
+function closeAdmin(){
+ overlay.classList.remove("open");
+ overlay.setAttribute("aria-hidden","true");
+ document.body.style.overflow="";
+ closeEditor();
+}
+async function openAdmin(){
+ overlay.classList.add("open");
+ overlay.setAttribute("aria-hidden","false");
+ document.body.style.overflow="hidden";
+ showAdminLogin();
+ adminStatus("");
+ if(!sb){msg("admin-login-msg","Supabase n'est pas configuré dans ce fichier.",true);return;}
+ try{
+  const ok=await isAdmin();
+  if(ok){showAdminDashboard();await loadAdmin();}
+  else{
+   const {data:{session}}=await sb.auth.getSession();
+   if(session)msg("admin-login-msg","Cette session n'a pas les droits administrateur.",true);
+  }
+ }catch(err){
+  console.error("Ouverture administration:",err);
+  msg("admin-login-msg","Impossible de vérifier la session.",true);
+ }
+}
 document.getElementById("admin-close").onclick=closeAdmin;
 overlay.addEventListener("click",e=>{if(e.target===overlay)closeAdmin();});
-function msg(id,t,err=false){
- const e=document.getElementById(id); if(!e)return;
- e.textContent=t; e.style.color=err?"#a32c20":"#46734c";
-}
+
 async function isAdmin(){
  if(!sb)return false;
  const {data:{session},error:sessionError}=await sb.auth.getSession();
- if(sessionError || !session)return false;
+ if(sessionError||!session)return false;
  const {data,error}=await sb.from("admins").select("user_id").eq("user_id",session.user.id).maybeSingle();
  if(error){console.error("Vérification admin:",error);return false;}
  return !!data;
 }
+
 document.getElementById("admin-login-btn").onclick=async()=>{
- if(!sb){msg("admin-login-msg","La connexion Supabase n'est pas configurée.",true);return;}
+ if(!sb){msg("admin-login-msg","Supabase n'est pas configuré.",true);return;}
  const email=document.getElementById("admin-email").value.trim();
  const password=document.getElementById("admin-password").value;
- if(!email || !password){msg("admin-login-msg","Saisissez votre e-mail et votre mot de passe.",true);return;}
+ if(!email||!password){msg("admin-login-msg","Saisissez l'e-mail et le mot de passe.",true);return;}
  const button=document.getElementById("admin-login-btn");
- button.disabled=true; button.textContent="Connexion…";
+ setBusy(button,true,"Connexion…");
  try{
-   const {error}=await sb.auth.signInWithPassword({email,password});
-   if(error){msg("admin-login-msg",error.message,true);return;}
-   if(!(await isAdmin())){
-     await sb.auth.signOut();
-     msg("admin-login-msg","Compte non autorisé.",true);
-     return;
-   }
-   showAdminDashboard(); await loadAdmin();
+  const {error}=await sb.auth.signInWithPassword({email,password});
+  if(error){msg("admin-login-msg",error.message,true);return;}
+  if(!(await isAdmin())){
+   await sb.auth.signOut();
+   msg("admin-login-msg","Compte authentifié mais non autorisé.",true);
+   return;
+  }
+  msg("admin-login-msg","");
+  showAdminDashboard();
+  await loadAdmin();
  }catch(err){
-   console.error("Connexion admin:",err);
-   msg("admin-login-msg","Une erreur est survenue pendant la connexion.",true);
- }finally{
-   button.disabled=false; button.textContent="Se connecter";
- }
+  console.error(err);
+  msg("admin-login-msg","Une erreur est survenue pendant la connexion.",true);
+ }finally{setBusy(button,false);}
+};
+document.getElementById("admin-password").addEventListener("keydown",e=>{if(e.key==="Enter")document.getElementById("admin-login-btn").click();});
+document.getElementById("admin-eye").onclick=()=>{
+ const input=document.getElementById("admin-password");
+ input.type=input.type==="password"?"text":"password";
+ document.getElementById("admin-eye").innerHTML=input.type==="password"?'<i class="fa-solid fa-eye"></i>':'<i class="fa-solid fa-eye-slash"></i>';
 };
 document.getElementById("admin-logout-btn").onclick=async()=>{
- if(sb)await sb.auth.signOut();
- showAdminLogin();
+ if(!sb)return;
+ const b=document.getElementById("admin-logout-btn");
+ setBusy(b,true,"Déconnexion…");
+ try{await sb.auth.signOut();closeAdmin();}finally{setBusy(b,false);}
 };
 
-document.querySelectorAll(".admin-tab").forEach(b=>b.onclick=()=>{document.querySelectorAll(".admin-tab").forEach(x=>x.classList.remove("active"));document.querySelectorAll(".admin-section").forEach(x=>x.classList.remove("active"));b.classList.add("active");document.querySelector(`[data-section="${b.dataset.tab}"]`).classList.add("active");});
+document.querySelectorAll(".admin-tab").forEach(b=>b.addEventListener("click",()=>{
+ document.querySelectorAll(".admin-tab").forEach(x=>x.classList.remove("active"));
+ document.querySelectorAll(".admin-section").forEach(x=>x.classList.remove("active"));
+ b.classList.add("active");
+ const section=document.querySelector(`[data-section="${b.dataset.tab}"]`);
+ if(section)section.classList.add("active");
+ adminStatus("");
+}));
 
 async function loadAdmin(){
- if(!(await isAdmin()))return;
- const [c,s,m,e,ct]=await Promise.all([sb.from("site_content").select("*").order("section"),sb.from("services").select("*").order("display_order"),sb.from("models").select("*").order("display_order"),sb.from("experience_steps").select("*").order("display_order"),sb.from("contact_settings").select("*").eq("id",1).maybeSingle()]);
- for(const x of [c,s,m,e,ct])if(x.error)throw x.error;
- cache={content:c.data||[],services:s.data||[],models:m.data||[],experience:e.data||[],contact:ct.data};renderAdmin();
+ if(adminBusy)return;
+ if(!(await isAdmin())){showAdminLogin();return;}
+ adminBusy=true;
+ try{
+  const [c,s,m,e,ct]=await Promise.all([
+   sb.from("site_content").select("*").order("section").order("id"),
+   sb.from("services").select("*").order("display_order").order("id"),
+   sb.from("models").select("*").order("display_order").order("id"),
+   sb.from("experience_steps").select("*").order("display_order").order("id"),
+   sb.from("contact_settings").select("*").eq("id",1).maybeSingle()
+  ]);
+  for(const x of [c,s,m,e,ct])if(x.error)throw x.error;
+  cache={...cache,content:c.data||[],services:s.data||[],models:m.data||[],experience:e.data||[],contact:ct.data||null};
+  renderAdmin();
+ }catch(err){
+  console.error("Chargement administration:",err);
+  adminStatus(err.message||"Impossible de charger l'administration.",true);
+ }finally{adminBusy=false;}
 }
+
 function renderAdmin(){
- document.getElementById("admin-stats").innerHTML=[["Textes",cache.content.length],["Services",cache.services.length],["Photos galerie",cache.models.length],["Étapes",cache.experience.length]].map(x=>`<div class="admin-card"><b>${x[1]}</b><p>${x[0]}</p></div>`).join("");
- document.getElementById("content-list").innerHTML=cache.content.map(x=>`<div class="admin-card"><div class="admin-field"><label>${esc(x.label)}</label><textarea data-id="${x.id}">${esc(x.content_value)}</textarea></div><button class="admin-btn gold save-content" data-id="${x.id}">Enregistrer</button></div>`).join("");
- document.querySelectorAll(".save-content").forEach(b=>b.onclick=async()=>{const v=document.querySelector(`textarea[data-id="${b.dataset.id}"]`).value;const r=await sb.from("site_content").update({content_value:v}).eq("id",b.dataset.id);if(r.error){msg("admin-status",r.error.message,true);return;}msg("admin-status","Texte enregistré.");await loadAdmin();await loadSite();});
- document.getElementById("services-admin-list").innerHTML=cache.services.map(x=>`<div class="admin-card"><b>${esc(x.title)}</b><p>${esc(x.description)}</p><div class="admin-actions"><button class="admin-btn ghost edit-s" data-id="${x.id}">Modifier</button><button class="admin-btn danger del-s" data-id="${x.id}">Supprimer</button></div></div>`).join("");
- document.querySelectorAll(".edit-s").forEach(b=>b.onclick=async()=>{const x=cache.services.find(v=>v.id===b.dataset.id),title=prompt("Titre",x.title),description=prompt("Description",x.description);if(title!==null&&description!==null){await sb.from("services").update({title,description}).eq("id",x.id);await loadAdmin();await loadSite();}});
- document.querySelectorAll(".del-s").forEach(b=>b.onclick=async()=>{if(confirm("Supprimer ?")){await sb.from("services").delete().eq("id",b.dataset.id);await loadAdmin();await loadSite();}});
- document.getElementById("models-admin-list").innerHTML=cache.models.map(x=>`<div class="admin-card">${x.image_url?`<img class="admin-preview" src="${esc(x.image_url)}">`:``}<b>${esc(x.title)}</b><p>${esc(x.category||"")} • ${x.is_published?"Publié":"Brouillon"}</p><div class="admin-actions"><button class="admin-btn gold pub-m" data-id="${x.id}">${x.is_published?"Dépublier":"Publier"}</button><button class="admin-btn ghost edit-m" data-id="${x.id}">Modifier</button><button class="admin-btn danger del-m" data-id="${x.id}">Supprimer</button></div></div>`).join("");
-document.querySelectorAll(".pub-m").forEach(b=>b.onclick=async()=>{const x=cache.models.find(v=>v.id===b.dataset.id);const r=await sb.from("models").update({is_published:!x.is_published}).eq("id",x.id);if(r.error){msg("model-msg",r.error.message,true);return;}await loadAdmin();await loadSite();});
-document.querySelectorAll(".edit-m").forEach(b=>b.onclick=async()=>{const x=cache.models.find(v=>v.id===b.dataset.id);const title=prompt("Nom du modèle",x.title);if(title===null)return;const category=prompt("Catégorie",x.category||"");if(category===null)return;const description=prompt("Description",x.description||"");if(description===null)return;const whatsapp_message=prompt("Message WhatsApp",x.whatsapp_message||"Bonjour Charly's Couture, je suis intéressé par ce modèle.");if(whatsapp_message===null)return;const r=await sb.from("models").update({title,category,description,whatsapp_message}).eq("id",x.id);if(r.error){msg("model-msg",r.error.message,true);return;}await loadAdmin();await loadSite();});
-document.querySelectorAll(".del-m").forEach(b=>b.onclick=async()=>{if(confirm("Supprimer définitivement ce modèle ?")){const r=await sb.from("models").delete().eq("id",b.dataset.id);if(r.error){msg("model-msg",r.error.message,true);return;}await loadAdmin();await loadSite();}});
-  document.getElementById("experience-admin-list").innerHTML=cache.experience.map(x=>`<div class="admin-card"><b>${esc(x.step_number)} — ${esc(x.title)}</b><p>${esc(x.description)}</p><button class="admin-btn ghost edit-e" data-id="${x.id}">Modifier</button><button class="admin-btn danger del-e" data-id="${x.id}">Supprimer</button></div>`).join("");
- document.querySelectorAll(".edit-e").forEach(b=>b.onclick=async()=>{const x=cache.experience.find(v=>v.id===b.dataset.id),title=prompt("Titre",x.title),description=prompt("Description",x.description);if(title!==null&&description!==null){await sb.from("experience_steps").update({title,description}).eq("id",x.id);await loadAdmin();await loadSite();}});
- document.querySelectorAll(".del-e").forEach(b=>b.onclick=async()=>{if(confirm("Supprimer ?")){await sb.from("experience_steps").delete().eq("id",b.dataset.id);await loadAdmin();await loadSite();}});
- const c=cache.contact||{};["address","phone","whatsapp","opening_hours","map_embed_url"].forEach((k,i)=>document.getElementById(["contact-address","contact-phone","contact-whatsapp","contact-hours","contact-map"][i]).value=c[k]||"");
+ const stats=[
+  ["Textes",cache.content.length],
+  ["Services",cache.services.length],
+  ["Photos galerie",cache.models.length],
+  ["Étapes",cache.experience.length]
+ ];
+ document.getElementById("admin-stats").innerHTML=stats.map(x=>`<div class="admin-stat"><b>${x[1]}</b><span>${x[0]}</span></div>`).join("");
+
+ document.getElementById("content-list").innerHTML=cache.content.length?cache.content.map(x=>`
+  <div class="admin-card">
+   <div class="admin-field"><label>${esc(x.label||x.content_key||"Texte")}</label><textarea data-id="${esc(x.id)}">${esc(x.content_value)}</textarea></div>
+   <button class="admin-btn gold save-content" data-id="${esc(x.id)}">Enregistrer</button>
+  </div>`).join(""):`<div class="admin-empty">Aucun texte éditable trouvé.</div>`;
+ document.querySelectorAll(".save-content").forEach(b=>b.onclick=saveContent);
+
+ document.getElementById("services-admin-list").innerHTML=cache.services.length?cache.services.map((x,i)=>`
+  <div class="admin-item">
+   <div class="admin-item-main"><div class="admin-item-title">${esc(x.title)}</div><div class="admin-item-meta">Position ${i+1} · ${x.is_active===false?"Inactif":"Actif"}</div><p>${esc(x.description)}</p></div>
+   <div class="admin-item-actions">
+    <button class="admin-btn small ghost move-s-up" data-id="${esc(x.id)}" title="Monter">↑</button>
+    <button class="admin-btn small ghost move-s-down" data-id="${esc(x.id)}" title="Descendre">↓</button>
+    <button class="admin-btn small ghost edit-s" data-id="${esc(x.id)}">Modifier</button>
+    <button class="admin-btn small danger del-s" data-id="${esc(x.id)}">Supprimer</button>
+   </div>
+  </div>`).join(""):`<div class="admin-empty">Aucun service enregistré.</div>`;
+ document.querySelectorAll(".edit-s").forEach(b=>b.onclick=()=>openEditor("service",b.dataset.id));
+ document.querySelectorAll(".del-s").forEach(b=>b.onclick=()=>deleteService(b.dataset.id));
+ document.querySelectorAll(".move-s-up").forEach(b=>b.onclick=()=>moveItem("services",b.dataset.id,-1));
+ document.querySelectorAll(".move-s-down").forEach(b=>b.onclick=()=>moveItem("services",b.dataset.id,1));
+
+ document.getElementById("models-admin-list").innerHTML=cache.models.length?cache.models.map((x,i)=>`
+  <div class="admin-item admin-gallery-item">
+   ${x.image_url?`<img class="admin-gallery-thumb" src="${esc(x.image_url)}" alt="">`:`<div class="admin-gallery-thumb" style="display:grid;place-items:center;background:#eee">—</div>`}
+   <div class="admin-item-main"><div class="admin-item-title">${esc(x.title)}</div><div class="admin-item-meta">Position ${i+1} · ${x.is_published?"Publié":"Brouillon"}${x.category?" · "+esc(x.category):""}</div><p>${esc(x.description||"")}</p></div>
+   <div class="admin-item-actions">
+    <button class="admin-btn small ghost move-m-up" data-id="${esc(x.id)}" title="Monter">↑</button>
+    <button class="admin-btn small ghost move-m-down" data-id="${esc(x.id)}" title="Descendre">↓</button>
+    <button class="admin-btn small gold pub-m" data-id="${esc(x.id)}">${x.is_published?"Dépublier":"Publier"}</button>
+    <button class="admin-btn small ghost edit-m" data-id="${esc(x.id)}">Modifier</button>
+    <button class="admin-btn small danger del-m" data-id="${esc(x.id)}">Supprimer</button>
+   </div>
+  </div>`).join(""):`<div class="admin-empty">Aucune photo dans la galerie.</div>`;
+ document.querySelectorAll(".pub-m").forEach(b=>b.onclick=()=>togglePublish(b.dataset.id,b));
+ document.querySelectorAll(".edit-m").forEach(b=>b.onclick=()=>openEditor("model",b.dataset.id));
+ document.querySelectorAll(".del-m").forEach(b=>b.onclick=()=>deleteModel(b.dataset.id));
+ document.querySelectorAll(".move-m-up").forEach(b=>b.onclick=()=>moveItem("models",b.dataset.id,-1));
+ document.querySelectorAll(".move-m-down").forEach(b=>b.onclick=()=>moveItem("models",b.dataset.id,1));
+
+ document.getElementById("experience-admin-list").innerHTML=cache.experience.length?cache.experience.map((x,i)=>`
+  <div class="admin-item">
+   <div class="admin-item-main"><div class="admin-item-title">${esc(x.step_number||i+1)} — ${esc(x.title)}</div><div class="admin-item-meta">Position ${i+1} · ${x.is_active===false?"Inactif":"Actif"}</div><p>${esc(x.description)}</p></div>
+   <div class="admin-item-actions">
+    <button class="admin-btn small ghost move-e-up" data-id="${esc(x.id)}">↑</button>
+    <button class="admin-btn small ghost move-e-down" data-id="${esc(x.id)}">↓</button>
+    <button class="admin-btn small ghost edit-e" data-id="${esc(x.id)}">Modifier</button>
+    <button class="admin-btn small danger del-e" data-id="${esc(x.id)}">Supprimer</button>
+   </div>
+  </div>`).join(""):`<div class="admin-empty">Aucune étape enregistrée.</div>`;
+ document.querySelectorAll(".edit-e").forEach(b=>b.onclick=()=>openEditor("experience",b.dataset.id));
+ document.querySelectorAll(".del-e").forEach(b=>b.onclick=()=>deleteExperience(b.dataset.id));
+ document.querySelectorAll(".move-e-up").forEach(b=>b.onclick=()=>moveItem("experience_steps",b.dataset.id,-1));
+ document.querySelectorAll(".move-e-down").forEach(b=>b.onclick=()=>moveItem("experience_steps",b.dataset.id,1));
+
+ const c=cache.contact||{};
+ document.getElementById("contact-address").value=c.address||"";
+ document.getElementById("contact-phone").value=c.phone||"";
+ document.getElementById("contact-whatsapp").value=c.whatsapp||"";
+ document.getElementById("contact-hours").value=c.opening_hours||"";
+ document.getElementById("contact-map").value=c.map_embed_url||DEFAULT_CONTACT.map_embed_url;
 }
-document.getElementById("svc-add").onclick=async()=>{const title=document.getElementById("svc-title").value.trim(),description=document.getElementById("svc-desc").value.trim(),display_order=+document.getElementById("svc-order").value;if(!title)return;await sb.from("services").insert({title,description,display_order});await loadAdmin();await loadSite();};
-async function uploadModelImage(file){if(!file)return "";if(!file.type.startsWith("image/"))throw new Error("Sélectionnez une image.");if(file.size>8*1024*1024)throw new Error("Image trop volumineuse (8 Mo maximum).");const safe=file.name.toLowerCase().replace(/[^a-z0-9._-]/g,"-");const path=Date.now()+"-"+crypto.randomUUID()+"-"+safe;const up=await sb.storage.from("models").upload(path,file,{upsert:false,contentType:file.type});if(up.error)throw up.error;return sb.storage.from("models").getPublicUrl(path).data.publicUrl;}
-document.getElementById("model-add").onclick=async()=>{try{const title=document.getElementById("model-title").value.trim();if(!title)return msg("model-msg","Nom obligatoire.",true);const image_url=await uploadModelImage(document.getElementById("model-file").files[0]);const r=await sb.from("models").insert({title,category:document.getElementById("model-category").value,image_url,description:document.getElementById("model-desc").value,whatsapp_message:document.getElementById("model-wa").value,display_order:+document.getElementById("model-order").value,is_published:false});if(r.error)throw r.error;msg("model-msg","Modèle enregistré.");document.getElementById("model-file").value="";await loadAdmin();await loadSite();}catch(e){msg("model-msg",e.message,true);}};
-document.getElementById("exp-add").onclick=async()=>{const title=document.getElementById("exp-title").value.trim();if(!title)return;await sb.from("experience_steps").insert({step_number:+document.getElementById("exp-number").value,title,description:document.getElementById("exp-desc").value,display_order:+document.getElementById("exp-order").value});await loadAdmin();await loadSite();};
-document.getElementById("contact-save").onclick=async()=>{const payload={id:1,address:document.getElementById("contact-address").value,phone:document.getElementById("contact-phone").value,whatsapp:document.getElementById("contact-whatsapp").value,opening_hours:document.getElementById("contact-hours").value,map_embed_url:document.getElementById("contact-map").value};const r=await sb.from("contact_settings").upsert(payload);msg("contact-msg",r.error?r.error.message:"Enregistré.",!!r.error);await loadAdmin();await loadSite();};
+
+async function saveContent(){
+ const id=this.dataset.id,v=document.querySelector(`textarea[data-id="${CSS.escape(id)}"]`)?.value??"";
+ setBusy(this,true,"Enregistrement…");
+ try{
+  const r=await sb.from("site_content").update({content_value:v}).eq("id",id);
+  if(r.error)throw r.error;
+  adminStatus("Texte enregistré.");
+  await loadAdmin();await loadSite();
+ }catch(err){adminStatus(err.message,true);}finally{setBusy(this,false);}
+}
+
+function nextOrder(list){return list.length?Math.max(...list.map(x=>Number(x.display_order)||0))+1:1;}
+document.getElementById("svc-add").onclick=async function(){
+ const title=document.getElementById("svc-title").value.trim(),description=document.getElementById("svc-desc").value.trim(),order=Number(document.getElementById("svc-order").value)||nextOrder(cache.services);
+ if(!title){msg("svc-msg","Le titre est obligatoire.",true);return;}
+ setBusy(this,true,"Ajout…");
+ try{
+  const r=await sb.from("services").insert({title,description,display_order:order,is_active:true});
+  if(r.error)throw r.error;
+  document.getElementById("svc-title").value="";document.getElementById("svc-desc").value="";
+  msg("svc-msg","Service ajouté.");await loadAdmin();await loadSite();
+ }catch(err){msg("svc-msg",err.message,true);}finally{setBusy(this,false);}
+};
+
+async function deleteService(id){
+ if(!confirm("Supprimer définitivement ce service ?"))return;
+ try{const r=await sb.from("services").delete().eq("id",id);if(r.error)throw r.error;adminStatus("Service supprimé.");await loadAdmin();await loadSite();}
+ catch(err){adminStatus(err.message,true);}
+}
+async function deleteExperience(id){
+ if(!confirm("Supprimer définitivement cette étape ?"))return;
+ try{const r=await sb.from("experience_steps").delete().eq("id",id);if(r.error)throw r.error;adminStatus("Étape supprimée.");await loadAdmin();await loadSite();}
+ catch(err){adminStatus(err.message,true);}
+}
+async function togglePublish(id,button){
+ setBusy(button,true,"…");
+ try{
+  const x=cache.models.find(v=>String(v.id)===String(id));if(!x)throw new Error("Photo introuvable.");
+  const r=await sb.from("models").update({is_published:!x.is_published}).eq("id",id);if(r.error)throw r.error;
+  adminStatus(x.is_published?"Photo retirée de la publication.":"Photo publiée.");
+  await loadAdmin();await loadSite();
+ }catch(err){adminStatus(err.message,true);}finally{setBusy(button,false);}
+}
+function extractStoragePath(url){
+ try{
+  const u=new URL(url);
+  const marker="/storage/v1/object/public/models/";
+  const i=u.pathname.indexOf(marker);
+  return i>=0?decodeURIComponent(u.pathname.slice(i+marker.length)):null;
+ }catch{return null;}
+}
+async function deleteModel(id){
+ const x=cache.models.find(v=>String(v.id)===String(id));if(!x)return;
+ if(!confirm(`Supprimer définitivement « ${x.title} » de la galerie ?`))return;
+ try{
+  const r=await sb.from("models").delete().eq("id",id);if(r.error)throw r.error;
+  const path=extractStoragePath(x.image_url);
+  if(path){const d=await sb.storage.from("models").remove([path]);if(d.error)console.warn("Image Storage non supprimée:",d.error);}
+  adminStatus("Photo supprimée de la galerie.");
+  await loadAdmin();await loadSite();
+ }catch(err){adminStatus(err.message,true);}
+}
+
+async function moveItem(table,id,direction){
+ const list=table==="services"?cache.services:table==="models"?cache.models:cache.experience;
+ const idx=list.findIndex(x=>String(x.id)===String(id));if(idx<0)return;
+ const targetIdx=idx+direction;if(targetIdx<0||targetIdx>=list.length)return;
+ const a=list[idx],b=list[targetIdx],ao=Number(a.display_order)||idx+1,bo=Number(b.display_order)||targetIdx+1;
+ try{
+  const r1=await sb.from(table).update({display_order:-999999}).eq("id",a.id);if(r1.error)throw r1.error;
+  const r2=await sb.from(table).update({display_order:ao}).eq("id",b.id);if(r2.error)throw r2.error;
+  const r3=await sb.from(table).update({display_order:bo}).eq("id",a.id);if(r3.error)throw r3.error;
+  await loadAdmin();await loadSite();
+ }catch(err){adminStatus(err.message,true);}
+}
+
+function editorFields(type,x){
+ if(type==="service")return `
+  <div class="admin-field"><label>Titre</label><input id="ed-title" value="${esc(x.title)}"></div>
+  <div class="admin-field"><label>Description</label><textarea id="ed-description">${esc(x.description)}</textarea></div>
+  <div class="admin-field"><label>Publié / actif</label><select id="ed-active"><option value="1" ${x.is_active!==false?"selected":""}>Oui</option><option value="0" ${x.is_active===false?"selected":""}>Non</option></select></div>`;
+ if(type==="model")return `
+  <div class="admin-field"><label>Titre de la photo</label><input id="ed-title" value="${esc(x.title)}"></div>
+  <div class="admin-field"><label>Catégorie</label><input id="ed-category" value="${esc(x.category||"")}"></div>
+  <div class="admin-field"><label>Remplacer la photo (facultatif)</label><input id="ed-file" type="file" accept="image/*"></div>
+  <div class="admin-field"><label>Description</label><textarea id="ed-description">${esc(x.description||"")}</textarea></div>
+  <div class="admin-field"><label>Message WhatsApp</label><input id="ed-wa" value="${esc(x.whatsapp_message||"Bonjour Charly's Couture, je suis intéressé par cette création.")}"></div>`;
+ return `
+  <div class="admin-grid">
+   <div class="admin-field"><label>Numéro</label><input id="ed-number" type="number" value="${esc(x.step_number||1)}"></div>
+   <div class="admin-field"><label>Titre</label><input id="ed-title" value="${esc(x.title)}"></div>
+  </div>
+  <div class="admin-field"><label>Description</label><textarea id="ed-description">${esc(x.description)}</textarea></div>
+  <div class="admin-field"><label>Actif</label><select id="ed-active"><option value="1" ${x.is_active!==false?"selected":""}>Oui</option><option value="0" ${x.is_active===false?"selected":""}>Non</option></select></div>`;
+}
+function openEditor(type,id){
+ const lists={service:cache.services,model:cache.models,experience:cache.experience};
+ const x=lists[type]?.find(v=>String(v.id)===String(id));if(!x)return;
+ adminEditor={type,id};
+ document.getElementById("editor-title").textContent=type==="model"?"Modifier la photo":type==="service"?"Modifier le service":"Modifier l'étape";
+ document.getElementById("editor-body").innerHTML=editorFields(type,x);
+ document.getElementById("admin-editor").classList.add("open");
+}
+function closeEditor(){document.getElementById("admin-editor")?.classList.remove("open");adminEditor={type:null,id:null};}
+document.getElementById("editor-close").onclick=closeEditor;
+document.getElementById("editor-cancel").onclick=closeEditor;
+document.getElementById("admin-editor").addEventListener("click",e=>{if(e.target.id==="admin-editor")closeEditor();});
+document.getElementById("editor-save").onclick=async function(){
+ const {type,id}=adminEditor;if(!type)return;
+ const x=(type==="service"?cache.services:type==="model"?cache.models:cache.experience).find(v=>String(v.id)===String(id));if(!x)return;
+ setBusy(this,true,"Enregistrement…");
+ try{
+  let payload={},table="";
+  if(type==="service"){table="services";payload={title:document.getElementById("ed-title").value.trim(),description:document.getElementById("ed-description").value,is_active:document.getElementById("ed-active").value==="1"};}
+  if(type==="experience"){table="experience_steps";payload={step_number:Number(document.getElementById("ed-number").value)||1,title:document.getElementById("ed-title").value.trim(),description:document.getElementById("ed-description").value,is_active:document.getElementById("ed-active").value==="1"};}
+  if(type==="model"){
+   table="models";payload={title:document.getElementById("ed-title").value.trim(),category:document.getElementById("ed-category").value,description:document.getElementById("ed-description").value,whatsapp_message:document.getElementById("ed-wa").value};
+   const file=document.getElementById("ed-file").files[0];
+   if(file)payload.image_url=await uploadModelImage(file);
+  }
+  if(!payload.title)throw new Error("Le titre est obligatoire.");
+  const r=await sb.from(table).update(payload).eq("id",id);if(r.error)throw r.error;
+  closeEditor();adminStatus("Modification enregistrée.");await loadAdmin();await loadSite();
+ }catch(err){adminStatus(err.message,true);}finally{setBusy(this,false);}
+};
+
+async function uploadModelImage(file){
+ if(!file)return "";
+ if(!file.type.startsWith("image/"))throw new Error("Sélectionnez une image.");
+ if(file.size>8*1024*1024)throw new Error("Image trop volumineuse (8 Mo maximum).");
+ const safe=file.name.toLowerCase().replace(/[^a-z0-9._-]/g,"-");
+ const path=Date.now()+"-"+crypto.randomUUID()+"-"+safe;
+ const up=await sb.storage.from("models").upload(path,file,{upsert:false,contentType:file.type});
+ if(up.error)throw up.error;
+ return sb.storage.from("models").getPublicUrl(path).data.publicUrl;
+}
+document.getElementById("model-add").onclick=async function(){
+ try{
+  const title=document.getElementById("model-title").value.trim();
+  if(!title){msg("model-msg","Titre obligatoire.",true);return;}
+  const file=document.getElementById("model-file").files[0];
+  if(!file){msg("model-msg","Sélectionnez une photo.",true);return;}
+  setBusy(this,true,"Téléversement…");
+  const image_url=await uploadModelImage(file);
+  const r=await sb.from("models").insert({
+   title,category:document.getElementById("model-category").value.trim(),image_url,
+   description:document.getElementById("model-desc").value.trim(),
+   whatsapp_message:document.getElementById("model-wa").value.trim()||"Bonjour Charly's Couture, je suis intéressé par cette création.",
+   display_order:Number(document.getElementById("model-order").value)||nextOrder(cache.models),
+   is_published:false
+  });
+  if(r.error)throw r.error;
+  ["model-title","model-category","model-desc"].forEach(id=>document.getElementById(id).value="");
+  document.getElementById("model-file").value="";
+  msg("model-msg","Photo ajoutée en brouillon.");
+  await loadAdmin();await loadSite();
+ }catch(err){msg("model-msg",err.message,true);}finally{setBusy(this,false);}
+};
+document.getElementById("exp-add").onclick=async function(){
+ const title=document.getElementById("exp-title").value.trim();if(!title){msg("exp-msg","Titre obligatoire.",true);return;}
+ setBusy(this,true,"Ajout…");
+ try{
+  const r=await sb.from("experience_steps").insert({step_number:Number(document.getElementById("exp-number").value)||nextOrder(cache.experience),title,description:document.getElementById("exp-desc").value.trim(),display_order:Number(document.getElementById("exp-order").value)||nextOrder(cache.experience),is_active:true});
+  if(r.error)throw r.error;
+  document.getElementById("exp-title").value="";document.getElementById("exp-desc").value="";
+  msg("exp-msg","Étape ajoutée.");await loadAdmin();await loadSite();
+ }catch(err){msg("exp-msg",err.message,true);}finally{setBusy(this,false);}
+};
+document.getElementById("contact-save").onclick=async function(){
+ const payload={id:1,address:document.getElementById("contact-address").value.trim(),phone:document.getElementById("contact-phone").value.trim(),whatsapp:document.getElementById("contact-whatsapp").value.trim(),opening_hours:document.getElementById("contact-hours").value.trim(),map_embed_url:document.getElementById("contact-map").value.trim()};
+ setBusy(this,true,"Enregistrement…");
+ try{const r=await sb.from("contact_settings").upsert(payload);if(r.error)throw r.error;msg("contact-msg","Coordonnées enregistrées.");await loadAdmin();await loadSite();}catch(err){msg("contact-msg",err.message,true);}finally{setBusy(this,false);}
+};
+
+async function loadMessages(){
+ const box=document.getElementById("messages-admin-list");
+ box.innerHTML='<div class="admin-empty">Chargement…</div>';
+ try{
+  const r=await sb.from("messages").select("*").order("created_at",{ascending:false}).limit(100);
+  if(r.error)throw r.error;
+  const rows=r.data||[];
+  box.innerHTML=rows.length?rows.map(x=>`
+   <div class="admin-item">
+    <div class="admin-item-main"><div class="admin-item-title">${esc(x.subject||x.name||"Message")}</div><div class="admin-item-meta">${esc(x.email||x.phone||"")} · ${x.created_at?new Date(x.created_at).toLocaleString("fr-FR"):""}</div><p>${esc(x.message||x.content||"")}</p></div>
+    <div class="admin-item-actions"><button class="admin-btn small danger del-message" data-id="${esc(x.id)}">Supprimer</button></div>
+   </div>`).join(""):'<div class="admin-empty">Aucun message reçu.</div>';
+  document.querySelectorAll(".del-message").forEach(b=>b.onclick=async()=>{
+   if(!confirm("Supprimer ce message ?"))return;
+   const d=await sb.from("messages").delete().eq("id",b.dataset.id);
+   if(d.error)adminStatus(d.error.message,true);else{adminStatus("Message supprimé.");await loadMessages();}
+  });
+ }catch(err){
+  box.innerHTML='<div class="admin-empty">La table « messages » n’est pas disponible dans Supabase ou son accès est refusé. L’administration du site fonctionne normalement.</div>';
+ }
+}
+document.querySelector('.admin-tab[data-tab="messages"]').addEventListener("click",loadMessages);
+
+if(sb){
+ sb.auth.onAuthStateChange((event,session)=>{
+  if(event==="SIGNED_OUT"){showAdminLogin();}
+  if(event==="SIGNED_IN"&&session)showAdminDashboard();
+ });
+}
+
 loadSite();
 subscribeRealtime();
 </script>
 
-<div class="admin-overlay" id="admin-overlay">
-<div class="admin-panel">
-<div class="admin-head"><div><small>Administration privée</small><h2>Charly's Couture</h2></div><button class="admin-close" id="admin-close">×</button></div>
-<div id="admin-login-view"><div class="admin-login">
-<h3>Connexion</h3><p>Accès réservé à l'administrateur unique.</p>
-<div class="admin-note">Le compte administrateur est vérifié directement par Supabase Auth. Aucun mot de passe n'est stocké dans cette page.</div>
-<div class="admin-field"><label>E-mail administrateur</label><input id="admin-email" type="email" autocomplete="username"></div>
-<div class="admin-field"><label>Mot de passe</label><input id="admin-password" type="password"></div>
-<button class="admin-btn gold" id="admin-login-btn">Se connecter</button><div class="admin-msg" id="admin-login-msg"></div>
-</div></div>
-<div id="admin-dashboard-view" style="display:none">
-<div class="admin-toolbar"><div class="admin-tabs">
-<button class="admin-tab active" data-tab="dashboard">Accueil</button><button class="admin-tab" data-tab="content">Textes</button><button class="admin-tab" data-tab="services">Services</button><button class="admin-tab" data-tab="models">Galerie</button><button class="admin-tab" data-tab="experience">Expérience</button><button class="admin-tab" data-tab="contact">Contact</button><button class="admin-tab" data-tab="messages">Messages</button>
-</div><button class="admin-btn ghost" id="admin-logout-btn">Déconnexion</button></div>
-<div class="admin-status" id="admin-status"></div>
-<div class="admin-content">
-<section class="admin-section active" data-section="dashboard"><h3>Tableau de bord</h3><p>Tout est géré depuis ce panneau.</p><div class="admin-grid" id="admin-stats"></div></section>
-<section class="admin-section" data-section="content"><h3>Textes</h3><div id="content-list"></div></section>
-<section class="admin-section" data-section="services"><h3>Services</h3>
-<div class="admin-card"><div class="admin-grid"><div class="admin-field"><label>Titre</label><input id="svc-title"></div><div class="admin-field"><label>Ordre</label><input id="svc-order" type="number" value="1"></div></div><div class="admin-field"><label>Description</label><textarea id="svc-desc"></textarea></div><button class="admin-btn gold" id="svc-add">Ajouter</button></div><div id="services-admin-list"></div></section>
-<section class="admin-section" data-section="models"><h3>Galerie</h3><p class="admin-help">Ajoutez, publiez, modifiez ou supprimez les photos qui apparaîtront dans la galerie publique.</p>
-<div class="admin-card"><div class="admin-grid">
-<div class="admin-field"><label>Titre de la photo</label><input id="model-title"></div>
-<div class="admin-field"><label>Catégorie</label><input id="model-category"></div>
-<div class="admin-field"><label>Photo</label><input id="model-file" type="file" accept="image/*"></div>
-<div class="admin-field"><label>Ordre</label><input id="model-order" type="number" value="1"></div>
-</div><div class="admin-field"><label>Description</label><textarea id="model-desc"></textarea></div>
-<div class="admin-field"><label>Message WhatsApp</label><input id="model-wa" value="Bonjour Charly's Couture, je suis intéressé par ce modèle."></div>
-<button class="admin-btn gold" id="model-add">Ajouter à la galerie</button><div class="admin-msg" id="model-msg"></div></div>
-<div id="models-admin-list"></div></section>
-<section class="admin-section" data-section="experience"><h3>Expérience</h3>
-<div class="admin-card"><div class="admin-grid"><div class="admin-field"><label>Numéro</label><input id="exp-number" type="number" value="1"></div><div class="admin-field"><label>Titre</label><input id="exp-title"></div><div class="admin-field"><label>Ordre</label><input id="exp-order" type="number" value="1"></div></div><div class="admin-field"><label>Description</label><textarea id="exp-desc"></textarea></div><button class="admin-btn gold" id="exp-add">Ajouter</button></div><div id="experience-admin-list"></div></section>
-<section class="admin-section" data-section="contact"><h3>Contact</h3><div class="admin-card">
-<div class="admin-field"><label>Adresse</label><input id="contact-address"></div><div class="admin-field"><label>Téléphone</label><input id="contact-phone"></div><div class="admin-field"><label>WhatsApp</label><input id="contact-whatsapp"></div><div class="admin-field"><label>Horaires</label><input id="contact-hours"></div><div class="admin-field"><label>Google Maps</label><input id="contact-map"></div><button class="admin-btn gold" id="contact-save">Enregistrer</button><div class="admin-msg" id="contact-msg"></div></div></section>
-<section class="admin-section" data-section="messages"><h3>Messages visiteurs</h3><div id="messages-admin-list"></div></section>
-</div></div></div></div>
 </body>
 </html>
