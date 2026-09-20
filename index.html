@@ -41,9 +41,7 @@ header.scrolled{background:rgba(11,10,9,.99);padding:10px 0;border-bottom:1px so
 .nav-cta{border:1px solid var(--champagne);color:var(--champagne);padding:11px 17px;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700}
 .menu{display:none;background:none;border:0;color:#fff;font-size:1.35rem}
 
-.hero{min-height:900px;height:100vh;display:flex;align-items:center;position:relative;overflow:hidden;background:
- radial-gradient(circle at 78% 25%,rgba(201,166,107,.16),transparent 22%),
- linear-gradient(115deg,#080706 0%,#16110e 48%,#0a0908 100%);color:#fff}
+.hero{min-height:900px;height:100vh;display:flex;align-items:center;position:relative;overflow:hidden;background-image:linear-gradient(90deg,rgba(5,4,3,.82),rgba(5,4,3,.52) 48%,rgba(5,4,3,.7)),url("https://upload.wikimedia.org/wikipedia/commons/9/95/A_sewing_studio_at_CBCC_and_CIHE.jpg");background-size:cover;background-position:center 45%;background-attachment:scroll;color:#fff}
 .hero:before{content:"";position:absolute;width:760px;height:760px;border:1px solid rgba(201,166,107,.22);border-radius:50%;right:-250px;top:-120px;box-shadow:0 0 0 55px rgba(201,166,107,.025),0 0 0 110px rgba(201,166,107,.018)}
 .hero:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.22),transparent 55%,rgba(0,0,0,.3));pointer-events:none}
 .hero-content{position:relative;z-index:2;max-width:800px;padding-top:55px}
@@ -209,7 +207,7 @@ footer{background:#090807;color:#fff;padding:48px 0 25px;border-top:1px solid va
 .admin-content{padding:22px}.admin-section{display:none}.admin-section.active{display:block}.admin-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
 .admin-card{background:#fff;border:1px solid #ddd2c3;padding:15px;margin:10px 0}.admin-card strong{font-family:var(--serif);font-size:1.4rem}.admin-card p{font-size:.8rem;color:#71695f}
 .admin-actions{display:flex;gap:6px;flex-wrap:wrap}.admin-msg{min-height:20px;font-size:.78rem;margin-top:8px}.admin-note{background:#fff6df;border-left:3px solid #c9a66b;padding:10px;font-size:.75rem;margin:15px 0}
-.admin-status{padding:8px 20px;font-size:.7rem;color:#71695f}.admin-preview{width:65px;height:65px;object-fit:cover}
+.admin-status{padding:8px 20px;font-size:.7rem;color:#71695f}.admin-preview{width:65px;height:65px;object-fit:cover}.admin-hero-preview{width:100%;max-height:260px;object-fit:cover;margin:10px 0;border:1px solid #ddd2c3}.admin-help{font-size:.72rem;color:#71695f;margin-top:6px}
 @media(max-width:700px){header{padding:16px 0}.logo{font-size:1.72rem}.logo small{font-size:.46rem;letter-spacing:.24em}.admin-grid{grid-template-columns:1fr}.admin-login{padding:30px 16px}.admin-content{padding:14px}}
 </style>
 </head>
@@ -391,7 +389,8 @@ const DEFAULT_CONTENT={
  about_text:"Bienvenue chez Charly's Couture, atelier de couture situé au 9JPW+MF, Parakou.",
  philosophy_quote:"Une belle couture commence par un travail précis.",
  contact_title:"Venez à\nl'atelier.",
- footer_text:"Atelier de couture à Parakou. Créations, confection, retouches et réfection."
+ footer_text:"Atelier de couture à Parakou. Créations, confection, retouches et réfection.",
+ hero_image_url:"https://upload.wikimedia.org/wikipedia/commons/9/95/A_sewing_studio_at_CBCC_and_CIHE.jpg"
 };
 const DEFAULT_SERVICES=[
  {title:"Couture Dame",description:"Robes, jupes, ensembles et tenues traditionnelles ou modernes."},
@@ -416,28 +415,21 @@ function wa(number,msg){return "https://wa.me/"+(number||"2290165035450").replac
 function observe(){document.querySelectorAll(".reveal").forEach(e=>e.classList.add("show")); if("IntersectionObserver" in window){const o=new IntersectionObserver(es=>es.forEach(e=>e.isIntersecting&&e.target.classList.add("show")),{threshold:.08});document.querySelectorAll(".reveal").forEach(e=>o.observe(e));}}
 
 const logo=document.getElementById("main-logo");
-const CLICK_WINDOW=5000, REFRESH_DELAY=3000;
-function resetLogoClicks(){
- clicks=[];
- if(refreshTimer){clearTimeout(refreshTimer);refreshTimer=null;}
-}
-async function handleLogoClick(e){
- e.preventDefault(); e.stopPropagation();
+const LOGO_WINDOW=5000, LOGO_REFRESH_DELAY=3000;
+function resetLogoSequence(){clicks=[];if(refreshTimer){clearTimeout(refreshTimer);refreshTimer=null;}}
+function handleLogoClick(e){
+ e.preventDefault();e.stopPropagation();
  const now=Date.now();
- clicks=clicks.filter(t=>now-t<=CLICK_WINDOW);
+ clicks=clicks.filter(t=>now-t<LOGO_WINDOW);
  clicks.push(now);
  if(refreshTimer){clearTimeout(refreshTimer);refreshTimer=null;}
- if(clicks.length>=6){
-   resetLogoClicks();
-   await openAdmin();
-   return;
- }
- refreshTimer=setTimeout(()=>{
-   resetLogoClicks();
-   window.location.reload();
- },REFRESH_DELAY);
+ if(clicks.length>=6){resetLogoSequence();openAdmin();return;}
+ refreshTimer=setTimeout(()=>{resetLogoSequence();window.location.reload();},LOGO_REFRESH_DELAY);
 }
-logo.addEventListener("pointerup",handleLogoClick,{passive:false});
+if(logo){
+ logo.style.touchAction="manipulation";
+ logo.addEventListener("click",handleLogoClick,false);
+}
 
 async function loadSite(){
  if(!sb){fallback();return;}
@@ -465,6 +457,8 @@ function renderTextDefaults(extra={}){
  const t={...DEFAULT_CONTENT,...extra};
  document.querySelector(".hero h1").innerHTML=esc(t.hero_title).replace(/\n/g,"<br>");
  document.querySelector(".hero-content p").textContent=t.hero_text;
+ const heroUrl=t.hero_image_url||DEFAULT_CONTENT.hero_image_url;
+ document.querySelector(".hero").style.backgroundImage='linear-gradient(90deg,rgba(5,4,3,.82),rgba(5,4,3,.52) 48%,rgba(5,4,3,.7)),url("'+esc(heroUrl)+'")';
  document.querySelector(".about-copy h2").innerHTML=esc(t.about_title).replace(/\n/g,"<br>");
  const aboutPs=document.querySelectorAll(".about-copy p");
  if(aboutPs[0])aboutPs[0].innerHTML=esc(t.about_text).replace(/(Charly's Couture|9JPW\+MF, Parakou)/g,"<strong>$1</strong>");
@@ -506,57 +500,32 @@ function subscribeRealtime(){
 const overlay=document.getElementById("admin-overlay");
 const adminLoginView=document.getElementById("admin-login-view");
 const adminDashboardView=document.getElementById("admin-dashboard-view");
-function showAdminLogin(){adminDashboardView.style.display="none";adminLoginView.style.display="block";}
-function showAdminDashboard(){adminLoginView.style.display="none";adminDashboardView.style.display="block";}
+function showAdminLogin(){if(adminDashboardView)adminDashboardView.style.display="none";if(adminLoginView)adminLoginView.style.display="block";}
+function showAdminDashboard(){if(adminLoginView)adminLoginView.style.display="none";if(adminDashboardView)adminDashboardView.style.display="block";}
 async function openAdmin(){
- overlay.classList.add("open"); document.body.style.overflow="hidden"; showAdminLogin();
+ if(refreshTimer){clearTimeout(refreshTimer);refreshTimer=null;}
+ overlay.classList.add("open");document.body.style.overflow="hidden";showAdminLogin();
  if(!sb){msg("admin-login-msg","La connexion Supabase n'est pas configurée.",true);return;}
- try{
-   if(await isAdmin()){showAdminDashboard();await loadAdmin();}
- }catch(err){console.error("Session admin:",err);}
+ try{if(await isAdmin()){showAdminDashboard();await loadAdmin();}}catch(err){console.error("Ouverture administration:",err);}
 }
 function closeAdmin(){overlay.classList.remove("open");document.body.style.overflow="";}
 document.getElementById("admin-close").onclick=closeAdmin;
-overlay.addEventListener("click",e=>{if(e.target===overlay)closeAdmin();});
-function msg(id,t,err=false){
- const e=document.getElementById(id); if(!e)return;
- e.textContent=t; e.style.color=err?"#a32c20":"#46734c";
-}
+function msg(id,t,err=false){const e=document.getElementById(id);if(!e)return;e.textContent=t;e.style.color=err?"#a32c20":"#46734c";}
 async function isAdmin(){
- if(!sb)return false;
- const {data:{session},error:sessionError}=await sb.auth.getSession();
- if(sessionError || !session)return false;
- const {data,error}=await sb.from("admins").select("user_id").eq("user_id",session.user.id).maybeSingle();
- if(error){console.error("Vérification admin:",error);return false;}
- return !!data;
+ if(!sb)return false;const {data:{session}}=await sb.auth.getSession();if(!session)return false;
+ const {data}=await sb.from("admins").select("user_id").eq("user_id",session.user.id).maybeSingle();return !!data;
 }
 document.getElementById("admin-login-btn").onclick=async()=>{
- if(!sb){msg("admin-login-msg","La connexion Supabase n'est pas configurée.",true);return;}
+ if(!sb){msg("admin-login-msg","Configurez l’URL Supabase et la clé publique dans le HTML.",true);return;}
  const email=document.getElementById("admin-email").value.trim();
  const password=document.getElementById("admin-password").value;
- if(!email || !password){msg("admin-login-msg","Saisissez votre e-mail et votre mot de passe.",true);return;}
- const button=document.getElementById("admin-login-btn");
- button.disabled=true; button.textContent="Connexion…";
- try{
-   const {error}=await sb.auth.signInWithPassword({email,password});
-   if(error){msg("admin-login-msg",error.message,true);return;}
-   if(!(await isAdmin())){
-     await sb.auth.signOut();
-     msg("admin-login-msg","Compte non autorisé.",true);
-     return;
-   }
-   showAdminDashboard(); await loadAdmin();
- }catch(err){
-   console.error("Connexion admin:",err);
-   msg("admin-login-msg","Une erreur est survenue pendant la connexion.",true);
- }finally{
-   button.disabled=false; button.textContent="Se connecter";
- }
+ if(!email || !password){msg("admin-login-msg","Saisissez votre e-mail et votre mot de passe Supabase.",true);return;}
+ const {error}=await sb.auth.signInWithPassword({email,password});
+ if(error){msg("admin-login-msg",error.message,true);return;}
+ if(!(await isAdmin())){await sb.auth.signOut();msg("admin-login-msg","Compte non autorisé.",true);return;}
+ document.getElementById("admin-login-view").style.display="none";document.getElementById("admin-dashboard-view").style.display="block";await loadAdmin();
 };
-document.getElementById("admin-logout-btn").onclick=async()=>{
- if(sb)await sb.auth.signOut();
- showAdminLogin();
-};
+document.getElementById("admin-logout-btn").onclick=async()=>{await sb.auth.signOut();document.getElementById("admin-dashboard-view").style.display="none";document.getElementById("admin-login-view").style.display="block";};
 
 document.querySelectorAll(".admin-tab").forEach(b=>b.onclick=()=>{document.querySelectorAll(".admin-tab").forEach(x=>x.classList.remove("active"));document.querySelectorAll(".admin-section").forEach(x=>x.classList.remove("active"));b.classList.add("active");document.querySelector(`[data-section="${b.dataset.tab}"]`).classList.add("active");});
 
@@ -580,8 +549,35 @@ document.querySelectorAll(".del-m").forEach(b=>b.onclick=async()=>{if(confirm("S
   document.getElementById("experience-admin-list").innerHTML=cache.experience.map(x=>`<div class="admin-card"><b>${esc(x.step_number)} — ${esc(x.title)}</b><p>${esc(x.description)}</p><button class="admin-btn ghost edit-e" data-id="${x.id}">Modifier</button><button class="admin-btn danger del-e" data-id="${x.id}">Supprimer</button></div>`).join("");
  document.querySelectorAll(".edit-e").forEach(b=>b.onclick=async()=>{const x=cache.experience.find(v=>v.id===b.dataset.id),title=prompt("Titre",x.title),description=prompt("Description",x.description);if(title!==null&&description!==null){await sb.from("experience_steps").update({title,description}).eq("id",x.id);await loadAdmin();await loadSite();}});
  document.querySelectorAll(".del-e").forEach(b=>b.onclick=async()=>{if(confirm("Supprimer ?")){await sb.from("experience_steps").delete().eq("id",b.dataset.id);await loadAdmin();await loadSite();}});
+ const heroContent=cache.content.find(x=>x.content_key==="hero_image_url");
+ const heroUrl=(heroContent&&heroContent.content_value)||DEFAULT_CONTENT.hero_image_url;
+ const heroInput=document.getElementById("hero-image-url");
+ if(heroInput)heroInput.value=heroUrl;
+ const heroPreview=document.getElementById("hero-image-preview");
+ if(heroPreview)heroPreview.src=heroUrl;
  const c=cache.contact||{};["address","phone","whatsapp","opening_hours","map_embed_url"].forEach((k,i)=>document.getElementById(["contact-address","contact-phone","contact-whatsapp","contact-hours","contact-map"][i]).value=c[k]||"");
 }
+async function saveHeroImage(url){
+ const value=(url||"").trim();
+ if(!value)return;
+ const existing=cache.content.find(x=>x.content_key==="hero_image_url");
+ const payload={content_key:"hero_image_url",content_value:value,label:"Photo du hero",section:"hero"};
+ const r=existing?await sb.from("site_content").update({content_value:value,label:"Photo du hero",section:"hero"}).eq("id",existing.id):await sb.from("site_content").insert(payload);
+ if(r.error)throw r.error;
+ await loadAdmin();await loadSite();msg("hero-msg","Photo du hero enregistrée.");
+}
+async function uploadHeroImage(file){
+ if(!file)return "";
+ if(!file.type.startsWith("image/"))throw new Error("Sélectionnez une image.");
+ if(file.size>8*1024*1024)throw new Error("Image trop volumineuse (8 Mo maximum).");
+ const safe=file.name.toLowerCase().replace(/[^a-z0-9._-]/g,"-");
+ const path="hero-"+Date.now()+"-"+crypto.randomUUID()+"-"+safe;
+ const up=await sb.storage.from("models").upload(path,file,{upsert:false,contentType:file.type});
+ if(up.error)throw up.error;
+ return sb.storage.from("models").getPublicUrl(path).data.publicUrl;
+}
+document.getElementById("hero-save").onclick=async()=>{try{const file=document.getElementById("hero-image-file").files[0];const url=file?await uploadHeroImage(file):document.getElementById("hero-image-url").value;await saveHeroImage(url);document.getElementById("hero-image-file").value="";}catch(e){msg("hero-msg",e.message,true);}};
+
 document.getElementById("svc-add").onclick=async()=>{const title=document.getElementById("svc-title").value.trim(),description=document.getElementById("svc-desc").value.trim(),display_order=+document.getElementById("svc-order").value;if(!title)return;await sb.from("services").insert({title,description,display_order});await loadAdmin();await loadSite();};
 async function uploadModelImage(file){if(!file)return "";if(!file.type.startsWith("image/"))throw new Error("Sélectionnez une image.");if(file.size>8*1024*1024)throw new Error("Image trop volumineuse (8 Mo maximum).");const safe=file.name.toLowerCase().replace(/[^a-z0-9._-]/g,"-");const path=Date.now()+"-"+crypto.randomUUID()+"-"+safe;const up=await sb.storage.from("models").upload(path,file,{upsert:false,contentType:file.type});if(up.error)throw up.error;return sb.storage.from("models").getPublicUrl(path).data.publicUrl;}
 document.getElementById("model-add").onclick=async()=>{try{const title=document.getElementById("model-title").value.trim();if(!title)return msg("model-msg","Nom obligatoire.",true);const image_url=await uploadModelImage(document.getElementById("model-file").files[0]);const r=await sb.from("models").insert({title,category:document.getElementById("model-category").value,image_url,description:document.getElementById("model-desc").value,whatsapp_message:document.getElementById("model-wa").value,display_order:+document.getElementById("model-order").value,is_published:false});if(r.error)throw r.error;msg("model-msg","Modèle enregistré.");document.getElementById("model-file").value="";await loadAdmin();await loadSite();}catch(e){msg("model-msg",e.message,true);}};
@@ -603,12 +599,13 @@ subscribeRealtime();
 </div></div>
 <div id="admin-dashboard-view" style="display:none">
 <div class="admin-toolbar"><div class="admin-tabs">
-<button class="admin-tab active" data-tab="dashboard">Accueil</button><button class="admin-tab" data-tab="content">Textes</button><button class="admin-tab" data-tab="services">Services</button><button class="admin-tab" data-tab="models">Modèles</button><button class="admin-tab" data-tab="experience">Expérience</button><button class="admin-tab" data-tab="contact">Contact</button><button class="admin-tab" data-tab="messages">Messages</button>
+<button class="admin-tab active" data-tab="dashboard">Accueil</button><button class="admin-tab" data-tab="content">Textes</button><button class="admin-tab" data-tab="hero">Hero</button><button class="admin-tab" data-tab="services">Services</button><button class="admin-tab" data-tab="models">Modèles</button><button class="admin-tab" data-tab="experience">Expérience</button><button class="admin-tab" data-tab="contact">Contact</button><button class="admin-tab" data-tab="messages">Messages</button>
 </div><button class="admin-btn ghost" id="admin-logout-btn">Déconnexion</button></div>
 <div class="admin-status" id="admin-status"></div>
 <div class="admin-content">
 <section class="admin-section active" data-section="dashboard"><h3>Tableau de bord</h3><p>Tout est géré depuis ce panneau.</p><div class="admin-grid" id="admin-stats"></div></section>
 <section class="admin-section" data-section="content"><h3>Textes</h3><div id="content-list"></div></section>
+<section class="admin-section" data-section="hero"><h3>Photo du hero</h3><div class="admin-card"><p>Cette photo s'affiche en arrière-plan du grand bandeau d'accueil.</p><img id="hero-image-preview" class="admin-hero-preview" src="https://upload.wikimedia.org/wikipedia/commons/9/95/A_sewing_studio_at_CBCC_and_CIHE.jpg" alt="Aperçu de l'atelier"><div class="admin-field"><label>URL de la photo</label><input id="hero-image-url" type="url" placeholder="https://..."><div class="admin-help">Vous pouvez coller une URL d'image ou choisir une photo depuis votre téléphone.</div></div><div class="admin-field"><label>Nouvelle photo</label><input id="hero-image-file" type="file" accept="image/*"></div><button class="admin-btn gold" id="hero-save">Enregistrer la photo</button><div class="admin-msg" id="hero-msg"></div></div></section>
 <section class="admin-section" data-section="services"><h3>Services</h3>
 <div class="admin-card"><div class="admin-grid"><div class="admin-field"><label>Titre</label><input id="svc-title"></div><div class="admin-field"><label>Ordre</label><input id="svc-order" type="number" value="1"></div></div><div class="admin-field"><label>Description</label><textarea id="svc-desc"></textarea></div><button class="admin-btn gold" id="svc-add">Ajouter</button></div><div id="services-admin-list"></div></section>
 <section class="admin-section" data-section="models"><h3>Modèles</h3>
