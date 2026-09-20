@@ -270,7 +270,7 @@ footer{background:#090807;color:#fff;padding:48px 0 25px;border-top:1px solid va
    <div><span class="eyebrow">Notre savoir-faire</span><h2>L'exigence<br>du sur mesure.</h2></div>
    <p>Une approche précise et personnalisée pour créer, ajuster ou transformer vos vêtements avec le sens du détail.</p>
   </div>
-  <div class="services-grid">
+  <div class="services-grid" id="services-grid">
    <article class="service reveal"><span class="num">01</span><i class="fa-solid fa-person-dress"></i><h3>Couture Dame</h3><p>Robes, jupes, ensembles et tenues traditionnelles ou modernes.</p></article>
    <article class="service reveal"><span class="num">02</span><i class="fa-solid fa-user-tie"></i><h3>Couture Homme</h3><p>Chemises, pantalons, costumes et tenues traditionnelles.</p></article>
    <article class="service reveal"><span class="num">03</span><i class="fa-solid fa-child"></i><h3>Couture Enfant</h3><p>Des vêtements confortables et soignés, adaptés aux enfants.</p></article>
@@ -285,7 +285,7 @@ footer{background:#090807;color:#fff;padding:48px 0 25px;border-top:1px solid va
    <div><span class="eyebrow">Le lookbook</span><h2>Les modèles<br>à découvrir.</h2></div>
    <p>Explorez nos inspirations et contactez directement l'atelier pour discuter du modèle qui vous plaît.</p>
   </div>
-  <div class="gallery">
+  <div class="gallery" id="models-gallery">
 <a class="gallery-item g1 reveal" href="https://wa.me/22965035450?text=Bonjour%20Charly%27s%20Couture%2C%20je%20suis%20int%C3%A9ress%C3%A9%20par%20le%20mod%C3%A8le%201." target="_blank"><div class="fabric fabric-1"></div><span class="gallery-label">Modèle 01</span></a>
       <a class="gallery-item g2 reveal" href="https://wa.me/22965035450?text=Bonjour%20Charly%27s%20Couture%2C%20je%20suis%20int%C3%A9ress%C3%A9%20par%20le%20mod%C3%A8le%202." target="_blank"><div class="fabric fabric-2"></div><span class="gallery-label">Modèle 02</span></a>
       <a class="gallery-item g3 reveal" href="https://wa.me/22965035450?text=Bonjour%20Charly%27s%20Couture%2C%20je%20suis%20int%C3%A9ress%C3%A9%20par%20le%20mod%C3%A8le%203." target="_blank"><div class="fabric fabric-3"></div><span class="gallery-label">Modèle 03</span></a>
@@ -302,7 +302,7 @@ footer{background:#090807;color:#fff;padding:48px 0 25px;border-top:1px solid va
    <div><span class="eyebrow">L'expérience Charly's</span><h2>Du premier échange<br>à la dernière couture.</h2></div>
    <p>Une expérience claire, humaine et entièrement centrée sur votre projet.</p>
   </div>
-  <div class="experience-grid">
+  <div class="experience-grid" id="experience-grid">
    <article class="experience-card reveal"><div class="experience-number">01</div><h3>Échange</h3><p>Présentez votre idée, votre modèle ou votre besoin. Nous échangeons sur le style, les détails et l'occasion.</p></article>
    <article class="experience-card reveal"><div class="experience-number">02</div><h3>Mesures</h3><p>Les mesures et les choix de confection sont définis avec attention pour préparer une pièce parfaitement adaptée.</p></article>
    <article class="experience-card reveal"><div class="experience-number">03</div><h3>Finition</h3><p>Après essayage et ajustements, chaque détail est finalisé pour obtenir une tenue élégante et confortable.</p></article>
@@ -364,8 +364,6 @@ const SUPABASE_URL="https://VOTRE-PROJET.supabase.co";
 const SUPABASE_ANON_KEY="VOTRE_CLE_ANON_OU_PUBLISHABLE";
 const sb = (!SUPABASE_URL.includes("VOTRE-PROJET") && !SUPABASE_ANON_KEY.includes("VOTRE_CLE"))
   ? window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY) : null;
-const ADMIN_USERNAME="coucou";
-const ADMIN_EMAIL="coucou@charlyscouture.local";
 let cache={content:[],services:[],models:[],experience:[],contact:null}, clicks=[];
 
 const header=document.getElementById("header"),nav=document.getElementById("nav");
@@ -381,11 +379,11 @@ const logo=document.getElementById("main-logo");
 logo.addEventListener("click",e=>{
  e.preventDefault();
  const now=Date.now();
- clicks=clicks.filter(t=>now-t<=10000);
+ clicks=clicks.filter(t=>now-t<=5000);
  clicks.push(now);
 
- // 7 clics en moins de 10 secondes = ouverture de l'administration.
- if(clicks.length>=7){
+ // 6 clics en moins de 5 secondes = ouverture de l'administration.
+ if(clicks.length>=6){
    clicks=[];
    openAdmin();
    return;
@@ -471,21 +469,22 @@ async function loadAdmin(){
 function renderAdmin(){
  document.getElementById("admin-stats").innerHTML=[["Textes",cache.content.length],["Services",cache.services.length],["Modèles",cache.models.length],["Étapes",cache.experience.length]].map(x=>`<div class="admin-card"><b>${x[1]}</b><p>${x[0]}</p></div>`).join("");
  document.getElementById("content-list").innerHTML=cache.content.map(x=>`<div class="admin-card"><div class="admin-field"><label>${esc(x.label)}</label><textarea data-id="${x.id}">${esc(x.content_value)}</textarea></div><button class="admin-btn gold save-content" data-id="${x.id}">Enregistrer</button></div>`).join("");
- document.querySelectorAll(".save-content").forEach(b=>b.onclick=async()=>{const v=document.querySelector(`textarea[data-id="${b.dataset.id}"]`).value;await sb.from("site_content").update({content_value:v}).eq("id",b.dataset.id);await loadAdmin();await loadSite();});
+ document.querySelectorAll(".save-content").forEach(b=>b.onclick=async()=>{const v=document.querySelector(`textarea[data-id="${b.dataset.id}"]`).value;const r=await sb.from("site_content").update({content_value:v}).eq("id",b.dataset.id);if(r.error){msg("admin-status",r.error.message,true);return;}msg("admin-status","Texte enregistré.");await loadAdmin();await loadSite();});
  document.getElementById("services-admin-list").innerHTML=cache.services.map(x=>`<div class="admin-card"><b>${esc(x.title)}</b><p>${esc(x.description)}</p><div class="admin-actions"><button class="admin-btn ghost edit-s" data-id="${x.id}">Modifier</button><button class="admin-btn danger del-s" data-id="${x.id}">Supprimer</button></div></div>`).join("");
  document.querySelectorAll(".edit-s").forEach(b=>b.onclick=async()=>{const x=cache.services.find(v=>v.id===b.dataset.id),title=prompt("Titre",x.title),description=prompt("Description",x.description);if(title!==null&&description!==null){await sb.from("services").update({title,description}).eq("id",x.id);await loadAdmin();await loadSite();}});
  document.querySelectorAll(".del-s").forEach(b=>b.onclick=async()=>{if(confirm("Supprimer ?")){await sb.from("services").delete().eq("id",b.dataset.id);await loadAdmin();await loadSite();}});
- document.getElementById("models-admin-list").innerHTML=cache.models.map(x=>`<div class="admin-card">${x.image_url?`<img class="admin-preview" src="${esc(x.image_url)}">`:``}<b>${esc(x.title)}</b><p>${esc(x.category)} • ${x.is_published?"Publié":"Brouillon"}</p><div class="admin-actions"><button class="admin-btn gold pub-m" data-id="${x.id}">${x.is_published?"Dépublier":"Publier"}</button><button class="admin-btn ghost edit-m" data-id="${x.id}">Modifier</button><button class="admin-btn danger del-m" data-id="${x.id}">Supprimer</button></div></div>`).join("");
- document.querySelectorAll(".pub-m").forEach(b=>b.onclick=async()=>{const x=cache.models.find(v=>v.id===b.dataset.id);await sb.from("models").update({is_published:!x.is_published}).eq("id",x.id);await loadAdmin();await loadSite();});
- document.querySelectorAll(".edit-m").forEach(b=>b.onclick=async()=>{const x=cache.models.find(v=>v.id===b.dataset.id);const title=prompt("Nom",x.title),image_url=prompt("URL image",x.image_url||""),description=prompt("Description",x.description);if(title!==null&&image_url!==null&&description!==null){await sb.from("models").update({title,image_url,description}).eq("id",x.id);await loadAdmin();await loadSite();}});
- document.querySelectorAll(".del-m").forEach(b=>b.onclick=async()=>{if(confirm("Supprimer définitivement ?")){await sb.from("models").delete().eq("id",b.dataset.id);await loadAdmin();await loadSite();}});
- document.getElementById("experience-admin-list").innerHTML=cache.experience.map(x=>`<div class="admin-card"><b>${esc(x.step_number)} — ${esc(x.title)}</b><p>${esc(x.description)}</p><button class="admin-btn ghost edit-e" data-id="${x.id}">Modifier</button><button class="admin-btn danger del-e" data-id="${x.id}">Supprimer</button></div>`).join("");
+ document.getElementById("models-admin-list").innerHTML=cache.models.map(x=>`<div class="admin-card">${x.image_url?`<img class="admin-preview" src="${esc(x.image_url)}">`:``}<b>${esc(x.title)}</b><p>${esc(x.category||"")} • ${x.is_published?"Publié":"Brouillon"}</p><div class="admin-actions"><button class="admin-btn gold pub-m" data-id="${x.id}">${x.is_published?"Dépublier":"Publier"}</button><button class="admin-btn ghost edit-m" data-id="${x.id}">Modifier</button><button class="admin-btn danger del-m" data-id="${x.id}">Supprimer</button></div></div>`).join("");
+document.querySelectorAll(".pub-m").forEach(b=>b.onclick=async()=>{const x=cache.models.find(v=>v.id===b.dataset.id);const r=await sb.from("models").update({is_published:!x.is_published}).eq("id",x.id);if(r.error){msg("model-msg",r.error.message,true);return;}await loadAdmin();await loadSite();});
+document.querySelectorAll(".edit-m").forEach(b=>b.onclick=async()=>{const x=cache.models.find(v=>v.id===b.dataset.id);const title=prompt("Nom du modèle",x.title);if(title===null)return;const category=prompt("Catégorie",x.category||"");if(category===null)return;const description=prompt("Description",x.description||"");if(description===null)return;const whatsapp_message=prompt("Message WhatsApp",x.whatsapp_message||"Bonjour Charly's Couture, je suis intéressé par ce modèle.");if(whatsapp_message===null)return;const r=await sb.from("models").update({title,category,description,whatsapp_message}).eq("id",x.id);if(r.error){msg("model-msg",r.error.message,true);return;}await loadAdmin();await loadSite();});
+document.querySelectorAll(".del-m").forEach(b=>b.onclick=async()=>{if(confirm("Supprimer définitivement ce modèle ?")){const r=await sb.from("models").delete().eq("id",b.dataset.id);if(r.error){msg("model-msg",r.error.message,true);return;}await loadAdmin();await loadSite();}});
+  document.getElementById("experience-admin-list").innerHTML=cache.experience.map(x=>`<div class="admin-card"><b>${esc(x.step_number)} — ${esc(x.title)}</b><p>${esc(x.description)}</p><button class="admin-btn ghost edit-e" data-id="${x.id}">Modifier</button><button class="admin-btn danger del-e" data-id="${x.id}">Supprimer</button></div>`).join("");
  document.querySelectorAll(".edit-e").forEach(b=>b.onclick=async()=>{const x=cache.experience.find(v=>v.id===b.dataset.id),title=prompt("Titre",x.title),description=prompt("Description",x.description);if(title!==null&&description!==null){await sb.from("experience_steps").update({title,description}).eq("id",x.id);await loadAdmin();await loadSite();}});
  document.querySelectorAll(".del-e").forEach(b=>b.onclick=async()=>{if(confirm("Supprimer ?")){await sb.from("experience_steps").delete().eq("id",b.dataset.id);await loadAdmin();await loadSite();}});
  const c=cache.contact||{};["address","phone","whatsapp","opening_hours","map_embed_url"].forEach((k,i)=>document.getElementById(["contact-address","contact-phone","contact-whatsapp","contact-hours","contact-map"][i]).value=c[k]||"");
 }
 document.getElementById("svc-add").onclick=async()=>{const title=document.getElementById("svc-title").value.trim(),description=document.getElementById("svc-desc").value.trim(),display_order=+document.getElementById("svc-order").value;if(!title)return;await sb.from("services").insert({title,description,display_order});await loadAdmin();await loadSite();};
-document.getElementById("model-add").onclick=async()=>{const title=document.getElementById("model-title").value.trim();if(!title)return alert("Nom obligatoire.");await sb.from("models").insert({title,category:document.getElementById("model-category").value,image_url:document.getElementById("model-image").value,description:document.getElementById("model-desc").value,whatsapp_message:document.getElementById("model-wa").value,display_order:+document.getElementById("model-order").value,is_published:false});await loadAdmin();await loadSite();};
+async function uploadModelImage(file){if(!file)return "";if(!file.type.startsWith("image/"))throw new Error("Sélectionnez une image.");if(file.size>8*1024*1024)throw new Error("Image trop volumineuse (8 Mo maximum).");const safe=file.name.toLowerCase().replace(/[^a-z0-9._-]/g,"-");const path=Date.now()+"-"+crypto.randomUUID()+"-"+safe;const up=await sb.storage.from("models").upload(path,file,{upsert:false,contentType:file.type});if(up.error)throw up.error;return sb.storage.from("models").getPublicUrl(path).data.publicUrl;}
+document.getElementById("model-add").onclick=async()=>{try{const title=document.getElementById("model-title").value.trim();if(!title)return msg("model-msg","Nom obligatoire.",true);const image_url=await uploadModelImage(document.getElementById("model-file").files[0]);const r=await sb.from("models").insert({title,category:document.getElementById("model-category").value,image_url,description:document.getElementById("model-desc").value,whatsapp_message:document.getElementById("model-wa").value,display_order:+document.getElementById("model-order").value,is_published:false});if(r.error)throw r.error;msg("model-msg","Modèle enregistré.");document.getElementById("model-file").value="";await loadAdmin();await loadSite();}catch(e){msg("model-msg",e.message,true);}};
 document.getElementById("exp-add").onclick=async()=>{const title=document.getElementById("exp-title").value.trim();if(!title)return;await sb.from("experience_steps").insert({step_number:+document.getElementById("exp-number").value,title,description:document.getElementById("exp-desc").value,display_order:+document.getElementById("exp-order").value});await loadAdmin();await loadSite();};
 document.getElementById("contact-save").onclick=async()=>{const payload={id:1,address:document.getElementById("contact-address").value,phone:document.getElementById("contact-phone").value,whatsapp:document.getElementById("contact-whatsapp").value,opening_hours:document.getElementById("contact-hours").value,map_embed_url:document.getElementById("contact-map").value};const r=await sb.from("contact_settings").upsert(payload);msg("contact-msg",r.error?r.error.message:"Enregistré.",!!r.error);await loadAdmin();await loadSite();};
 loadSite();
@@ -497,7 +496,7 @@ loadSite();
 <div id="admin-login-view"><div class="admin-login">
 <h3>Connexion</h3><p>Accès réservé à l'administrateur unique.</p>
 <div class="admin-note">Nom d'utilisateur : <b>coucou</b>. Le mot de passe est vérifié par Supabase Auth et n'est pas stocké dans cette page.</div>
-<div class="admin-field"><label>Nom d'utilisateur</label><input id="admin-username" value="coucou"></div>
+<div class="admin-field"><label>E-mail administrateur</label><input id="admin-email" type="email" autocomplete="username"></div>
 <div class="admin-field"><label>Mot de passe</label><input id="admin-password" type="password"></div>
 <button class="admin-btn gold" id="admin-login-btn">Se connecter</button><div class="admin-msg" id="admin-login-msg"></div>
 </div></div>
@@ -512,7 +511,15 @@ loadSite();
 <section class="admin-section" data-section="services"><h3>Services</h3>
 <div class="admin-card"><div class="admin-grid"><div class="admin-field"><label>Titre</label><input id="svc-title"></div><div class="admin-field"><label>Ordre</label><input id="svc-order" type="number" value="1"></div></div><div class="admin-field"><label>Description</label><textarea id="svc-desc"></textarea></div><button class="admin-btn gold" id="svc-add">Ajouter</button></div><div id="services-admin-list"></div></section>
 <section class="admin-section" data-section="models"><h3>Modèles</h3>
-<div class="admin-card"><div class="admin-grid"><div class="admin-field"><label>Nom</label><input id="model-title"></div><div class="admin-field"><label>Catégorie</label><input id="model-category"></div><div class="admin-field"><label>URL image</label><input id="model-image"></div><div class="admin-field"><label>Ordre</label><input id="model-order" type="number" value="1"></div></div><div class="admin-field"><label>Description</label><textarea id="model-desc"></textarea></div><div class="admin-field"><label>Message WhatsApp</label><input id="model-wa" value="Bonjour Charly's Couture, je suis intéressé par ce modèle."></div><button class="admin-btn gold" id="model-add">Ajouter le modèle</button></div><div id="models-admin-list"></div></section>
+<div class="admin-card"><div class="admin-grid">
+<div class="admin-field"><label>Nom</label><input id="model-title"></div>
+<div class="admin-field"><label>Catégorie</label><input id="model-category"></div>
+<div class="admin-field"><label>Photo</label><input id="model-file" type="file" accept="image/*"></div>
+<div class="admin-field"><label>Ordre</label><input id="model-order" type="number" value="1"></div>
+</div><div class="admin-field"><label>Description</label><textarea id="model-desc"></textarea></div>
+<div class="admin-field"><label>Message WhatsApp</label><input id="model-wa" value="Bonjour Charly's Couture, je suis intéressé par ce modèle."></div>
+<button class="admin-btn gold" id="model-add">Ajouter le modèle</button><div class="admin-msg" id="model-msg"></div></div>
+<div id="models-admin-list"></div></section>
 <section class="admin-section" data-section="experience"><h3>Expérience</h3>
 <div class="admin-card"><div class="admin-grid"><div class="admin-field"><label>Numéro</label><input id="exp-number" type="number" value="1"></div><div class="admin-field"><label>Titre</label><input id="exp-title"></div><div class="admin-field"><label>Ordre</label><input id="exp-order" type="number" value="1"></div></div><div class="admin-field"><label>Description</label><textarea id="exp-desc"></textarea></div><button class="admin-btn gold" id="exp-add">Ajouter</button></div><div id="experience-admin-list"></div></section>
 <section class="admin-section" data-section="contact"><h3>Contact</h3><div class="admin-card">
