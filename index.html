@@ -134,7 +134,7 @@ header.scrolled{background:rgba(11,10,9,.99);padding:10px 0;border-bottom:1px so
 .contact-row{display:grid;grid-template-columns:34px 1fr;gap:10px}
 .contact-row i{color:var(--champagne);margin-top:5px}
 .contact-row strong{font-size:.72rem;text-transform:uppercase;letter-spacing:.12em}
-.contact-row span{color:#71695f;font-size:.85rem}
+.contact-row span{color:#71695f;font-size:.85rem}.contact-link{color:inherit;text-decoration:none;transition:.2s;border-bottom:1px solid transparent}.contact-link:hover,.contact-link:focus{color:#8f6b2f;border-bottom-color:currentColor}.contact-link:active{opacity:.7}
 .map{min-height:480px;box-shadow:var(--shadow);background:#ddd}
 .map iframe{width:100%;height:100%;min-height:480px;border:0;filter:grayscale(1) contrast(.9)}
 
@@ -350,14 +350,15 @@ footer{background:#090807;color:#fff;padding:48px 0 25px;border-top:1px solid va
    <span class="eyebrow">Nous trouver</span>
    <h2>Venez à<br>l'atelier.</h2>
    <div class="contact-list">
-    <div class="contact-row"><i class="fa-solid fa-location-dot"></i><span><strong>Adresse</strong><br>9JPW+MF, Parakou</span></div>
-    <div class="contact-row"><i class="fa-solid fa-phone"></i><span><strong>Téléphone</strong><br>+229 01 65 03 54 50</span></div>
-    <div class="contact-row"><i class="fa-brands fa-whatsapp"></i><span><strong>WhatsApp</strong><br>+229 01 65 03 54 50</span></div>
+    <div class="contact-row"><i class="fa-solid fa-location-dot"></i><span><strong>Adresse</strong><br><a class="contact-link address-link" href="https://www.google.com/maps/search/?api=1&query=9JPW%2BMF%2C%20Parakou%2C%20Benin" target="_blank" rel="noopener">9JPW+MF, Parakou</a></span></div>
+    <div class="contact-row"><i class="fa-solid fa-phone"></i><span><strong>Téléphone</strong><br><a class="contact-link phone-link" href="tel:+2290165035450">+229 01 65 03 54 50</a></span></div>
+    <div class="contact-row"><i class="fa-brands fa-whatsapp"></i><span><strong>WhatsApp</strong><br><a class="contact-link whatsapp-link" href="https://wa.me/2290165035450" target="_blank" rel="noopener">+229 01 65 03 54 50</a></span></div>
+    <div class="contact-row"><i class="fa-solid fa-envelope"></i><span><strong>E-mail professionnel</strong><br><a class="contact-link email-link" href="mailto:charlyscouture@phenixconnect.online">charlyscouture@phenixconnect.online</a></span></div>
     <div class="contact-row"><i class="fa-regular fa-clock"></i><span><strong>Horaires</strong><br>Lundi – Samedi : 8h – 19h</span></div>
    </div>
    <a class="btn btn-gold" href="https://wa.me/2290165035450?text=Bonjour%20Charly%27s%20Couture%2C%20je%20souhaite%20prendre%20rendez-vous.">Prendre rendez-vous <i class="fa-solid fa-arrow-right"></i></a>
   </div>
-  <div class="map reveal"><iframe src="https://www.google.com/maps?q=9JPW%2BMF%20Parakou&output=embed" allowfullscreen loading="lazy"></iframe></div>
+  <div class="map reveal"><iframe title="Localisation précise de Charly's Couture — 9JPW+MF, Parakou" src="https://www.google.com/maps?q=9JPW%2BMF%2C%20Parakou%2C%20Benin&output=embed" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
  </div>
 </section>
 </main>
@@ -381,7 +382,7 @@ const SUPABASE_URL="https://VOTRE-PROJET.supabase.co";
 const SUPABASE_PUBLIC_KEY="VOTRE_SB_PUBLISHABLE_KEY";
 const sb = (!SUPABASE_URL.includes("VOTRE-PROJET") && !SUPABASE_PUBLIC_KEY.includes("VOTRE_SB_PUBLISHABLE_KEY"))
   ? window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLIC_KEY) : null;
-let cache={content:[],services:[],models:[],experience:[],contact:null}, clicks=[];
+let cache={content:[],services:[],models:[],experience:[],contact:null}, clicks=[], refreshTimer=null;
 
 // Contenu par défaut : le site reste complet même avant la première synchronisation Supabase.
 const DEFAULT_CONTENT={
@@ -405,7 +406,7 @@ const DEFAULT_EXPERIENCE=[
  {step_number:2,title:"Mesures",description:"Les mesures et les choix de confection sont définis avec attention pour préparer une pièce adaptée à votre silhouette et à votre demande."},
  {step_number:3,title:"Finition",description:"Après essayage et ajustements, chaque détail est finalisé pour obtenir une tenue élégante, confortable et soigneusement réalisée."}
 ];
-const DEFAULT_CONTACT={address:"9JPW+MF, Parakou",phone:"01 65 03 54 50",whatsapp:"+229 01 65 03 54 50",opening_hours:"Lundi – Samedi : 8h – 19h",map_embed_url:"https://www.google.com/maps?q=9JPW%2BMF%20Parakou&output=embed"};
+const DEFAULT_CONTACT={address:"9JPW+MF, Parakou",phone:"01 65 03 54 50",whatsapp:"+229 01 65 03 54 50",email:"charlyscouture@phenixconnect.online",opening_hours:"Lundi – Samedi : 8h – 19h",map_embed_url:"https://www.google.com/maps?q=9JPW%2BMF%2C%20Parakou%2C%20Benin&output=embed"};
 
 const header=document.getElementById("header"),nav=document.getElementById("nav");
 document.querySelector(".menu").onclick=()=>nav.classList.toggle("open");
@@ -417,24 +418,15 @@ function wa(number,msg){return "https://wa.me/"+(number||"2290165035450").replac
 function observe(){document.querySelectorAll(".reveal").forEach(e=>e.classList.add("show")); if("IntersectionObserver" in window){const o=new IntersectionObserver(es=>es.forEach(e=>e.isIntersecting&&e.target.classList.add("show")),{threshold:.08});document.querySelectorAll(".reveal").forEach(e=>o.observe(e));}}
 
 const logo=document.getElementById("main-logo");
-logo.addEventListener("click",e=>{
+logo.addEventListener("click",function(e){
  e.preventDefault();
+ e.stopPropagation();
  const now=Date.now();
- clicks=clicks.filter(t=>now-t<=5000);
+ clicks=clicks.filter(t=>now-t<5000);
  clicks.push(now);
-
- // 6 clics en moins de 5 secondes = ouverture de l'administration.
- if(clicks.length>=6){
-   clicks=[];
-   openAdmin();
-   return;
- }
-
- // 1 clic = retour à l'accueil, sans rechargement de la page.
- if(clicks.length===1){
-   history.replaceState(null,"","#accueil");
-   window.scrollTo({top:0,behavior:"smooth"});
- }
+ if(refreshTimer){clearTimeout(refreshTimer);refreshTimer=null;}
+ if(clicks.length===6){clicks=[];openAdmin();return;}
+ if(clicks.length===1){refreshTimer=setTimeout(function(){if(clicks.length===1){clicks=[];window.location.reload();}refreshTimer=null;},3000);}
 });
 
 async function loadSite(){
@@ -476,12 +468,13 @@ function renderSite(){
  renderTextDefaults(t);
  const c={...DEFAULT_CONTACT,...(cache.contact||{})},number=c.whatsapp;
  const rows=document.querySelectorAll(".contact-row");
- if(rows[0])rows[0].querySelector("span").innerHTML="<strong>Adresse</strong><br>"+esc(c.address);
- if(rows[1])rows[1].querySelector("span").innerHTML="<strong>Téléphone</strong><br>"+esc(c.phone);
- if(rows[2])rows[2].querySelector("span").innerHTML="<strong>WhatsApp</strong><br>"+esc(number);
- if(rows[3])rows[3].querySelector("span").innerHTML="<strong>Horaires</strong><br>"+esc(c.opening_hours);
- document.querySelector(".map iframe").src=c.map_embed_url;
- document.querySelectorAll('a[href*="wa.me"]').forEach(a=>a.href=wa(number,decodeURIComponent((a.href.split("text=")[1]||"").replace(/\+/g," "))));
+  if(rows[0])rows[0].querySelector("span").innerHTML="<strong>Adresse</strong><br><a class=\"contact-link address-link\" href=\"https://www.google.com/maps/search/?api=1&query=9JPW%2BMF%2C%20Parakou%2C%20Benin\" target=\"_blank\" rel=\"noopener\">"+esc(c.address)+"</a>";
+  if(rows[1])rows[1].querySelector("span").innerHTML="<strong>Téléphone</strong><br><a class=\"contact-link phone-link\" href=\"tel:"+esc(c.phone).replace(/\\D/g,"")+"\">"+esc(c.phone)+"</a>";
+  if(rows[2])rows[2].querySelector("span").innerHTML="<strong>WhatsApp</strong><br><a class=\"contact-link whatsapp-link\" href=\""+wa(number)+"\" target=\"_blank\" rel=\"noopener\">"+esc(number)+"</a>";
+  if(rows[3])rows[3].querySelector("span").innerHTML="<strong>E-mail professionnel</strong><br><a class=\"contact-link email-link\" href=\"mailto:"+esc(c.email||DEFAULT_CONTACT.email)+"\">"+esc(c.email||DEFAULT_CONTACT.email)+"</a>";
+  if(rows[4])rows[4].querySelector("span").innerHTML="<strong>Horaires</strong><br>"+esc(c.opening_hours);
+  document.querySelector(".map iframe").src=c.map_embed_url||DEFAULT_CONTACT.map_embed_url;
+  document.querySelectorAll('a[href*="wa.me"]').forEach(a=>a.href=wa(number,decodeURIComponent((a.href.split("text=")[1]||"").replace(/\+/g," "))));
  const services=cache.services.length?cache.services:DEFAULT_SERVICES;
  document.getElementById("services-grid").innerHTML=services.map((x,i)=>`<article class="service reveal"><span class="num">${String(i+1).padStart(2,"0")}</span><i class="fa-solid ${["fa-person-dress","fa-user-tie","fa-child","fa-scissors"][i%4]}"></i><h3>${esc(x.title)}</h3><p>${esc(x.description)}</p></article>`).join("");
  document.getElementById("models-gallery").innerHTML=cache.models.length?cache.models.map((x,i)=>`<a class="gallery-item reveal g${i%6+1}" href="${wa(number,x.whatsapp_message||"Bonjour Charly's Couture, je suis intéressé par ce modèle.")}" target="_blank">${x.image_url?`<img src="${esc(x.image_url)}" alt="${esc(x.title)}" loading="lazy">`:`<div class="fabric fabric-${i%6+1}"></div>`}<span class="gallery-label">${esc(x.title)}</span></a>`).join(""):`<div style="grid-column:1/-1;color:#aaa;padding:30px;text-align:center">Les modèles de l'atelier seront affichés ici. Les nouvelles photos ajoutées depuis l'administration apparaîtront automatiquement.</div>`;
