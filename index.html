@@ -41,9 +41,7 @@ header.scrolled{background:rgba(11,10,9,.99);padding:10px 0;border-bottom:1px so
 .nav-cta{border:1px solid var(--champagne);color:var(--champagne);padding:11px 17px;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700}
 .menu{display:none;background:none;border:0;color:#fff;font-size:1.35rem}
 
-.hero{min-height:900px;height:100vh;display:flex;align-items:center;position:relative;overflow:hidden;background:
- radial-gradient(circle at 78% 25%,rgba(201,166,107,.16),transparent 22%),
- linear-gradient(115deg,#080706 0%,#16110e 48%,#0a0908 100%);color:#fff}
+.hero{min-height:900px;height:100vh;display:flex;align-items:center;position:relative;overflow:hidden;background-image:linear-gradient(90deg,rgba(5,4,3,.72) 0%,rgba(8,6,5,.48) 42%,rgba(8,6,5,.24) 100%),url(https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=1800&q=88);background-size:cover;background-position:center 35%;color:#fff}
 .hero:before{content:"";position:absolute;width:760px;height:760px;border:1px solid rgba(201,166,107,.22);border-radius:50%;right:-250px;top:-120px;box-shadow:0 0 0 55px rgba(201,166,107,.025),0 0 0 110px rgba(201,166,107,.018)}
 .hero:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.22),transparent 55%,rgba(0,0,0,.3));pointer-events:none}
 .hero-content{position:relative;z-index:2;max-width:800px;padding-top:55px}
@@ -174,7 +172,7 @@ footer{background:#090807;color:#fff;padding:48px 0 25px;border-top:1px solid va
  header{padding:11px 0}
  .logo{font-size:1.7rem}
  .logo small{font-size:.46rem;margin-top:6px}
- .hero{min-height:760px;height:auto;padding:125px 0 90px}
+ .hero{min-height:760px;height:auto;padding:125px 0 90px;background-position:center top}
  .hero-content{padding-top:0}
  .hero-kicker{font-size:.64rem;letter-spacing:.18em}
  .hero h1{font-size:clamp(3rem,14vw,4.3rem);line-height:.9;margin-bottom:24px}
@@ -218,6 +216,7 @@ footer{background:#090807;color:#fff;padding:48px 0 25px;border-top:1px solid va
 .admin-help{color:#71695f;font-size:.82rem;margin:-2px 0 18px}.admin-field{display:grid;gap:6px;margin:12px 0}.admin-field label{font-size:.64rem;text-transform:uppercase;letter-spacing:.12em;font-weight:700;color:#514a43}
 .admin-field input,.admin-field textarea,.admin-field select{width:100%;padding:12px;border:1px solid #d3c5b2;background:#fff;font:inherit;border-radius:2px}.admin-field textarea{min-height:100px;resize:vertical}
 .admin-field input:focus,.admin-field textarea:focus,.admin-field select:focus{outline:2px solid rgba(201,166,107,.25);border-color:#c9a66b}
+.hero-admin-preview{height:280px;border:1px solid #d3c5b2;background:#eee7dc;display:flex;align-items:center;justify-content:center;overflow:hidden}.hero-admin-preview img{width:100%;height:100%;object-fit:cover;display:block}
 .admin-btn{border:0;background:#0b0a09;color:#fff;padding:11px 15px;cursor:pointer;font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;border-radius:2px;transition:.2s}
 .admin-btn:hover{transform:translateY(-1px)}.admin-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
 .admin-btn.gold{background:#c9a66b;color:#17120d}.admin-btn.danger{background:#7c261e}.admin-btn.ghost{background:#fff;color:#171310;border:1px solid #d3c5b2}
@@ -426,6 +425,7 @@ footer{background:#090807;color:#fff;padding:48px 0 25px;border-top:1px solid va
    <div class="admin-toolbar">
     <div class="admin-tabs">
      <button class="admin-tab active" data-tab="dashboard">Tableau de bord</button>
+     <button class="admin-tab" data-tab="hero">Hero</button>
      <button class="admin-tab" data-tab="content">Textes</button>
      <button class="admin-tab" data-tab="services">Services</button>
      <button class="admin-tab" data-tab="models">Galerie</button>
@@ -445,6 +445,20 @@ footer{background:#090807;color:#fff;padding:48px 0 25px;border-top:1px solid va
      <div class="admin-card">
       <strong>Administration prête</strong>
       <p>Les modifications sont enregistrées dans Supabase puis répercutées sur le site après actualisation des données.</p>
+     </div>
+    </section>
+
+    <section class="admin-section" data-section="hero">
+     <h3>Hero</h3>
+     <p class="admin-help">Gérez la grande image d'accueil. L'image est enregistrée dans le bucket <strong>models</strong> et son adresse est conservée dans <strong>site_content</strong>.</p>
+     <div class="admin-card">
+      <div class="admin-grid">
+       <div class="admin-field"><label for="hero-image-url">URL de l'image</label><input id="hero-image-url" type="url" placeholder="https://…"></div>
+       <div class="admin-field"><label for="hero-image-file">Ou téléverser une image</label><input id="hero-image-file" type="file" accept="image/*"></div>
+      </div>
+      <div class="admin-field"><label>Prévisualisation</label><div id="hero-preview" class="hero-admin-preview"><span>Aucune image sélectionnée</span></div></div>
+      <button class="admin-btn gold" id="hero-save">Enregistrer le Hero</button>
+      <div class="admin-msg" id="hero-msg"></div>
      </div>
     </section>
 
@@ -551,6 +565,7 @@ let cache={content:[],services:[],models:[],experience:[],contact:null}, clicks=
 const DEFAULT_CONTENT={
  hero_title:"L'art de la\nbelle couture.",
  hero_text:"Chez Charly's Couture, nous créons, ajustons et restaurons vos vêtements avec soin. Hommes, dames et enfants : chaque pièce est réalisée selon votre style, vos mesures et vos besoins.",
+ hero_image_url:"https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=1800&q=88",
  about_title:"Votre vêtement mérite\nun travail soigné.",
  about_text:"Bienvenue chez Charly's Couture, atelier de couture situé au 9JPW+MF, Parakou.",
  philosophy_quote:"Une belle couture commence par un travail précis.",
@@ -630,6 +645,9 @@ function renderTextDefaults(extra={}){
  const t={...DEFAULT_CONTENT,...extra};
  document.querySelector(".hero h1").innerHTML=esc(t.hero_title).replace(/\n/g,"<br>");
  document.querySelector(".hero-content p").textContent=t.hero_text;
+ const heroImage=t.hero_image_url||'https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=1800&q=88';
+ const heroEl=document.querySelector(".hero");
+ if(heroEl) heroEl.style.backgroundImage="linear-gradient(90deg,rgba(5,4,3,.72) 0%,rgba(8,6,5,.48) 42%,rgba(8,6,5,.24) 100%),url(\""+heroImage.replace(/\"/g,"%22")+"\")";
  document.querySelector(".about-copy h2").innerHTML=esc(t.about_title).replace(/\n/g,"<br>");
  const aboutPs=document.querySelectorAll(".about-copy p");
  if(aboutPs[0])aboutPs[0].innerHTML=esc(t.about_text).replace(/(Charly's Couture|9JPW\+MF, Parakou)/g,"<strong>$1</strong>");
@@ -806,6 +824,12 @@ function renderAdmin(){
  ];
  document.getElementById("admin-stats").innerHTML=stats.map(x=>`<div class="admin-stat"><b>${x[1]}</b><span>${x[0]}</span></div>`).join("");
 
+ const heroContent=cache.content.find(x=>x.content_key==="hero_image_url");
+ const heroUrl=heroContent?.content_value||'https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=1800&q=88';
+ const heroInput=document.getElementById("hero-image-url");
+ if(heroInput)heroInput.value=heroUrl;
+ updateHeroPreview(heroUrl);
+
  document.getElementById("content-list").innerHTML=cache.content.length?cache.content.map(x=>`
   <div class="admin-card">
    <div class="admin-field"><label>${esc(x.label||x.content_key||"Texte")}</label><textarea data-id="${esc(x.id)}">${esc(x.content_value)}</textarea></div>
@@ -868,6 +892,52 @@ function renderAdmin(){
  document.getElementById("contact-hours").value=c.opening_hours||"";
  document.getElementById("contact-map").value=c.map_embed_url||DEFAULT_CONTACT.map_embed_url;
 }
+
+function updateHeroPreview(url){
+ const box=document.getElementById("hero-preview");
+ if(!box)return;
+ if(url)box.innerHTML=`<img src="${esc(url)}" alt="Prévisualisation du Hero">`;
+ else box.innerHTML="<span>Aucune image sélectionnée</span>";
+}
+document.getElementById("hero-image-url").addEventListener("input",e=>updateHeroPreview(e.target.value.trim()));
+document.getElementById("hero-image-file").addEventListener("change",e=>{
+ const f=e.target.files[0];
+ if(f)updateHeroPreview(URL.createObjectURL(f));
+});
+async function saveHeroImage(){
+ const button=document.getElementById("hero-save");
+ const msgBox=document.getElementById("hero-msg");
+ const input=document.getElementById("hero-image-url");
+ const file=document.getElementById("hero-image-file").files[0];
+ try{
+  setBusy(button,true,"Enregistrement…");
+  let url=input.value.trim();
+  if(file){
+   if(!file.type.startsWith("image/"))throw new Error("Sélectionnez une image.");
+   if(file.size>8*1024*1024)throw new Error("Image trop volumineuse (8 Mo maximum).");
+   const safe=file.name.toLowerCase().replace(/[^a-z0-9._-]/g,"-");
+   const path="hero/"+Date.now()+"-"+crypto.randomUUID()+"-"+safe;
+   const up=await sb.storage.from("models").upload(path,file,{upsert:false,contentType:file.type});
+   if(up.error)throw up.error;
+   url=sb.storage.from("models").getPublicUrl(path).data.publicUrl;
+  }
+  if(!url)throw new Error("Ajoutez une URL ou sélectionnez une image.");
+  const existing=cache.content.find(x=>x.content_key==="hero_image_url");
+  let r;
+  if(existing){
+   r=await sb.from("site_content").update({content_value:url}).eq("id",existing.id);
+  }else{
+   r=await sb.from("site_content").insert({section:"hero",content_key:"hero_image_url",content_value:url,label:"Image Hero"});
+  }
+  if(r.error)throw r.error;
+  msgBox.textContent="Image du Hero enregistrée.";msgBox.style.color="#46734c";
+  document.getElementById("hero-image-url").value=url;updateHeroPreview(url);
+  document.getElementById("hero-image-file").value="";
+  await loadAdmin();await loadSite();
+ }catch(err){msgBox.textContent=err.message||"Impossible d'enregistrer l'image.";msgBox.style.color="#a32c20";}
+ finally{setBusy(button,false);}
+}
+document.getElementById("hero-save").onclick=saveHeroImage;
 
 async function saveContent(){
  const id=this.dataset.id,v=document.querySelector(`textarea[data-id="${CSS.escape(id)}"]`)?.value??"";
