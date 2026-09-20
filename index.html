@@ -82,11 +82,11 @@ header.scrolled{background:rgba(11,10,9,.99);padding:10px 0;border-bottom:1px so
 .signature{font-family:var(--serif);font-size:2rem;margin-top:32px;color:#312a23}
 
 .services{background:#f7f2e9}
-.services-grid{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid #d9cdbc}
+.services-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border-top:1px solid #d9cdbc}
 .service{padding:0 0 32px;border-right:1px solid #d9cdbc;transition:.3s;overflow:hidden;position:relative;background:#f8f3ea}
 .service:first-child{border-left:1px solid #d9cdbc}
 .service:hover{background:#fff;transform:translateY(-5px);box-shadow:0 20px 45px rgba(0,0,0,.06)}
-.service-photo{height:250px;position:relative;overflow:hidden;background:#ddd}.service-photo img{width:100%;height:100%;object-fit:cover;display:block;transition:.6s}.service:hover .service-photo img{transform:scale(1.05)}.service-photo:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 45%,rgba(0,0,0,.38))}.service-body{padding:28px 25px 0}.service .num{display:block;margin-bottom:18px}
+.service-photo{height:260px;position:relative;overflow:hidden;background:#ddd}.service-photo img{width:100%;height:100%;object-fit:cover;display:block;transition:.6s}.service:hover .service-photo img{transform:scale(1.05)}.service-photo:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 45%,rgba(0,0,0,.38))}.service-body{padding:28px 25px 0}.service .num{display:block;margin-bottom:18px}
 .service .num{font-family:var(--serif);font-size:1.3rem;color:var(--champagne)}
 .service i{display:block;font-size:1.45rem;color:var(--champagne);margin:0 0 18px}
 .service h3{font-family:var(--serif);font-size:2rem;font-weight:600;margin-bottom:10px}
@@ -155,7 +155,7 @@ footer{background:#090807;color:#fff;padding:48px 0 25px;border-top:1px solid va
  .nav.open .nav-links{display:flex;position:absolute;top:72px;left:5%;right:5%;background:#12100e;padding:25px;flex-direction:column;gap:18px;border:1px solid var(--line)}
  .hero{min-height:760px} .hero-meta{display:none}
  .intro-grid,.about-grid,.contact-grid{grid-template-columns:1fr;gap:50px}
- .about-visual{min-height:500px} .services-grid{grid-template-columns:repeat(2,1fr)}
+ .about-visual{min-height:500px} .services-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
  .service:nth-child(3){border-left:1px solid #d9cdbc}
  .experience-grid{grid-template-columns:1fr}
  .gallery{grid-template-columns:repeat(2,1fr);grid-auto-rows:210px}
@@ -180,12 +180,12 @@ footer{background:#090807;color:#fff;padding:48px 0 25px;border-top:1px solid va
  .section-head{display:block;margin-bottom:38px} .section-head h2{font-size:clamp(2.7rem,12vw,4rem);line-height:.95} .section-head p{margin-top:22px;line-height:1.7}
  .intro h2{font-size:clamp(2.8rem,12vw,4rem)}
  .about-copy h2{font-size:clamp(2.7rem,11vw,4rem)}
- .service{padding:0 0 30px}.service-photo{height:230px}.service-body{padding:24px 22px 0}
- .service h3{font-size:1.8rem}
+ .service{padding:0 0 24px}.service-photo{height:185px}.service-body{padding:20px 18px 0}
+ .service h3{font-size:1.45rem;line-height:1.05}
  .experience-card{padding:38px 26px}
  .quote{padding:95px 0}
- .services-grid{grid-template-columns:1fr} .service,.service:first-child,.service:nth-child(3){border-left:1px solid #d9cdbc}
- .gallery{grid-template-columns:1fr;grid-auto-rows:330px}
+ .services-grid{grid-template-columns:repeat(2,minmax(0,1fr))} .service,.service:first-child,.service:nth-child(3){border-left:1px solid #d9cdbc}
+ .gallery{grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:190px}
  .about-visual{min-height:430px} .about-badge{right:14px}
  .footer-links{flex-direction:column;gap:12px}
 }
@@ -448,7 +448,8 @@ async function loadSite(){
 function fallback(){
  const s=DEFAULT_SERVICES.map(x=>[x.title,x.description]);
  const e=DEFAULT_EXPERIENCE;
- document.getElementById("services-grid").innerHTML=s.map((x,i)=>`<article class="service reveal"><span class="num">0${i+1}</span><i class="fa-solid ${["fa-person-dress","fa-user-tie","fa-child","fa-scissors"][i%4]}"></i><h3>${x[0]}</h3><p>${x[1]}</p></article>`).join("");
+ const servicePhotos=["https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=900&q=85","https://images.unsplash.com/photo-1617137968427-85924c800a22?auto=format&fit=crop&w=900&q=85","https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?auto=format&fit=crop&w=900&q=85","https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=900&q=85"];
+ document.getElementById("services-grid").innerHTML=s.map((x,i)=>`<article class="service reveal"><div class="service-photo"><img src="${servicePhotos[i%servicePhotos.length]}" alt="${esc(x[0])}" loading="lazy"></div><div class="service-body"><span class="num">0${i+1}</span><i class="fa-solid ${["fa-person-dress","fa-user-tie","fa-child","fa-scissors"][i%4]}"></i><h3>${esc(x[0])}</h3><p>${esc(x[1])}</p></div></article>`).join("");
  document.getElementById("models-gallery").innerHTML=`<div style="grid-column:1/-1;color:#aaa;padding:30px;text-align:center">Les modèles de l'atelier seront affichés ici. Les nouvelles photos ajoutées depuis l'administration apparaîtront automatiquement.</div>`;
  document.getElementById("experience-grid").innerHTML=e.map((x,i)=>`<article class="experience-card reveal"><div class="experience-number">0${x.step_number}</div><h3>${x.title}</h3><p>${x.description}</p></article>`).join("");
  renderTextDefaults(DEFAULT_CONTENT);
