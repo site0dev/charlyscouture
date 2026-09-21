@@ -600,7 +600,7 @@ function resetLogoClicks(){
  clicks=[];
  if(refreshTimer){clearTimeout(refreshTimer);refreshTimer=null;}
 }
-async function handleLogoClick(e){
+function handleLogoClick(e){
  e.preventDefault(); e.stopPropagation();
  const now=Date.now();
  clicks=clicks.filter(t=>now-t<=CLICK_WINDOW);
@@ -608,7 +608,7 @@ async function handleLogoClick(e){
  if(refreshTimer){clearTimeout(refreshTimer);refreshTimer=null;}
  if(clicks.length>=6){
    resetLogoClicks();
-   await openAdmin();
+   openAdmin();
    return;
  }
  refreshTimer=setTimeout(()=>{
@@ -616,7 +616,7 @@ async function handleLogoClick(e){
    window.location.reload();
  },REFRESH_DELAY);
 }
-logo.addEventListener("pointerup",handleLogoClick,{passive:false});
+logo.addEventListener("click",handleLogoClick);
 
 async function loadSite(){
  if(!sb){fallback();return;}
@@ -719,27 +719,35 @@ function closeAdmin(){
  document.body.style.overflow="";
  closeEditor();
 }
-async function openAdmin(){
+
+// Ouvre l'administration immédiatement. La vérification de session se fait ensuite.
+function openAdmin(){
  overlay.classList.add("open");
  overlay.setAttribute("aria-hidden","false");
  document.body.style.overflow="hidden";
- showAdminLogin();
  adminStatus("");
- if(!sb){msg("admin-login-msg","Supabase n'est pas configuré dans ce fichier.",true);return;}
+ if(!sb){showAdminLogin();msg("admin-login-msg","Supabase n'est pas configuré dans ce fichier.",true);return;}
+ showAdminLogin();
+ void restoreAdminSession();
+}
+async function restoreAdminSession(){
  try{
-  const {data:{session}}=await sb.auth.getSession();
-  if(!session){adminSession=null;adminVerified=false;return;}
-  adminSession=session;
-  const {data,error}=await sb.from("admins").select("user_id").eq("user_id",session.user.id).maybeSingle();
+  const {data:{session},error}=await sb.auth.getSession();
   if(error)throw error;
-  if(!data){adminVerified=false;msg("admin-login-msg","Cette session n'a pas les droits administrateur.",true);return;}
+  if(!session){adminSession=null;adminVerified=false;return;}
+  const {data,error:adminError}=await sb.from("admins").select("user_id").eq("user_id",session.user.id).maybeSingle();
+  if(adminError)throw adminError;
+  if(!data){adminSession=null;adminVerified=false;msg("admin-login-msg","Cette session n'a pas les droits administrateur.",true);return;}
+  adminSession=session;
   adminVerified=true;
   showAdminDashboard();
   void loadAdmin(true);
  }catch(err){
   console.error("Ouverture administration:",err);
+  adminSession=null;
   adminVerified=false;
-  msg("admin-login-msg","Impossible de vérifier la session.",true);
+  showAdminLogin();
+  msg("admin-login-msg","Impossible de vérifier la session. Vous pouvez vous reconnecter.",true);
  }
 }
 document.getElementById("admin-close").onclick=closeAdmin;
@@ -747,10 +755,12 @@ overlay.addEventListener("click",e=>{if(e.target===overlay)closeAdmin();});
 
 async function isAdmin(){
  if(!sb)return false;
+ if(adminVerified&&adminSession)return true;
  const {data:{session},error:sessionError}=await sb.auth.getSession();
  if(sessionError||!session)return false;
  const {data,error}=await sb.from("admins").select("user_id").eq("user_id",session.user.id).maybeSingle();
  if(error){console.error("Vérification admin:",error);return false;}
+ if(data){adminSession=session;adminVerified=true;}
  return !!data;
 }
 
@@ -766,21 +776,28 @@ document.getElementById("admin-login-btn").onclick=async()=>{
   if(error){msg("admin-login-msg",error.message,true);return;}
   adminSession=data.session||null;
   if(!adminSession){msg("admin-login-msg","Session de connexion introuvable.",true);return;}
+
+  // Affichage immédiat : l'administration s'ouvre sans attendre le chargement des données.
+  showAdminDashboard();
+  msg("admin-login-msg","");
+
+  // Vérification des droits en arrière-plan.
   const {data:admin,error:adminError}=await sb.from("admins").select("user_id").eq("user_id",adminSession.user.id).maybeSingle();
   if(adminError)throw adminError;
   if(!admin){
    adminVerified=false;
+   adminSession=null;
+   showAdminLogin();
    await sb.auth.signOut();
    msg("admin-login-msg","Compte authentifié mais non autorisé.",true);
    return;
   }
   adminVerified=true;
-  msg("admin-login-msg","");
-  showAdminDashboard();
   void loadAdmin(true);
  }catch(err){
-  console.error(err);
+  console.error("Connexion administration:",err);
   adminVerified=false;
+  showAdminLogin();
   msg("admin-login-msg",err.message||"Une erreur est survenue pendant la connexion.",true);
  }finally{setBusy(button,false);}
 };
@@ -790,14 +807,13 @@ document.getElementById("admin-eye").onclick=()=>{
  input.type=input.type==="password"?"text":"password";
  document.getElementById("admin-eye").innerHTML=input.type==="password"?'<i class="fa-solid fa-eye"></i>':'<i class="fa-solid fa-eye-slash"></i>';
 };
-document.getElementById("admin-logout-btn").onclick=async()=>{
- if(!sb)return;
- const b=document.getElementById("admin-logout-btn");
+document.getElementById("admin-logout-btn").onclick=()=>{
+ if(!sb){closeAdmin();return;}
+ // Fermeture immédiate, puis suppression de session en arrière-plan.
  adminSession=null;
  adminVerified=false;
  closeAdmin();
- try{await sb.auth.signOut();}catch(err){console.error("Déconnexion:",err);}
- setBusy(b,false);
+ void sb.auth.signOut().catch(err=>console.error("Déconnexion:",err));
 };
 
 document.querySelectorAll(".admin-tab").forEach(b=>b.addEventListener("click",()=>{
@@ -809,12 +825,9 @@ document.querySelectorAll(".admin-tab").forEach(b=>b.addEventListener("click",()
  adminStatus("");
 }));
 
-async function loadAdmin(skipAuthCheck=false){
+async function loadAdmin(){
  if(adminBusy)return;
- if(!skipAuthCheck && !adminVerified){
-  if(!(await isAdmin())){showAdminLogin();return;}
-  adminVerified=true;
- }
+ if(!(await isAdmin())){showAdminLogin();return;}
  adminBusy=true;
  try{
   const [c,s,m,e,ct]=await Promise.all([
@@ -1156,12 +1169,8 @@ document.querySelector('.admin-tab[data-tab="messages"]').addEventListener("clic
 
 if(sb){
  sb.auth.onAuthStateChange((event,session)=>{
-  if(event==="SIGNED_OUT"){
-   adminSession=null;
-   adminVerified=false;
-   showAdminLogin();
-  }
-  if(event==="SIGNED_IN"&&session)adminSession=session;
+  if(event==="SIGNED_OUT"){showAdminLogin();}
+  if(event==="SIGNED_IN"&&session)showAdminDashboard();
  });
 }
 
