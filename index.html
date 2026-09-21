@@ -316,7 +316,7 @@ footer{background:#090807;color:#fff;padding:48px 0 25px;border-top:1px solid va
    <article class="service reveal"><div class="service-photo"><img src="https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=900&q=85" alt="Création couture dame" loading="lazy"></div><div class="service-body"><span class="num">01</span><i class="fa-solid fa-person-dress"></i><h3>Couture Dame</h3><p>Robes, jupes, ensembles et tenues traditionnelles ou modernes.</p></div></article>
    <article class="service reveal"><div class="service-photo"><img src="https://images.unsplash.com/photo-1617137968427-85924c800a22?auto=format&fit=crop&w=900&q=85" alt="Création couture homme" loading="lazy"></div><div class="service-body"><span class="num">02</span><i class="fa-solid fa-user-tie"></i><h3>Couture Homme</h3><p>Chemises, pantalons, costumes et tenues traditionnelles.</p></div></article>
    <article class="service reveal"><div class="service-photo"><img src="https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?auto=format&fit=crop&w=900&q=85" alt="Création couture enfant" loading="lazy"></div><div class="service-body"><span class="num">03</span><i class="fa-solid fa-child"></i><h3>Couture Enfant</h3><p>Des vêtements confortables et soignés, adaptés aux enfants.</p></div></article>
-   <article class="service reveal"><div class="service-photo"><img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=900&q=85" alt="Retouches de vêtements" loading="lazy"></div><div class="service-body"><span class="num">04</span><i class="fa-solid fa-scissors"></i><h3>Retouches</h3><p>Ajustement, réparation et transformation pour prolonger la vie de vos vêtements.</p></div></article>
+   <article class="service reveal"><div class="service-photo"><img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=900&q=85" alt="Retouches de vêtements" loading="lazy"></div><div class="service-body"><span class="num">04</span><i class="fa-solid fa-scissors"></i><h3>Retouches et réfections</h3><p>Ajustement, réparation, transformation et réfection pour prolonger la vie de vos vêtements.</p></div></article>
   </div>
  </div>
 </section>
@@ -555,10 +555,9 @@ footer{background:#090807;color:#fff;padding:48px 0 25px;border-top:1px solid va
 
 
 <script>
-const SUPABASE_URL="https://VOTRE-PROJET.supabase.co";
-const SUPABASE_PUBLIC_KEY="VOTRE_SB_PUBLISHABLE_KEY";
-const sb = (!SUPABASE_URL.includes("VOTRE-PROJET") && !SUPABASE_PUBLIC_KEY.includes("VOTRE_SB_PUBLISHABLE_KEY"))
-  ? window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLIC_KEY) : null;
+const SUPABASE_URL="https://hjtmegeqorqhensqpcpn.supabase.co";
+const SUPABASE_PUBLIC_KEY="sb_publishable_jZ8P8w_GRc4IptXIB0_SMQ_dBLvSAJj";
+const sb = window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLIC_KEY);
 let cache={content:[],services:[],models:[],experience:[],contact:null}, clicks=[], refreshTimer=null;
 
 // Contenu par défaut : le site reste complet même avant la première synchronisation Supabase.
