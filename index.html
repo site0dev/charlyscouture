@@ -440,7 +440,7 @@ footer{background:#090807;color:#fff;padding:48px 0 25px;border-top:1px solid va
    <div class="admin-content">
     <section class="admin-section active" data-section="dashboard">
      <h3>Tableau de bord</h3>
-     <p class="admin-help">Gérez le contenu visible du site sans modifier directement le code.</p>
+     <p class="admin-help">Aucune partie éditable du site n'est volontairement cachée : textes, boutons, images, services, galerie, expérience, contact et messages se gèrent depuis ce panneau.</p>
      <div class="admin-stats" id="admin-stats"></div>
      <div class="admin-card">
       <strong>Administration prête</strong>
@@ -463,8 +463,8 @@ footer{background:#090807;color:#fff;padding:48px 0 25px;border-top:1px solid va
     </section>
 
     <section class="admin-section" data-section="content">
-     <h3>Textes du site</h3>
-     <p class="admin-help">Modifiez les textes existants puis cliquez sur Enregistrer. Les champs sont liés à la table <strong>site_content</strong>.</p>
+     <h3>Tout le contenu visiteur</h3>
+     <p class="admin-help">Tous les textes affichés sur le site — menus, titres, paragraphes, boutons, messages et pied de page — sont modifiables ici.</p>
      <div id="content-list"></div>
     </section>
 
@@ -477,6 +477,8 @@ footer{background:#090807;color:#fff;padding:48px 0 25px;border-top:1px solid va
        <div class="admin-field"><label for="svc-order">Ordre</label><input id="svc-order" type="number" min="1" value="1"></div>
       </div>
       <div class="admin-field"><label for="svc-desc">Description</label><textarea id="svc-desc"></textarea></div>
+      <div class="admin-field"><label for="svc-image">Photo du service</label><input id="svc-image" type="file" accept="image/*"></div>
+      <div class="admin-field"><label for="svc-image-url">URL de la photo (facultatif)</label><input id="svc-image-url" type="url" placeholder="https://…"></div>
       <button class="admin-btn gold" id="svc-add">Ajouter le service</button>
       <div class="admin-msg" id="svc-msg"></div>
      </div>
@@ -525,6 +527,7 @@ footer{background:#090807;color:#fff;padding:48px 0 25px;border-top:1px solid va
       <div class="admin-grid">
        <div class="admin-field"><label for="contact-phone">Téléphone</label><input id="contact-phone"></div>
        <div class="admin-field"><label for="contact-whatsapp">WhatsApp</label><input id="contact-whatsapp"></div>
+       <div class="admin-field"><label for="contact-email">E-mail professionnel</label><input id="contact-email" type="email"></div>
       </div>
       <div class="admin-field"><label for="contact-hours">Horaires</label><input id="contact-hours"></div>
       <div class="admin-field"><label for="contact-map">Google Maps — URL d'intégration</label><input id="contact-map"></div>
@@ -564,15 +567,47 @@ let cache={content:[],services:[],models:[],experience:[],contact:null}, clicks=
 
 // Contenu par défaut : le site reste complet même avant la première synchronisation Supabase.
 const DEFAULT_CONTENT={
- hero_title:"L'art de la\nbelle couture.",
+ brand_name:"Charly's Couture",
+ brand_tagline:"Atelier • Sur mesure",
+ nav_home:"Accueil", nav_about:"La Maison", nav_services:"Savoir-faire", nav_gallery:"Collection", nav_experience:"Expérience", nav_contact:"Contact",
+ hero_eyebrow:"Atelier de couture", hero_title:"L'art de la\\nbelle couture.",
  hero_text:"Chez Charly's Couture, nous créons, ajustons et restaurons vos vêtements avec soin. Hommes, dames et enfants : chaque pièce est réalisée selon votre style, vos mesures et vos besoins.",
  hero_image_url:"https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=1800&q=88",
- about_title:"Votre vêtement mérite\nun travail soigné.",
+ hero_cta_gallery:"Découvrir la collection", hero_cta_quote:"Demander un devis",
+ hero_meta_1_title:"Hommes · Dames · Enfants", hero_meta_1_text:"Création & confection sur mesure",
+ hero_meta_2_title:"Retouches & réfections", hero_meta_2_text:"Donnez une nouvelle vie à vos vêtements", hero_meta_scroll:"Faire défiler",
+ hero_whatsapp_message:"Bonjour Charly's Couture, je souhaite un devis.",
+ intro_eyebrow:"Notre atelier", intro_title:"Des vêtements pensés\\npour vous.",
+ intro_text_1:"Chez Charly's Couture, chaque projet commence par votre besoin : une nouvelle tenue, une retouche précise ou une réfection complète. Nous prenons le temps de comprendre votre demande pour obtenir un résultat propre et adapté.",
+ intro_text_2:"Notre atelier accompagne les hommes, les dames et les enfants, avec une attention particulière portée aux mesures, aux finitions et au confort.",
+ about_eyebrow:"La Maison", about_title:"Votre vêtement mérite\\nun travail soigné.",
  about_text:"Bienvenue chez Charly's Couture, atelier de couture situé au 9JPW+MF, Parakou.",
- philosophy_quote:"Une belle couture commence par un travail précis.",
- contact_title:"Venez à\nl'atelier.",
- footer_text:"Atelier de couture à Parakou. Créations, confection, retouches et réfection."
+ about_text_2:"Nous réalisons des vêtements pour hommes, dames et enfants, ainsi que des travaux de retouches et de réfections. Chaque intervention est réalisée avec soin pour préserver la coupe, le confort et l'aspect du vêtement.",
+ about_text_3:"Création d'une tenue, ajustement d'une pièce, réparation ou réfection : nous vous accompagnons du premier échange jusqu'à la finition.",
+ about_badge_title:"Sur mesure", about_badge_text:"La précision dans chaque détail.", about_image_url:"",
+ services_eyebrow:"Notre savoir-faire", services_title:"Créer, ajuster\\net restaurer.", services_text:"Couture pour hommes, dames et enfants, retouches et réfections : un savoir-faire adapté à chaque vêtement et à chaque demande.",
+ gallery_eyebrow:"La galerie", gallery_title:"Nos créations\\nà découvrir.", gallery_text:"Découvrez les créations présentées par l'atelier. Pour une création personnalisée ou une demande particulière, contactez-nous directement sur WhatsApp.",
+ experience_eyebrow:"L'expérience Charly's", experience_title:"Du premier échange\\nà la dernière couture.", experience_text:"Une méthode simple, avec une attention constante portée à votre demande et aux finitions.",
+ quote_eyebrow:"La philosophie de la Maison", philosophy_quote:"Une belle couture commence par un travail précis.", quote_author:"Charly's Couture",
+ cta_eyebrow:"Votre prochaine tenue", cta_title:"Votre projet mérite\\nune belle finition.", cta_text:"Écrivez-nous sur WhatsApp pour présenter votre modèle, demander un devis ou prendre rendez-vous à l'atelier.", cta_button:"Écrire à la Maison", cta_whatsapp_message:"Bonjour Charly's Couture, je souhaite discuter d'une tenue.",
+ contact_eyebrow:"Nous trouver", contact_title:"Venez à\\nl'atelier.",
+ footer_text:"Atelier de couture à Parakou. Créations, confection, retouches et réfection.", footer_copyright:"© 2026 Charly's Couture — Tous droits réservés."
 };
+const EDITABLE_CONTENT=[
+ ["brand_name","Identité — Nom","brand"],["brand_tagline","Identité — Sous-titre","brand"],
+ ["nav_home","Menu — Accueil","navigation"],["nav_about","Menu — La Maison","navigation"],["nav_services","Menu — Savoir-faire","navigation"],["nav_gallery","Menu — Collection","navigation"],["nav_experience","Menu — Expérience","navigation"],["nav_contact","Menu — Contact","navigation"],
+ ["hero_eyebrow","Accueil — Petit titre","hero"],["hero_title","Accueil — Grand titre","hero"],["hero_text","Accueil — Texte","hero"],["hero_cta_gallery","Accueil — Bouton collection","hero"],["hero_cta_quote","Accueil — Bouton devis","hero"],["hero_meta_1_title","Accueil — Bandeau 1 titre","hero"],["hero_meta_1_text","Accueil — Bandeau 1 texte","hero"],["hero_meta_2_title","Accueil — Bandeau 2 titre","hero"],["hero_meta_2_text","Accueil — Bandeau 2 texte","hero"],["hero_meta_scroll","Accueil — Défilement","hero"],["hero_whatsapp_message","Accueil — Message WhatsApp","hero"],
+ ["intro_eyebrow","Présentation — Petit titre","intro"],["intro_title","Présentation — Titre","intro"],["intro_text_1","Présentation — Paragraphe 1","intro"],["intro_text_2","Présentation — Paragraphe 2","intro"],
+ ["about_eyebrow","Maison — Petit titre","about"],["about_title","Maison — Titre","about"],["about_text","Maison — Paragraphe 1","about"],["about_text_2","Maison — Paragraphe 2","about"],["about_text_3","Maison — Paragraphe 3","about"],["about_badge_title","Maison — Badge titre","about"],["about_badge_text","Maison — Badge texte","about"],["about_image_url","Maison — Photo URL","about"],
+ ["services_eyebrow","Services — Petit titre","services"],["services_title","Services — Titre","services"],["services_text","Services — Texte","services"],
+ ["gallery_eyebrow","Galerie — Petit titre","gallery"],["gallery_title","Galerie — Titre","gallery"],["gallery_text","Galerie — Texte","gallery"],
+ ["experience_eyebrow","Expérience — Petit titre","experience"],["experience_title","Expérience — Titre","experience"],["experience_text","Expérience — Texte","experience"],
+ ["quote_eyebrow","Philosophie — Petit titre","quote"],["philosophy_quote","Philosophie — Citation","quote"],["quote_author","Philosophie — Auteur","quote"],
+ ["cta_eyebrow","Appel à l'action — Petit titre","cta"],["cta_title","Appel à l'action — Titre","cta"],["cta_text","Appel à l'action — Texte","cta"],["cta_button","Appel à l'action — Bouton","cta"],["cta_whatsapp_message","Appel à l'action — Message WhatsApp","cta"],
+ ["contact_eyebrow","Contact — Petit titre","contact"],["contact_title","Contact — Titre","contact"],
+ ["footer_text","Pied de page — Texte","footer"],["footer_copyright","Pied de page — Copyright","footer"]
+];
+
 const DEFAULT_SERVICES=[
  {title:"Couture Dame",description:"Robes, jupes, ensembles et tenues traditionnelles ou modernes."},
  {title:"Couture Homme",description:"Chemises, pantalons, costumes et tenues traditionnelles."},
@@ -642,19 +677,24 @@ function fallback(){
  renderTextDefaults(DEFAULT_CONTENT);
  observe();
 }
+function contentValue(key,fallback=""){const row=cache.content.find(x=>x.content_key===key);return row?.content_value ?? DEFAULT_CONTENT[key] ?? fallback;}
 function renderTextDefaults(extra={}){
  const t={...DEFAULT_CONTENT,...extra};
- document.querySelector(".hero h1").innerHTML=esc(t.hero_title).replace(/\n/g,"<br>");
- document.querySelector(".hero-content p").textContent=t.hero_text;
- const heroImage=t.hero_image_url||'https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=1800&q=88';
- const heroEl=document.querySelector(".hero");
- if(heroEl) heroEl.style.backgroundImage="linear-gradient(90deg,rgba(5,4,3,.72) 0%,rgba(8,6,5,.48) 42%,rgba(8,6,5,.24) 100%),url(\""+heroImage.replace(/\"/g,"%22")+"\")";
- document.querySelector(".about-copy h2").innerHTML=esc(t.about_title).replace(/\n/g,"<br>");
- const aboutPs=document.querySelectorAll(".about-copy p");
- if(aboutPs[0])aboutPs[0].innerHTML=esc(t.about_text).replace(/(Charly's Couture|9JPW\+MF, Parakou)/g,"<strong>$1</strong>");
- document.querySelector(".quote blockquote").textContent="« "+t.philosophy_quote+" »";
- document.querySelector(".contact h2").innerHTML=esc(t.contact_title).replace(/\n/g,"<br>");
- document.querySelector(".footer-tag").textContent=t.footer_text;
+ const txt=(sel,key)=>{const e=document.querySelector(sel);if(e)e.textContent=t[key]??"";};
+ const br=(sel,key)=>{const e=document.querySelector(sel);if(e)e.innerHTML=esc(t[key]??"").replace(/\\n/g,"<br>");};
+ txt(".logo","brand_name"); const lg=document.querySelector(".logo small");if(lg)lg.textContent=t.brand_tagline;
+ [[".nav-links a:nth-child(1)","nav_home"],[".nav-links a:nth-child(2)","nav_about"],[".nav-links a:nth-child(3)","nav_services"],[".nav-links a:nth-child(4)","nav_gallery"],[".nav-links a:nth-child(5)","nav_experience"],[".nav-links a:nth-child(6)","nav_contact"],[".footer-links a:nth-child(1)","nav_about"],[".footer-links a:nth-child(2)","nav_services"],[".footer-links a:nth-child(3)","nav_gallery"],[".footer-links a:nth-child(4)","nav_contact"]].forEach(x=>txt(x[0],x[1]));
+ txt(".hero .eyebrow","hero_eyebrow");br(".hero h1","hero_title");txt(".hero-content p","hero_text");txt(".hero-actions .btn-gold","hero_cta_gallery");txt(".hero-actions .btn-line","hero_cta_quote");
+ const hm=document.querySelectorAll(".hero-meta > div");if(hm[0]){hm[0].querySelector("strong").textContent=t.hero_meta_1_title;hm[0].lastChild.textContent=t.hero_meta_1_text;}if(hm[1]){hm[1].querySelector("strong").textContent=t.hero_meta_2_title;hm[1].lastChild.textContent=t.hero_meta_2_text;}if(hm[2]&&hm[2].querySelector("strong"))hm[2].querySelector("strong").textContent=t.hero_meta_scroll;
+ const heroImage=t.hero_image_url||'https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=1800&q=88';const heroEl=document.querySelector(".hero");if(heroEl)heroEl.style.backgroundImage='linear-gradient(90deg,rgba(5,4,3,.72) 0%,rgba(8,6,5,.48) 42%,rgba(8,6,5,.24) 100%),url("'+heroImage.replace(/"/g,"%22")+'")';
+ txt(".intro .eyebrow","intro_eyebrow");br(".intro h2","intro_title");const ip=document.querySelectorAll(".intro-copy p");if(ip[0])ip[0].textContent=t.intro_text_1;if(ip[1])ip[1].textContent=t.intro_text_2;
+ txt(".about-copy .eyebrow","about_eyebrow");br(".about-copy h2","about_title");const ap=document.querySelectorAll(".about-copy p");[t.about_text,t.about_text_2,t.about_text_3].forEach((v,i)=>{if(ap[i])ap[i].textContent=v;});const badge=document.querySelector(".about-badge");if(badge){badge.querySelector("strong").textContent=t.about_badge_title;badge.querySelector("span").textContent=t.about_badge_text;}const av=document.querySelector(".about-visual");if(av)av.style.backgroundImage=t.about_image_url?'linear-gradient(135deg,rgba(201,166,107,.18),rgba(201,166,107,.05) 45%),url("'+t.about_image_url.replace(/"/g,"%22")+'")':"";
+ txt(".services .section-head .eyebrow","services_eyebrow");br(".services .section-head h2","services_title");txt(".services .section-head p","services_text");
+ txt(".lookbook .section-head .eyebrow","gallery_eyebrow");br(".lookbook .section-head h2","gallery_title");txt(".lookbook .section-head p","gallery_text");
+ txt(".experience .section-head .eyebrow","experience_eyebrow");br(".experience .section-head h2","experience_title");txt(".experience .section-head p","experience_text");
+ txt(".quote .eyebrow","quote_eyebrow");txt(".quote blockquote","philosophy_quote");txt(".quote cite","quote_author");
+ txt(".cta .eyebrow","cta_eyebrow");br(".cta h2","cta_title");txt(".cta p","cta_text");txt(".cta .btn-dark","cta_button");
+ txt(".contact .eyebrow","contact_eyebrow");br(".contact h2","contact_title");txt(".footer-tag","footer_text");const fc=document.querySelector(".footer-bottom span:first-child");if(fc)fc.textContent=t.footer_copyright;
 }
 function renderSite(){
  const t=Object.fromEntries(cache.content.map(x=>[x.content_key,x.content_value]));
@@ -667,9 +707,11 @@ function renderSite(){
   if(rows[3])rows[3].querySelector("span").innerHTML="<strong>E-mail professionnel</strong><br><a class=\"contact-link email-link\" href=\"mailto:"+esc(c.email||DEFAULT_CONTACT.email)+"\">"+esc(c.email||DEFAULT_CONTACT.email)+"</a>";
   if(rows[4])rows[4].querySelector("span").innerHTML="<strong>Horaires</strong><br>"+esc(c.opening_hours);
   document.querySelector(".map iframe").src=c.map_embed_url||DEFAULT_CONTACT.map_embed_url;
-  document.querySelectorAll('a[href*="wa.me"]').forEach(a=>a.href=wa(number,decodeURIComponent((a.href.split("text=")[1]||"").replace(/\+/g," "))));
+  const heroWa=document.querySelector(".hero-actions .btn-line");if(heroWa)heroWa.href=wa(number,t.hero_whatsapp_message||"Bonjour Charly's Couture, je souhaite un devis.");
+  const ctaWa=document.querySelector(".cta .btn-dark");if(ctaWa)ctaWa.href=wa(number,t.cta_whatsapp_message||"Bonjour Charly's Couture, je souhaite discuter d'une tenue.");
+  document.querySelectorAll('a[href*="wa.me"]').forEach(a=>{if(a!==heroWa&&a!==ctaWa){const msgText=decodeURIComponent((a.href.split("text=")[1]||"").replace(/\+/g," "));a.href=wa(number,msgText);}});
  const services=cache.services.length?cache.services:DEFAULT_SERVICES;
- document.getElementById("services-grid").innerHTML=services.map((x,i)=>`<article class="service reveal"><div class="service-photo"><img src="${servicePhotos[i%servicePhotos.length]}" alt="${esc(x.title)}" loading="lazy"></div><div class="service-body"><span class="num">${String(i+1).padStart(2,"0")}</span><i class="fa-solid ${["fa-person-dress","fa-user-tie","fa-child","fa-scissors"][i%4]}"></i><h3>${esc(x.title)}</h3><p>${esc(x.description)}</p></div></article>`).join("");
+ document.getElementById("services-grid").innerHTML=services.map((x,i)=>{const img=contentValue("service_image_"+x.id,servicePhotos[i%servicePhotos.length]);return `<article class="service reveal"><div class="service-photo"><img src="${esc(img)}" alt="${esc(x.title)}" loading="lazy"></div><div class="service-body"><span class="num">${String(i+1).padStart(2,"0")}</span><i class="fa-solid ${["fa-person-dress","fa-user-tie","fa-child","fa-scissors"][i%4]}"></i><h3>${esc(x.title)}</h3><p>${esc(x.description)}</p></div></article>`;}).join("");
  document.getElementById("models-gallery").innerHTML=cache.models.length?cache.models.map((x,i)=>`<a class="gallery-item reveal g${i%6+1}" href="${wa(number,x.whatsapp_message||"Bonjour Charly's Couture, je suis intéressé par ce modèle.")}" target="_blank">${x.image_url?`<img src="${esc(x.image_url)}" alt="${esc(x.title)}" loading="lazy">`:`<div class="fabric fabric-${i%6+1}"></div>`}<span class="gallery-label">${esc(x.title)}</span></a>`).join(""):`<div style="grid-column:1/-1;color:#aaa;padding:30px;text-align:center">Les photos de la galerie apparaîtront ici. Les nouvelles photos ajoutées depuis l'administration apparaîtront automatiquement.</div>`;
  const exp=cache.experience.length?cache.experience:DEFAULT_EXPERIENCE;
  document.getElementById("experience-grid").innerHTML=exp.map((x,i)=>`<article class="experience-card reveal"><div class="experience-number">${String(x.step_number||i+1).padStart(2,"0")}</div><h3>${esc(x.title)}</h3><p>${esc(x.description)}</p></article>`).join("");
@@ -763,9 +805,14 @@ async function isAdmin(session=null){
   if(r.error||!r.data?.session)return false;
   session=r.data.session;
  }
- const {data,error}=await sb.from("admins").select("user_id").eq("user_id",session.user.id).maybeSingle();
- if(error){console.error("Vérification admin:",error);throw error;}
- return !!data;
+ // La vérification d'autorisation passe par une fonction SQL SECURITY DEFINER.
+ // Cela évite qu'une politique RLS de la table admins bloque le contrôle côté navigateur.
+ const {data,error}=await sb.rpc("is_admin");
+ if(error){
+  console.error("Vérification admin RPC:",error);
+  throw new Error("La vérification administrateur a échoué : "+(error.message||"fonction is_admin indisponible."));
+ }
+ return data===true;
 }
 
 document.getElementById("admin-login-btn").onclick=async()=>{
@@ -853,13 +900,9 @@ function renderAdmin(){
  if(heroInput)heroInput.value=heroUrl;
  updateHeroPreview(heroUrl);
 
- document.getElementById("content-list").innerHTML=cache.content.length?cache.content.map(x=>`
-  <div class="admin-card">
-   <div class="admin-field"><label>${esc(x.label||x.content_key||"Texte")}</label><textarea data-id="${esc(x.id)}">${esc(x.content_value)}</textarea></div>
-   <button class="admin-btn gold save-content" data-id="${esc(x.id)}">Enregistrer</button>
-  </div>`).join(""):`<div class="admin-empty">Aucun texte éditable trouvé.</div>`;
- document.querySelectorAll(".save-content").forEach(b=>b.onclick=saveContent);
-
+ const known=new Map(EDITABLE_CONTENT.map(([key,label,section])=>[key,{key,label,section}]));cache.content.forEach(x=>{if(!known.has(x.content_key))known.set(x.content_key,{key:x.content_key,label:x.label||x.content_key,section:x.section||"custom"});});
+ document.getElementById("content-list").innerHTML=Array.from(known.values()).map(item=>{const value=contentValue(item.key,"");const multi=/text|title|description|quote|message|footer|copyright|tagline/i.test(item.key);const isImage=item.key==="about_image_url";return `<div class="admin-card"><div class="admin-field"><label>${esc(item.label)}</label>${multi?`<textarea class="global-content-input" data-key="${esc(item.key)}">${esc(value)}</textarea>`:`<input class="global-content-input" data-key="${esc(item.key)}" value="${esc(value)}" ${isImage?'type="url"':''}>`}${isImage?`<div class="admin-field"><label>Ou téléverser la photo</label><input class="global-content-file" data-key="${esc(item.key)}" type="file" accept="image/*"></div>`:""}</div><button class="admin-btn gold save-global-content" data-key="${esc(item.key)}">Enregistrer</button></div>`;}).join("");
+ document.querySelectorAll(".save-global-content").forEach(b=>b.onclick=saveGlobalContent);
  document.getElementById("services-admin-list").innerHTML=cache.services.length?cache.services.map((x,i)=>`
   <div class="admin-item">
    <div class="admin-item-main"><div class="admin-item-title">${esc(x.title)}</div><div class="admin-item-meta">Position ${i+1} · ${x.is_active===false?"Inactif":"Actif"}</div><p>${esc(x.description)}</p></div>
@@ -912,6 +955,7 @@ function renderAdmin(){
  document.getElementById("contact-address").value=c.address||"";
  document.getElementById("contact-phone").value=c.phone||"";
  document.getElementById("contact-whatsapp").value=c.whatsapp||"";
+ document.getElementById("contact-email").value=c.email||"";
  document.getElementById("contact-hours").value=c.opening_hours||"";
  document.getElementById("contact-map").value=c.map_embed_url||DEFAULT_CONTACT.map_embed_url;
 }
@@ -962,6 +1006,11 @@ async function saveHeroImage(){
 }
 document.getElementById("hero-save").onclick=saveHeroImage;
 
+async function saveGlobalContent(){
+ const key=this.dataset.key;const input=document.querySelector(`.global-content-input[data-key="${CSS.escape(key)}"]`);if(!input)return;
+ setBusy(this,true,"Enregistrement…");
+ try{const meta=EDITABLE_CONTENT.find(x=>x[0]===key);let value=input.value.trim();const file=document.querySelector(`.global-content-file[data-key="${CSS.escape(key)}"]`)?.files?.[0];if(file)value=await uploadModelImage(file);const r=await sb.from("site_content").upsert({content_key:key,content_value:value,section:meta?.[2]||"custom",label:meta?.[1]||key},{onConflict:"content_key"});if(r.error)throw r.error;adminStatus("Contenu enregistré.");await loadAdmin();await loadSite();}catch(err){adminStatus(err.message||"Impossible d'enregistrer.",true);}finally{setBusy(this,false);}
+}
 async function saveContent(){
  const id=this.dataset.id,v=document.querySelector(`textarea[data-id="${CSS.escape(id)}"]`)?.value??"";
  setBusy(this,true,"Enregistrement…");
@@ -979,16 +1028,19 @@ document.getElementById("svc-add").onclick=async function(){
  if(!title){msg("svc-msg","Le titre est obligatoire.",true);return;}
  setBusy(this,true,"Ajout…");
  try{
-  const r=await sb.from("services").insert({title,description,display_order:order,is_active:true});
+  const r=await sb.from("services").insert({title,description,display_order:order,is_active:true}).select().single();
   if(r.error)throw r.error;
-  document.getElementById("svc-title").value="";document.getElementById("svc-desc").value="";
+  let imageUrl=document.getElementById("svc-image-url").value.trim();const file=document.getElementById("svc-image").files[0];
+  if(file)imageUrl=await uploadModelImage(file);
+  if(imageUrl){const ir=await sb.from("site_content").upsert({content_key:"service_image_"+r.data.id,content_value:imageUrl,section:"services",label:"Photo du service"},{onConflict:"content_key"});if(ir.error)throw ir.error;}
+  document.getElementById("svc-title").value="";document.getElementById("svc-desc").value="";document.getElementById("svc-image").value="";document.getElementById("svc-image-url").value="";
   msg("svc-msg","Service ajouté.");await loadAdmin();await loadSite();
  }catch(err){msg("svc-msg",err.message,true);}finally{setBusy(this,false);}
 };
 
 async function deleteService(id){
  if(!confirm("Supprimer définitivement ce service ?"))return;
- try{const r=await sb.from("services").delete().eq("id",id);if(r.error)throw r.error;adminStatus("Service supprimé.");await loadAdmin();await loadSite();}
+ try{const r=await sb.from("services").delete().eq("id",id);if(r.error)throw r.error;await sb.from("site_content").delete().eq("content_key","service_image_"+id);adminStatus("Service supprimé.");await loadAdmin();await loadSite();}
  catch(err){adminStatus(err.message,true);}
 }
 async function deleteExperience(id){
@@ -1042,6 +1094,8 @@ function editorFields(type,x){
  if(type==="service")return `
   <div class="admin-field"><label>Titre</label><input id="ed-title" value="${esc(x.title)}"></div>
   <div class="admin-field"><label>Description</label><textarea id="ed-description">${esc(x.description)}</textarea></div>
+  <div class="admin-field"><label>Photo du service — URL</label><input id="ed-image-url" type="url" value="${esc(contentValue("service_image_"+x.id,""))}" placeholder="https://…"></div>
+  <div class="admin-field"><label>Remplacer la photo</label><input id="ed-image-file" type="file" accept="image/*"></div>
   <div class="admin-field"><label>Publié / actif</label><select id="ed-active"><option value="1" ${x.is_active!==false?"selected":""}>Oui</option><option value="0" ${x.is_active===false?"selected":""}>Non</option></select></div>`;
  if(type==="model")return `
   <div class="admin-field"><label>Titre de la photo</label><input id="ed-title" value="${esc(x.title)}"></div>
@@ -1077,6 +1131,11 @@ document.getElementById("editor-save").onclick=async function(){
   let payload={},table="";
   if(type==="service"){table="services";payload={title:document.getElementById("ed-title").value.trim(),description:document.getElementById("ed-description").value,is_active:document.getElementById("ed-active").value==="1"};}
   if(type==="experience"){table="experience_steps";payload={step_number:Number(document.getElementById("ed-number").value)||1,title:document.getElementById("ed-title").value.trim(),description:document.getElementById("ed-description").value,is_active:document.getElementById("ed-active").value==="1"};}
+  if(type==="service"){
+   const file=document.getElementById("ed-image-file")?.files?.[0];let imageUrl=document.getElementById("ed-image-url")?.value.trim()||"";
+   if(file)imageUrl=await uploadModelImage(file);
+   if(imageUrl){const rImg=await sb.from("site_content").upsert({content_key:"service_image_"+id,content_value:imageUrl,section:"services",label:"Photo du service"},{onConflict:"content_key"});if(rImg.error)throw rImg.error;}
+  }
   if(type==="model"){
    table="models";payload={title:document.getElementById("ed-title").value.trim(),category:document.getElementById("ed-category").value,description:document.getElementById("ed-description").value,whatsapp_message:document.getElementById("ed-wa").value};
    const file=document.getElementById("ed-file").files[0];
@@ -1131,7 +1190,7 @@ document.getElementById("exp-add").onclick=async function(){
  }catch(err){msg("exp-msg",err.message,true);}finally{setBusy(this,false);}
 };
 document.getElementById("contact-save").onclick=async function(){
- const payload={id:1,address:document.getElementById("contact-address").value.trim(),phone:document.getElementById("contact-phone").value.trim(),whatsapp:document.getElementById("contact-whatsapp").value.trim(),opening_hours:document.getElementById("contact-hours").value.trim(),map_embed_url:document.getElementById("contact-map").value.trim()};
+ const payload={id:1,address:document.getElementById("contact-address").value.trim(),phone:document.getElementById("contact-phone").value.trim(),whatsapp:document.getElementById("contact-whatsapp").value.trim(),email:document.getElementById("contact-email").value.trim(),opening_hours:document.getElementById("contact-hours").value.trim(),map_embed_url:document.getElementById("contact-map").value.trim()};
  setBusy(this,true,"Enregistrement…");
  try{const r=await sb.from("contact_settings").upsert(payload);if(r.error)throw r.error;msg("contact-msg","Coordonnées enregistrées.");await loadAdmin();await loadSite();}catch(err){msg("contact-msg",err.message,true);}finally{setBusy(this,false);}
 };
