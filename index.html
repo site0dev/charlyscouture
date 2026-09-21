@@ -557,7 +557,9 @@ footer{background:#090807;color:#fff;padding:48px 0 25px;border-top:1px solid va
 <script>
 const SUPABASE_URL="https://hjtmegeqorqhensqpcpn.supabase.co";
 const SUPABASE_PUBLIC_KEY="sb_publishable_jZ8P8w_GRc4IptXIB0_SMQ_dBLvSAJj";
-const sb = window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLIC_KEY);
+const sb = (window.supabase && SUPABASE_URL && SUPABASE_PUBLIC_KEY)
+ ? window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLIC_KEY)
+ : null;
 let cache={content:[],services:[],models:[],experience:[],contact:null}, clicks=[], refreshTimer=null;
 
 // Contenu par défaut : le site reste complet même avant la première synchronisation Supabase.
@@ -600,7 +602,7 @@ function resetLogoClicks(){
  clicks=[];
  if(refreshTimer){clearTimeout(refreshTimer);refreshTimer=null;}
 }
-function handleLogoClick(e){
+async function handleLogoClick(e){
  e.preventDefault(); e.stopPropagation();
  const now=Date.now();
  clicks=clicks.filter(t=>now-t<=CLICK_WINDOW);
@@ -608,7 +610,7 @@ function handleLogoClick(e){
  if(refreshTimer){clearTimeout(refreshTimer);refreshTimer=null;}
  if(clicks.length>=6){
    resetLogoClicks();
-   openAdmin();
+   await openAdmin();
    return;
  }
  refreshTimer=setTimeout(()=>{
@@ -616,7 +618,7 @@ function handleLogoClick(e){
    window.location.reload();
  },REFRESH_DELAY);
 }
-logo.addEventListener("click",handleLogoClick);
+logo.addEventListener("pointerup",handleLogoClick,{passive:false});
 
 async function loadSite(){
  if(!sb){fallback();return;}
@@ -690,8 +692,6 @@ const adminLoginView=document.getElementById("admin-login-view");
 const adminDashboardView=document.getElementById("admin-dashboard-view");
 let adminBusy=false;
 let adminEditor={type:null,id:null};
-let adminSession=null;
-let adminVerified=false;
 
 function showAdminLogin(){
  adminDashboardView.style.display="none";
@@ -703,6 +703,12 @@ function showAdminDashboard(){
 }
 function adminStatus(text,error=false){
  const e=document.getElementById("admin-status");
+ if(!e)return;
+ e.textContent=text||"";
+ e.classList.toggle("error",!!error);
+}
+function msg(id,text,error=false){
+ const e=document.getElementById(id);
  if(!e)return;
  e.textContent=text||"";
  e.classList.toggle("error",!!error);
@@ -719,84 +725,73 @@ function closeAdmin(){
  document.body.style.overflow="";
  closeEditor();
 }
-
-// Ouvre l'administration immédiatement. La vérification de session se fait ensuite.
-function openAdmin(){
+async function openAdmin(){
  overlay.classList.add("open");
  overlay.setAttribute("aria-hidden","false");
  document.body.style.overflow="hidden";
- adminStatus("");
- if(!sb){showAdminLogin();msg("admin-login-msg","Supabase n'est pas configuré dans ce fichier.",true);return;}
  showAdminLogin();
- void restoreAdminSession();
-}
-async function restoreAdminSession(){
+ adminStatus("");
+ msg("admin-login-msg","");
+ if(!sb){msg("admin-login-msg","Supabase n'est pas disponible. Vérifiez le chargement de Supabase.",true);return;}
  try{
   const {data:{session},error}=await sb.auth.getSession();
   if(error)throw error;
-  if(!session){adminSession=null;adminVerified=false;return;}
-  const {data,error:adminError}=await sb.from("admins").select("user_id").eq("user_id",session.user.id).maybeSingle();
-  if(adminError)throw adminError;
-  if(!data){adminSession=null;adminVerified=false;msg("admin-login-msg","Cette session n'a pas les droits administrateur.",true);return;}
-  adminSession=session;
-  adminVerified=true;
-  showAdminDashboard();
-  void loadAdmin(true);
+  if(session){
+   const allowed=await isAdmin(session);
+   if(allowed){
+    showAdminDashboard();
+    void loadAdmin();
+   }else{
+    await sb.auth.signOut();
+    showAdminLogin();
+    msg("admin-login-msg","Cette session n'a pas les droits administrateur.",true);
+   }
+  }
  }catch(err){
   console.error("Ouverture administration:",err);
-  adminSession=null;
-  adminVerified=false;
   showAdminLogin();
-  msg("admin-login-msg","Impossible de vérifier la session. Vous pouvez vous reconnecter.",true);
+  msg("admin-login-msg",err.message||"Impossible de vérifier la session.",true);
  }
 }
 document.getElementById("admin-close").onclick=closeAdmin;
 overlay.addEventListener("click",e=>{if(e.target===overlay)closeAdmin();});
 
-async function isAdmin(){
+async function isAdmin(session=null){
  if(!sb)return false;
- if(adminVerified&&adminSession)return true;
- const {data:{session},error:sessionError}=await sb.auth.getSession();
- if(sessionError||!session)return false;
+ if(!session){
+  const r=await sb.auth.getSession();
+  if(r.error||!r.data?.session)return false;
+  session=r.data.session;
+ }
  const {data,error}=await sb.from("admins").select("user_id").eq("user_id",session.user.id).maybeSingle();
- if(error){console.error("Vérification admin:",error);return false;}
- if(data){adminSession=session;adminVerified=true;}
+ if(error){console.error("Vérification admin:",error);throw error;}
  return !!data;
 }
 
 document.getElementById("admin-login-btn").onclick=async()=>{
- if(!sb){msg("admin-login-msg","Supabase n'est pas configuré.",true);return;}
+ if(!sb){msg("admin-login-msg","Supabase n'est pas disponible.",true);return;}
  const email=document.getElementById("admin-email").value.trim();
  const password=document.getElementById("admin-password").value;
  if(!email||!password){msg("admin-login-msg","Saisissez l'e-mail et le mot de passe.",true);return;}
  const button=document.getElementById("admin-login-btn");
  setBusy(button,true,"Connexion…");
+ msg("admin-login-msg","");
  try{
   const {data,error}=await sb.auth.signInWithPassword({email,password});
-  if(error){msg("admin-login-msg",error.message,true);return;}
-  adminSession=data.session||null;
-  if(!adminSession){msg("admin-login-msg","Session de connexion introuvable.",true);return;}
-
-  // Affichage immédiat : l'administration s'ouvre sans attendre le chargement des données.
+  if(error)throw error;
+  const session=data?.session;
+  if(!session)throw new Error("Connexion Supabase établie sans session.");
+  const allowed=await isAdmin(session);
+  if(!allowed){
+   await sb.auth.signOut();
+   showAdminLogin();
+   throw new Error("Compte authentifié mais non autorisé. Ajoutez cet utilisateur dans public.admins.");
+  }
   showAdminDashboard();
   msg("admin-login-msg","");
-
-  // Vérification des droits en arrière-plan.
-  const {data:admin,error:adminError}=await sb.from("admins").select("user_id").eq("user_id",adminSession.user.id).maybeSingle();
-  if(adminError)throw adminError;
-  if(!admin){
-   adminVerified=false;
-   adminSession=null;
-   showAdminLogin();
-   await sb.auth.signOut();
-   msg("admin-login-msg","Compte authentifié mais non autorisé.",true);
-   return;
-  }
-  adminVerified=true;
-  void loadAdmin(true);
+  void loadAdmin();
  }catch(err){
   console.error("Connexion administration:",err);
-  adminVerified=false;
   showAdminLogin();
   msg("admin-login-msg",err.message||"Une erreur est survenue pendant la connexion.",true);
  }finally{setBusy(button,false);}
@@ -809,9 +804,6 @@ document.getElementById("admin-eye").onclick=()=>{
 };
 document.getElementById("admin-logout-btn").onclick=()=>{
  if(!sb){closeAdmin();return;}
- // Fermeture immédiate, puis suppression de session en arrière-plan.
- adminSession=null;
- adminVerified=false;
  closeAdmin();
  void sb.auth.signOut().catch(err=>console.error("Déconnexion:",err));
 };
@@ -1168,9 +1160,8 @@ async function loadMessages(){
 document.querySelector('.admin-tab[data-tab="messages"]').addEventListener("click",loadMessages);
 
 if(sb){
- sb.auth.onAuthStateChange((event,session)=>{
-  if(event==="SIGNED_OUT"){showAdminLogin();}
-  if(event==="SIGNED_IN"&&session)showAdminDashboard();
+ sb.auth.onAuthStateChange((event)=>{
+  if(event==="SIGNED_OUT")showAdminLogin();
  });
 }
 
