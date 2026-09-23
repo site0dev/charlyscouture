@@ -217,6 +217,36 @@ footer{background:#090807;color:#fff;padding:48px 0 25px;border-top:1px solid va
 .admin-field input,.admin-field textarea,.admin-field select{width:100%;padding:12px;border:1px solid #d3c5b2;background:#fff;font:inherit;border-radius:2px}.admin-field textarea{min-height:100px;resize:vertical}
 .admin-field input:focus,.admin-field textarea:focus,.admin-field select:focus{outline:2px solid rgba(201,166,107,.25);border-color:#c9a66b}
 .hero-admin-preview{height:280px;border:1px solid #d3c5b2;background:#eee7dc;display:flex;align-items:center;justify-content:center;overflow:hidden}.hero-admin-preview img{width:100%;height:100%;object-fit:cover;display:block}
+/* Nos créations : galerie horizontale et responsive, jamais une liste verticale */
+#models-gallery.gallery{
+ display:grid !important;
+ grid-template-columns:repeat(auto-fit,minmax(170px,1fr)) !important;
+ grid-auto-rows:auto !important;
+ gap:12px !important;
+ align-items:stretch;
+}
+#models-gallery.gallery .gallery-item,
+#models-gallery.gallery .gallery-item.g1,
+#models-gallery.gallery .gallery-item.g2,
+#models-gallery.gallery .gallery-item.g3,
+#models-gallery.gallery .gallery-item.g4,
+#models-gallery.gallery .gallery-item.g5,
+#models-gallery.gallery .gallery-item.g6{
+ grid-column:auto !important;
+ grid-row:auto !important;
+ min-width:0;
+ aspect-ratio:4/5;
+}
+#models-gallery.gallery .gallery-item img,
+#models-gallery.gallery .gallery-item .fabric{
+ width:100%;
+ height:100%;
+ object-fit:cover;
+}
+@media(max-width:520px){
+ #models-gallery.gallery{grid-template-columns:repeat(2,minmax(0,1fr)) !important;gap:8px !important}
+ #models-gallery.gallery .gallery-label{left:10px;bottom:10px;font-size:.95rem}
+}
 .admin-btn{border:0;background:#0b0a09;color:#fff;padding:11px 15px;cursor:pointer;font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;border-radius:2px;transition:.2s}
 .admin-btn:hover{transform:translateY(-1px)}.admin-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
 .admin-btn.gold{background:#c9a66b;color:#17120d}.admin-btn.danger{background:#7c261e}.admin-btn.ghost{background:#fff;color:#171310;border:1px solid #d3c5b2}
@@ -327,7 +357,7 @@ footer{background:#090807;color:#fff;padding:48px 0 25px;border-top:1px solid va
 <section class="section section-dark lookbook" id="collection">
  <div class="container">
   <div class="section-head reveal">
-   <div><span class="eyebrow">La galerie</span><h2>Nos créations<br>à découvrir.</h2></div>
+   <div><span class="eyebrow">Nos créations</span><h2>Nos créations<br>à découvrir.</h2></div>
    <p>Découvrez les créations présentées par l'atelier. Pour une création personnalisée ou une demande particulière, contactez-nous directement sur WhatsApp.</p>
   </div>
   <div class="gallery" id="models-gallery">
@@ -432,7 +462,7 @@ footer{background:#090807;color:#fff;padding:48px 0 25px;border-top:1px solid va
      <button class="admin-tab" data-tab="hero">Hero</button>
      <button class="admin-tab" data-tab="content">Textes</button>
      <button class="admin-tab" data-tab="services">Services</button>
-     <button class="admin-tab" data-tab="models">Galerie</button>
+     <button class="admin-tab" data-tab="models">Nos créations</button>
      <button class="admin-tab" data-tab="experience">Expérience</button>
      <button class="admin-tab" data-tab="contact">Contact</button>
      <button class="admin-tab" data-tab="messages">Messages</button>
@@ -458,6 +488,8 @@ footer{background:#090807;color:#fff;padding:48px 0 25px;border-top:1px solid va
      <div class="admin-card">
       <strong>Remplacement propre</strong>
       <p>Le fichier choisi est envoyé dans le stockage Supabase. Pour les images déjà stockées dans le bucket <strong>models</strong>, l'ancien fichier est supprimé lorsqu'il peut être identifié. Les anciennes images provenant d'Internet ne sont pas téléchargées ni conservées dans votre stockage.</p>
+      <p><strong>Services :</strong> chaque photo visible sur une carte peut être remplacée ici. Si aucune photo personnalisée n'est enregistrée, le site utilise sa photo de secours jusqu'à ce que vous en choisissiez une.</p>
+      <p><strong>Nos créations :</strong> ajoutez autant de photos que nécessaire dans l'onglet « Nos créations ». Elles sont automatiquement disposées côte à côte et passent à la ligne suivante uniquement lorsque la largeur de l'écran l'exige.</p>
      </div>
      <div id="all-photos-list" class="photo-manager-grid"></div>
      <div class="admin-card">
@@ -505,8 +537,8 @@ footer{background:#090807;color:#fff;padding:48px 0 25px;border-top:1px solid va
     </section>
 
     <section class="admin-section" data-section="models">
-     <h3>Galerie</h3>
-     <p class="admin-help">Ajoutez une photo, publiez-la quand elle est prête, modifiez ses informations et utilisez ↑ ↓ pour son ordre. La suppression retire également l'image du stockage lorsque le fichier provient du bucket <strong>models</strong>.</p>
+     <h3>Nos créations</h3>
+     <p class="admin-help">Ajoutez autant de photos que vous le souhaitez, publiez-les quand elles sont prêtes, modifiez leurs informations et utilisez ↑ ↓ pour leur ordre. Les photos publiées s’affichent dans « Nos créations ». La suppression retire également l'image du stockage lorsque le fichier provient du bucket <strong>models</strong>.</p>
      <div class="admin-card">
       <div class="admin-grid">
        <div class="admin-field"><label for="model-title">Titre de la photo</label><input id="model-title"></div>
@@ -516,7 +548,7 @@ footer{background:#090807;color:#fff;padding:48px 0 25px;border-top:1px solid va
       </div>
       <div class="admin-field"><label for="model-desc">Description</label><textarea id="model-desc"></textarea></div>
       <div class="admin-field"><label for="model-wa">Message WhatsApp</label><input id="model-wa" value="Bonjour Charly's Couture, je suis intéressé par cette création."></div>
-      <button class="admin-btn gold" id="model-add">Ajouter à la galerie</button>
+      <button class="admin-btn gold" id="model-add">Ajouter à « Nos créations »</button>
       <div class="admin-msg" id="model-msg"></div>
      </div>
      <div class="admin-list" id="models-admin-list"></div>
@@ -992,7 +1024,23 @@ function sitePhotoDefinitions(){
   {key:"hero_image_url",label:"Accueil — Hero",section:"Accueil",fallback:'https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=1800&q=88'},
   {key:"about_image_url",label:"La Maison — Photo",section:"La Maison",fallback:""}
  ];
- cache.services.forEach((x,i)=>defs.push({key:"service_image_"+x.id,label:"Service — "+x.title,section:"Savoir-faire",fallback:contentValue("service_fallback_image_"+(i+1),servicePhotos[i%servicePhotos.length]),serviceId:x.id}));
+ if(cache.services.length){
+  cache.services.forEach((x,i)=>defs.push({
+   key:"service_image_"+x.id,
+   label:"Service "+String(i+1).padStart(2,"0")+" — "+x.title,
+   section:"Savoir-faire",
+   fallback:contentValue("service_fallback_image_"+(i+1),servicePhotos[i%servicePhotos.length]),
+   serviceId:x.id
+  }));
+ }else{
+  DEFAULT_SERVICES.forEach((x,i)=>defs.push({
+   key:"service_fallback_image_"+(i+1),
+   label:"Service "+String(i+1).padStart(2,"0")+" — "+x.title,
+   section:"Savoir-faire",
+   fallback:servicePhotos[i%servicePhotos.length],
+   fallbackOnly:true
+  }));
+ }
  return defs;
 }
 function photoPreview(url,label){
@@ -1003,14 +1051,20 @@ function renderAllPhotosAdmin(){
  if(!list||!models)return;
  const defs=sitePhotoDefinitions();
  list.innerHTML=defs.map(d=>{
-  const current=contentValue(d.key,d.fallback||"");
-  const source=current?(current.includes("images.unsplash.com")?"Image Internet par défaut":"Image enregistrée dans Supabase"):"Aucune image";
+  const saved=contentValue(d.key,"");
+  const current=saved||d.fallback||"";
+  const source=saved
+   ? (saved.includes("images.unsplash.com")?"Image Internet enregistrée comme URL":"Photo personnalisée enregistrée")
+   : (current.includes("images.unsplash.com")?"Photo Internet de secours":"Aucune photo");
+  const actionLabel=d.fallbackOnly?"Remplacer cette photo":"Remplacer la photo";
   return `<article class="photo-manager-card">
    ${photoPreview(current,d.label)}
-   <div><div class="photo-manager-title">${esc(d.label)}</div><div class="photo-manager-meta">${esc(source)}${d.serviceId?` · clé ${esc(d.key)}`:""}</div>
+   <div>
+    <div class="photo-manager-title">${esc(d.label)}</div>
+    <div class="photo-manager-meta">${esc(source)}${d.serviceId?` · remplacement prioritaire pour ce service`:""}</div>
     <div class="admin-field"><label>Choisir dans votre galerie</label><input class="all-photo-file" data-key="${esc(d.key)}" type="file" accept="image/*"></div>
-    <div class="admin-field"><label>URL actuelle</label><input class="all-photo-url" data-key="${esc(d.key)}" type="url" value="${esc(current)}" placeholder="https://…"></div>
-    <div class="photo-manager-actions"><button class="admin-btn gold replace-site-photo" data-key="${esc(d.key)}">Remplacer</button><button class="admin-btn ghost clear-site-photo" data-key="${esc(d.key)}">Retirer</button></div>
+    <div class="admin-field"><label>URL à utiliser</label><input class="all-photo-url" data-key="${esc(d.key)}" type="url" value="${esc(saved)}" placeholder="https://…"></div>
+    <div class="photo-manager-actions"><button class="admin-btn gold replace-site-photo" data-key="${esc(d.key)}">${actionLabel}</button><button class="admin-btn ghost clear-site-photo" data-key="${esc(d.key)}">Revenir à la photo par défaut</button></div>
     <div class="photo-manager-status" id="photo-status-${esc(d.key).replace(/[^a-zA-Z0-9_-]/g,"-")}"></div>
    </div>
   </article>`;
@@ -1069,7 +1123,7 @@ async function clearSitePhoto(key,button){
   setBusy(button,true,"Retrait…");
   const r=await sb.from("site_content").delete().eq("content_key",key);if(r.error)throw r.error;
   await deleteStoredImageIfOwned(old);
-  photoStatus(key,"Photo personnalisée retirée.");
+  photoStatus(key,"Photo personnalisée retirée : la photo par défaut est de nouveau utilisée.");
   await loadAdmin();await loadSite();
  }catch(err){photoStatus(key,err.message||"Erreur.",true);}finally{setBusy(button,false);}
 }
