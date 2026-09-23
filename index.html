@@ -714,21 +714,31 @@ logo.addEventListener("pointerup",handleLogoClick,{passive:false});
 async function loadSite(){
  if(!sb){fallback();return;}
  try{
-  const [c,s,m,e,ct]=await Promise.all([
-   sb.from("site_content").select("*"),sb.from("services").select("*").eq("is_active",true).order("display_order"),
+  const results=await Promise.all([
+   sb.from("site_content").select("*"),
+   sb.from("services").select("*").eq("is_active",true).order("display_order"),
    sb.from("models").select("*").eq("is_published",true).order("display_order"),
    sb.from("experience_steps").select("*").eq("is_active",true).order("display_order"),
    sb.from("contact_settings").select("*").eq("id",1).maybeSingle()
   ]);
-  for(const x of [c,s,m,e,ct])if(x.error)throw x.error;
-  cache={content:c.data||[],services:s.data||[],models:m.data||[],experience:e.data||[],contact:ct.data};renderSite();
+  const [c,s,m,e,ct]=results;
+  if(c.error)throw c.error;
+  if(s.error)throw s.error;
+  if(e.error)throw e.error;
+  if(ct.error)throw ct.error;
+  // La galerie reste fonctionnelle même si la table models n'est pas encore disponible.
+  const modelsData=m.error?[]:(m.data||[]);
+  if(m.error)console.warn("Table models indisponible; affichage des créations par défaut :",m.error.message);
+  cache={content:c.data||[],services:s.data||[],models:modelsData,experience:e.data||[],contact:ct.data};
+  renderSite();
  }catch(err){console.error(err);fallback();}
 }
 function fallback(){
  const s=DEFAULT_SERVICES.map(x=>[x.title,x.description]);
  const e=DEFAULT_EXPERIENCE;
  document.getElementById("services-grid").innerHTML=s.map((x,i)=>`<article class="service reveal"><div class="service-photo"><img src="${esc(contentValue("service_fallback_image_"+(i+1),servicePhotos[i%servicePhotos.length]))}" alt="${esc(x[0])}" loading="lazy"></div><div class="service-body"><span class="num">0${i+1}</span><i class="fa-solid ${["fa-person-dress","fa-user-tie","fa-child","fa-scissors"][i%4]}"></i><h3>${esc(x[0])}</h3><p>${esc(x[1])}</p></div></article>`).join("");
- document.getElementById("models-gallery").innerHTML=`<div style="grid-column:1/-1;color:#aaa;padding:30px;text-align:center">Les photos de la galerie apparaîtront ici. Les nouvelles photos ajoutées depuis l'administration apparaîtront automatiquement.</div>`;
+ const defaultCreations=Array.from({length:6},(_,i)=>({title:`Création ${String(i+1).padStart(2,"0")}`,image_url:""}));
+ document.getElementById("models-gallery").innerHTML=defaultCreations.map((x,i)=>`<a class="gallery-item reveal g${i%6+1}" href="${wa(DEFAULT_CONTACT.whatsapp)}" target="_blank"><div class="fabric fabric-${i%6+1}"></div><span class="gallery-label">${esc(x.title)}</span></a>`).join("");
  document.getElementById("experience-grid").innerHTML=e.map((x,i)=>`<article class="experience-card reveal"><div class="experience-number">0${x.step_number}</div><h3>${x.title}</h3><p>${x.description}</p></article>`).join("");
  renderTextDefaults(DEFAULT_CONTENT);
  observe();
@@ -768,7 +778,9 @@ function renderSite(){
   document.querySelectorAll('a[href*="wa.me"]').forEach(a=>{if(a!==heroWa&&a!==ctaWa){const msgText=decodeURIComponent((a.href.split("text=")[1]||"").replace(/\+/g," "));a.href=wa(number,msgText);}});
  const services=cache.services.length?cache.services:DEFAULT_SERVICES;
  document.getElementById("services-grid").innerHTML=services.map((x,i)=>{const img=contentValue("service_image_"+x.id,contentValue("service_fallback_image_"+(i+1),servicePhotos[i%servicePhotos.length]));return `<article class="service reveal"><div class="service-photo"><img src="${esc(img)}" alt="${esc(x.title)}" loading="lazy"></div><div class="service-body"><span class="num">${String(i+1).padStart(2,"0")}</span><i class="fa-solid ${["fa-person-dress","fa-user-tie","fa-child","fa-scissors"][i%4]}"></i><h3>${esc(x.title)}</h3><p>${esc(x.description)}</p></div></article>`;}).join("");
- document.getElementById("models-gallery").innerHTML=cache.models.length?cache.models.map((x,i)=>`<a class="gallery-item reveal g${i%6+1}" href="${wa(number,x.whatsapp_message||"Bonjour Charly's Couture, je suis intéressé par ce modèle.")}" target="_blank">${x.image_url?`<img src="${esc(x.image_url)}" alt="${esc(x.title)}" loading="lazy">`:`<div class="fabric fabric-${i%6+1}"></div>`}<span class="gallery-label">${esc(x.title)}</span></a>`).join(""):`<div style="grid-column:1/-1;color:#aaa;padding:30px;text-align:center">Les photos de la galerie apparaîtront ici. Les nouvelles photos ajoutées depuis l'administration apparaîtront automatiquement.</div>`;
+ const defaultCreations=Array.from({length:6},(_,i)=>({title:`Création ${String(i+1).padStart(2,"0")}`,image_url:"",whatsapp_message:"Bonjour Charly's Couture, je suis intéressé par cette création."}));
+ const creations=cache.models.length?cache.models:defaultCreations;
+ document.getElementById("models-gallery").innerHTML=creations.map((x,i)=>`<a class="gallery-item reveal g${i%6+1}" href="${wa(number,x.whatsapp_message||"Bonjour Charly's Couture, je suis intéressé par cette création.")}" target="_blank">${x.image_url?`<img src="${esc(x.image_url)}" alt="${esc(x.title||`Création ${i+1}`)}" loading="lazy">`:`<div class="fabric fabric-${i%6+1}"></div>`}<span class="gallery-label">${esc(x.title||`Création ${String(i+1).padStart(2,"0")}`)}</span></a>`).join("");
  const exp=cache.experience.length?cache.experience:DEFAULT_EXPERIENCE;
  document.getElementById("experience-grid").innerHTML=exp.map((x,i)=>`<article class="experience-card reveal"><div class="experience-number">${String(x.step_number||i+1).padStart(2,"0")}</div><h3>${esc(x.title)}</h3><p>${esc(x.description)}</p></article>`).join("");
  observe();
