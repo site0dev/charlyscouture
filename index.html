@@ -225,7 +225,7 @@ footer{background:#090807;color:#fff;padding:48px 0 25px;border-top:1px solid va
 .admin-tabs{display:flex;gap:6px;overflow-x:auto;max-width:100%;scrollbar-width:none}.admin-tabs::-webkit-scrollbar{display:none}
 .admin-tab{flex:0 0 auto;padding:9px 11px;border:1px solid #d3c5b2;background:#fff;color:#312c27;font-size:.6rem;text-transform:uppercase;letter-spacing:.05em;cursor:pointer;border-radius:2px}.admin-tab.active{background:#0b0a09;color:#fff;border-color:#0b0a09}
 .admin-content{padding:20px}.admin-section{display:none}.admin-section.active{display:block}.admin-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-.admin-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:18px 0}.admin-stat{background:#fff;border:1px solid #ddd2c3;padding:17px}.admin-stat b{font-family:var(--serif);font-size:2rem;display:block;line-height:1}.admin-stat span{display:block;color:#71695f;font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;margin-top:7px}
+.admin-stats{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:18px 0}.admin-stat{background:#fff;border:1px solid #ddd2c3;padding:17px}.admin-stat b{font-family:var(--serif);font-size:2rem;display:block;line-height:1}.admin-stat span{display:block;color:#71695f;font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;margin-top:7px}
 .admin-card{background:#fff;border:1px solid #ddd2c3;padding:16px;margin:10px 0}.admin-card strong{font-family:var(--serif);font-size:1.35rem}.admin-card p{font-size:.78rem;color:#71695f;margin:5px 0}
 .admin-list{display:grid;gap:10px}.admin-item{background:#fff;border:1px solid #ddd2c3;padding:14px;display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center}.admin-item-main{min-width:0}.admin-item-title{font-family:var(--serif);font-size:1.35rem;line-height:1.1}.admin-item-meta{font-size:.68rem;color:#8a8177;margin-top:5px}.admin-item-actions{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end}
 .admin-gallery-thumb{width:82px;height:82px;object-fit:cover;float:left;margin-right:13px;border:1px solid #ddd2c3}.admin-gallery-item{display:grid;grid-template-columns:82px 1fr auto;align-items:center;gap:13px}.admin-gallery-item .admin-gallery-thumb{float:none;margin:0}
@@ -233,8 +233,11 @@ footer{background:#090807;color:#fff;padding:48px 0 25px;border-top:1px solid va
 .admin-status{min-height:32px;padding:8px 20px;font-size:.7rem;color:#46734c;background:#f8f4ec;border-bottom:1px solid #ddd2c3}.admin-status.error{color:#a32c20}
 .admin-empty{padding:28px;text-align:center;color:#81786d;background:#fff;border:1px dashed #d3c5b2}.admin-preview{width:70px;height:70px;object-fit:cover;border:1px solid #ddd2c3}
 .admin-divider{height:1px;background:#e3d9ca;margin:18px 0}
+.photo-manager-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.photo-manager-card{background:#fff;border:1px solid #ddd2c3;padding:14px;display:grid;grid-template-columns:130px 1fr;gap:14px;align-items:start}.photo-manager-preview{width:130px;height:110px;border:1px solid #ddd2c3;background:#eee7dc;overflow:hidden;display:grid;place-items:center;color:#81786d;font-size:.7rem;text-align:center}.photo-manager-preview img{width:100%;height:100%;object-fit:cover}.photo-manager-title{font-family:var(--serif);font-size:1.25rem;line-height:1.1}.photo-manager-meta{font-size:.68rem;color:#8a8177;margin:5px 0 10px;word-break:break-word}.photo-manager-actions{display:flex;gap:6px;flex-wrap:wrap}.photo-manager-file{display:none}.photo-manager-note{font-size:.75rem;color:#71695f;margin:0 0 16px}.photo-manager-status{font-size:.72rem;margin-top:8px;min-height:18px}.photo-manager-status.ok{color:#46734c}.photo-manager-status.error{color:#a32c20}.photo-manager-badge{display:inline-block;padding:4px 7px;background:#f3ead9;color:#71572e;font-size:.57rem;text-transform:uppercase;letter-spacing:.08em;margin-left:5px}
+@media(max-width:800px){.photo-manager-grid{grid-template-columns:1fr}.photo-manager-card{grid-template-columns:100px 1fr}.photo-manager-preview{width:100px;height:90px}}
 .admin-editor{display:none;position:fixed;inset:0;z-index:1100;background:rgba(0,0,0,.58);padding:15px;overflow:auto}.admin-editor.open{display:flex;align-items:center;justify-content:center}.admin-editor-box{width:min(650px,100%);max-height:92vh;overflow:auto;background:#f8f4ec;border:1px solid #c9a66b;box-shadow:0 25px 70px #0008}.admin-editor-head{background:#0b0a09;color:#fff;padding:14px 18px;display:flex;justify-content:space-between;align-items:center}.admin-editor-head h4{font-family:var(--serif);font-size:1.7rem}.admin-editor-body{padding:18px}.admin-editor-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}
 .admin-login-password{position:relative}.admin-login-password input{padding-right:48px}.admin-eye{position:absolute;right:0;top:0;height:100%;width:44px;border:0;background:transparent;cursor:pointer;color:#71695f}
+@media(max-width:1000px){.admin-stats{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:800px){.admin-stats{grid-template-columns:repeat(2,1fr)}.admin-gallery-item{grid-template-columns:64px 1fr}.admin-gallery-thumb{width:64px;height:64px}.admin-gallery-item .admin-item-actions{grid-column:1/-1;justify-content:flex-start}.admin-toolbar{top:69px}}
 @media(max-width:700px){header{padding:16px 0}.logo{font-size:1.72rem}.logo small{font-size:.46rem;letter-spacing:.24em}.admin-grid{grid-template-columns:1fr}.admin-login{padding:30px 16px}.admin-content{padding:13px}.admin-panel{min-height:calc(100vh - 12px)}.admin-overlay{padding:6px}.admin-head{padding:13px 14px}.admin-head h2{font-size:1.65rem}.admin-session{display:none}.admin-content h3{font-size:2rem}.admin-item{grid-template-columns:1fr}.admin-item-actions{justify-content:flex-start}.admin-stats{gap:7px}.admin-stat{padding:13px}.admin-stat b{font-size:1.6rem}}
 </style>
@@ -313,7 +316,7 @@ footer{background:#090807;color:#fff;padding:48px 0 25px;border-top:1px solid va
    <p>Couture pour hommes, dames et enfants, retouches et réfections : un savoir-faire adapté à chaque vêtement et à chaque demande.</p>
   </div>
   <div class="services-grid" id="services-grid">
-   <article class="service reveal"><div class="service-photo"><img src="https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=900&q=85" alt="Création couture dame" loading="lazy"></div><div class="service-body"><span class="num">01</span><i class="fa-solid fa-person-dress"></i><h3>Couture Dame</h3><p>Robes, jupes, ensembles et tenues traditionnelles ou modernes.</p></div></article>
+   <article class="service reveal"><div class="service-photo"><img src="https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=900&q=85" alt="Création couture dame" loading="lazy"></div><div class="service-body"><span class="num">01</span><i class="fa-solid fa-person-dress"></i><h3>Couture Dame</h3><p>Robes, jupes, ensembles et tenues traditionnelles.</p></div></article>
    <article class="service reveal"><div class="service-photo"><img src="https://images.unsplash.com/photo-1617137968427-85924c800a22?auto=format&fit=crop&w=900&q=85" alt="Création couture homme" loading="lazy"></div><div class="service-body"><span class="num">02</span><i class="fa-solid fa-user-tie"></i><h3>Couture Homme</h3><p>Chemises, pantalons, costumes et tenues traditionnelles.</p></div></article>
    <article class="service reveal"><div class="service-photo"><img src="https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?auto=format&fit=crop&w=900&q=85" alt="Création couture enfant" loading="lazy"></div><div class="service-body"><span class="num">03</span><i class="fa-solid fa-child"></i><h3>Couture Enfant</h3><p>Des vêtements confortables et soignés, adaptés aux enfants.</p></div></article>
    <article class="service reveal"><div class="service-photo"><img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=900&q=85" alt="Retouches de vêtements" loading="lazy"></div><div class="service-body"><span class="num">04</span><i class="fa-solid fa-scissors"></i><h3>Retouches et réfections</h3><p>Ajustement, réparation, transformation et réfection pour prolonger la vie de vos vêtements.</p></div></article>
@@ -425,6 +428,7 @@ footer{background:#090807;color:#fff;padding:48px 0 25px;border-top:1px solid va
    <div class="admin-toolbar">
     <div class="admin-tabs">
      <button class="admin-tab active" data-tab="dashboard">Tableau de bord</button>
+     <button class="admin-tab" data-tab="photos">Photos</button>
      <button class="admin-tab" data-tab="hero">Hero</button>
      <button class="admin-tab" data-tab="content">Textes</button>
      <button class="admin-tab" data-tab="services">Services</button>
@@ -446,6 +450,21 @@ footer{background:#090807;color:#fff;padding:48px 0 25px;border-top:1px solid va
       <strong>Administration prête</strong>
       <p>Les modifications sont enregistrées dans Supabase puis répercutées sur le site après actualisation des données.</p>
      </div>
+    </section>
+
+    <section class="admin-section" data-section="photos">
+     <h3>Gestion de toutes les photos</h3>
+     <p class="admin-help">Toutes les images actuellement utilisées par le site sont regroupées ici : Hero, La Maison, chaque service et chaque photo de la galerie. Vous pouvez sélectionner une photo depuis votre galerie, la prévisualiser puis la remplacer. Les nouvelles adresses sont enregistrées dans Supabase et restent après actualisation.</p>
+     <div class="admin-card">
+      <strong>Remplacement propre</strong>
+      <p>Le fichier choisi est envoyé dans le stockage Supabase. Pour les images déjà stockées dans le bucket <strong>models</strong>, l'ancien fichier est supprimé lorsqu'il peut être identifié. Les anciennes images provenant d'Internet ne sont pas téléchargées ni conservées dans votre stockage.</p>
+     </div>
+     <div id="all-photos-list" class="photo-manager-grid"></div>
+     <div class="admin-card">
+      <strong>Photos de la galerie</strong>
+      <p>Les modèles ajoutés dans l'onglet Galerie sont également visibles ici. Utilisez « Remplacer » pour changer directement leur photo sans modifier le reste de leur fiche.</p>
+     </div>
+     <div id="all-model-photos-list" class="photo-manager-grid"></div>
     </section>
 
     <section class="admin-section" data-section="hero">
@@ -609,12 +628,17 @@ const EDITABLE_CONTENT=[
 ];
 
 const DEFAULT_SERVICES=[
- {title:"Couture Dame",description:"Robes, jupes, ensembles et tenues traditionnelles ou modernes."},
+ {title:"Couture Dame",description:"Robes, jupes, ensembles et tenues traditionnelles."},
  {title:"Couture Homme",description:"Chemises, pantalons, costumes et tenues traditionnelles."},
  {title:"Couture Enfant",description:"Des vêtements confortables et soignés, adaptés aux enfants."},
  {title:"Retouches et réfections",description:"Ajustement, réparation, transformation et réfection pour prolonger la vie de vos vêtements."}
 ];
-const servicePhotos=["https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=900&q=85","https://images.unsplash.com/photo-1617137968427-85924c800a22?auto=format&fit=crop&w=900&q=85","https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?auto=format&fit=crop&w=900&q=85","https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=900&q=85"];
+const servicePhotos=[
+ "https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=900&q=85",
+ "https://images.unsplash.com/photo-1617137968427-85924c800a22?auto=format&fit=crop&w=900&q=85",
+ "https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?auto=format&fit=crop&w=900&q=85",
+ "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=900&q=85"
+];
 const DEFAULT_EXPERIENCE=[
  {step_number:1,title:"Échange",description:"Présentez votre idée, votre modèle ou votre besoin. Nous échangeons sur le style, les détails et l'occasion."},
  {step_number:2,title:"Mesures",description:"Les mesures et les choix de confection sont définis avec attention pour préparer une pièce adaptée à votre silhouette et à votre demande."},
@@ -671,7 +695,7 @@ async function loadSite(){
 function fallback(){
  const s=DEFAULT_SERVICES.map(x=>[x.title,x.description]);
  const e=DEFAULT_EXPERIENCE;
- document.getElementById("services-grid").innerHTML=s.map((x,i)=>`<article class="service reveal"><div class="service-photo"><img src="${servicePhotos[i%servicePhotos.length]}" alt="${esc(x[0])}" loading="lazy"></div><div class="service-body"><span class="num">0${i+1}</span><i class="fa-solid ${["fa-person-dress","fa-user-tie","fa-child","fa-scissors"][i%4]}"></i><h3>${esc(x[0])}</h3><p>${esc(x[1])}</p></div></article>`).join("");
+ document.getElementById("services-grid").innerHTML=s.map((x,i)=>`<article class="service reveal"><div class="service-photo"><img src="${esc(contentValue("service_fallback_image_"+(i+1),servicePhotos[i%servicePhotos.length]))}" alt="${esc(x[0])}" loading="lazy"></div><div class="service-body"><span class="num">0${i+1}</span><i class="fa-solid ${["fa-person-dress","fa-user-tie","fa-child","fa-scissors"][i%4]}"></i><h3>${esc(x[0])}</h3><p>${esc(x[1])}</p></div></article>`).join("");
  document.getElementById("models-gallery").innerHTML=`<div style="grid-column:1/-1;color:#aaa;padding:30px;text-align:center">Les photos de la galerie apparaîtront ici. Les nouvelles photos ajoutées depuis l'administration apparaîtront automatiquement.</div>`;
  document.getElementById("experience-grid").innerHTML=e.map((x,i)=>`<article class="experience-card reveal"><div class="experience-number">0${x.step_number}</div><h3>${x.title}</h3><p>${x.description}</p></article>`).join("");
  renderTextDefaults(DEFAULT_CONTENT);
@@ -711,7 +735,7 @@ function renderSite(){
   const ctaWa=document.querySelector(".cta .btn-dark");if(ctaWa)ctaWa.href=wa(number,t.cta_whatsapp_message||"Bonjour Charly's Couture, je souhaite discuter d'une tenue.");
   document.querySelectorAll('a[href*="wa.me"]').forEach(a=>{if(a!==heroWa&&a!==ctaWa){const msgText=decodeURIComponent((a.href.split("text=")[1]||"").replace(/\+/g," "));a.href=wa(number,msgText);}});
  const services=cache.services.length?cache.services:DEFAULT_SERVICES;
- document.getElementById("services-grid").innerHTML=services.map((x,i)=>{const img=contentValue("service_image_"+x.id,servicePhotos[i%servicePhotos.length]);return `<article class="service reveal"><div class="service-photo"><img src="${esc(img)}" alt="${esc(x.title)}" loading="lazy"></div><div class="service-body"><span class="num">${String(i+1).padStart(2,"0")}</span><i class="fa-solid ${["fa-person-dress","fa-user-tie","fa-child","fa-scissors"][i%4]}"></i><h3>${esc(x.title)}</h3><p>${esc(x.description)}</p></div></article>`;}).join("");
+ document.getElementById("services-grid").innerHTML=services.map((x,i)=>{const img=contentValue("service_image_"+x.id,contentValue("service_fallback_image_"+(i+1),servicePhotos[i%servicePhotos.length]));return `<article class="service reveal"><div class="service-photo"><img src="${esc(img)}" alt="${esc(x.title)}" loading="lazy"></div><div class="service-body"><span class="num">${String(i+1).padStart(2,"0")}</span><i class="fa-solid ${["fa-person-dress","fa-user-tie","fa-child","fa-scissors"][i%4]}"></i><h3>${esc(x.title)}</h3><p>${esc(x.description)}</p></div></article>`;}).join("");
  document.getElementById("models-gallery").innerHTML=cache.models.length?cache.models.map((x,i)=>`<a class="gallery-item reveal g${i%6+1}" href="${wa(number,x.whatsapp_message||"Bonjour Charly's Couture, je suis intéressé par ce modèle.")}" target="_blank">${x.image_url?`<img src="${esc(x.image_url)}" alt="${esc(x.title)}" loading="lazy">`:`<div class="fabric fabric-${i%6+1}"></div>`}<span class="gallery-label">${esc(x.title)}</span></a>`).join(""):`<div style="grid-column:1/-1;color:#aaa;padding:30px;text-align:center">Les photos de la galerie apparaîtront ici. Les nouvelles photos ajoutées depuis l'administration apparaîtront automatiquement.</div>`;
  const exp=cache.experience.length?cache.experience:DEFAULT_EXPERIENCE;
  document.getElementById("experience-grid").innerHTML=exp.map((x,i)=>`<article class="experience-card reveal"><div class="experience-number">${String(x.step_number||i+1).padStart(2,"0")}</div><h3>${esc(x.title)}</h3><p>${esc(x.description)}</p></article>`).join("");
@@ -890,6 +914,7 @@ function renderAdmin(){
   ["Textes",cache.content.length],
   ["Services",cache.services.length],
   ["Photos galerie",cache.models.length],
+  ["Photos site",sitePhotoDefinitions().length+cache.models.length],
   ["Étapes",cache.experience.length]
  ];
  document.getElementById("admin-stats").innerHTML=stats.map(x=>`<div class="admin-stat"><b>${x[1]}</b><span>${x[0]}</span></div>`).join("");
@@ -951,6 +976,8 @@ function renderAdmin(){
  document.querySelectorAll(".move-e-up").forEach(b=>b.onclick=()=>moveItem("experience_steps",b.dataset.id,-1));
  document.querySelectorAll(".move-e-down").forEach(b=>b.onclick=()=>moveItem("experience_steps",b.dataset.id,1));
 
+ renderAllPhotosAdmin();
+
  const c=cache.contact||{};
  document.getElementById("contact-address").value=c.address||"";
  document.getElementById("contact-phone").value=c.phone||"";
@@ -958,6 +985,107 @@ function renderAdmin(){
  document.getElementById("contact-email").value=c.email||"";
  document.getElementById("contact-hours").value=c.opening_hours||"";
  document.getElementById("contact-map").value=c.map_embed_url||DEFAULT_CONTACT.map_embed_url;
+}
+
+function sitePhotoDefinitions(){
+ const defs=[
+  {key:"hero_image_url",label:"Accueil — Hero",section:"Accueil",fallback:'https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=1800&q=88'},
+  {key:"about_image_url",label:"La Maison — Photo",section:"La Maison",fallback:""}
+ ];
+ cache.services.forEach((x,i)=>defs.push({key:"service_image_"+x.id,label:"Service — "+x.title,section:"Savoir-faire",fallback:contentValue("service_fallback_image_"+(i+1),servicePhotos[i%servicePhotos.length]),serviceId:x.id}));
+ return defs;
+}
+function photoPreview(url,label){
+ return url?`<div class="photo-manager-preview"><img src="${esc(url)}" alt="${esc(label)}" loading="lazy"></div>`:`<div class="photo-manager-preview">Aucune photo enregistrée</div>`;
+}
+function renderAllPhotosAdmin(){
+ const list=document.getElementById("all-photos-list"),models=document.getElementById("all-model-photos-list");
+ if(!list||!models)return;
+ const defs=sitePhotoDefinitions();
+ list.innerHTML=defs.map(d=>{
+  const current=contentValue(d.key,d.fallback||"");
+  const source=current?(current.includes("images.unsplash.com")?"Image Internet par défaut":"Image enregistrée dans Supabase"):"Aucune image";
+  return `<article class="photo-manager-card">
+   ${photoPreview(current,d.label)}
+   <div><div class="photo-manager-title">${esc(d.label)}</div><div class="photo-manager-meta">${esc(source)}${d.serviceId?` · clé ${esc(d.key)}`:""}</div>
+    <div class="admin-field"><label>Choisir dans votre galerie</label><input class="all-photo-file" data-key="${esc(d.key)}" type="file" accept="image/*"></div>
+    <div class="admin-field"><label>URL actuelle</label><input class="all-photo-url" data-key="${esc(d.key)}" type="url" value="${esc(current)}" placeholder="https://…"></div>
+    <div class="photo-manager-actions"><button class="admin-btn gold replace-site-photo" data-key="${esc(d.key)}">Remplacer</button><button class="admin-btn ghost clear-site-photo" data-key="${esc(d.key)}">Retirer</button></div>
+    <div class="photo-manager-status" id="photo-status-${esc(d.key).replace(/[^a-zA-Z0-9_-]/g,"-")}"></div>
+   </div>
+  </article>`;
+ }).join("");
+ models.innerHTML=cache.models.length?cache.models.map(x=>`<article class="photo-manager-card">
+  ${photoPreview(x.image_url||"",x.title)}
+  <div><div class="photo-manager-title">Galerie — ${esc(x.title)}</div><div class="photo-manager-meta">${x.is_published?"Publié":"Brouillon"}${x.category?" · "+esc(x.category):""}</div>
+   <div class="admin-field"><label>Choisir dans votre galerie</label><input class="model-photo-file" data-id="${esc(x.id)}" type="file" accept="image/*"></div>
+   <div class="photo-manager-actions"><button class="admin-btn gold replace-model-photo" data-id="${esc(x.id)}">Remplacer la photo</button></div>
+   <div class="photo-manager-status" id="model-photo-status-${esc(x.id)}"></div>
+  </div>
+ </article>`).join(""):`<div class="admin-empty" style="grid-column:1/-1">Aucune photo de galerie enregistrée pour le moment.</div>`;
+ document.querySelectorAll(".replace-site-photo").forEach(b=>b.onclick=()=>replaceSitePhoto(b.dataset.key,b));
+ document.querySelectorAll(".clear-site-photo").forEach(b=>b.onclick=()=>clearSitePhoto(b.dataset.key,b));
+ document.querySelectorAll(".replace-model-photo").forEach(b=>b.onclick=()=>replaceModelPhoto(b.dataset.id,b));
+}
+function photoStatus(key,text,error=false){
+ const id="photo-status-"+String(key).replace(/[^a-zA-Z0-9_-]/g,"-");const el=document.getElementById(id);if(!el)return;el.textContent=text;el.className="photo-manager-status "+(error?"error":"ok");
+}
+async function uploadSiteImage(file,folder="site"){
+ if(!file)throw new Error("Sélectionnez une image.");
+ if(!file.type.startsWith("image/"))throw new Error("Sélectionnez un fichier image.");
+ if(file.size>8*1024*1024)throw new Error("Image trop volumineuse (8 Mo maximum).");
+ const safe=file.name.toLowerCase().replace(/[^a-z0-9._-]/g,"-");
+ const path=folder+"/"+Date.now()+"-"+crypto.randomUUID()+"-"+safe;
+ const up=await sb.storage.from("models").upload(path,file,{upsert:false,contentType:file.type});
+ if(up.error)throw up.error;
+ return sb.storage.from("models").getPublicUrl(path).data.publicUrl;
+}
+async function deleteStoredImageIfOwned(url){
+ const path=extractStoragePath(url);if(!path)return;
+ const r=await sb.storage.from("models").remove([path]);if(r.error)console.warn("Ancienne image non supprimée:",r.error);
+}
+async function replaceSitePhoto(key,button){
+ const file=document.querySelector(`.all-photo-file[data-key="${CSS.escape(key)}"]`)?.files?.[0];
+ const urlInput=document.querySelector(`.all-photo-url[data-key="${CSS.escape(key)}"]`);
+ const old=contentValue(key,"");
+ try{
+  setBusy(button,true,"Remplacement…");
+  let url=urlInput?.value.trim()||"";
+  if(file)url=await uploadSiteImage(file,key.startsWith("service_image_")?"site/services":"site");
+  if(!url)throw new Error("Sélectionnez une photo ou saisissez une URL.");
+  const meta=EDITABLE_CONTENT.find(x=>x[0]===key);
+  const r=await sb.from("site_content").upsert({content_key:key,content_value:url,section:meta?.[2]||"photos",label:meta?.[1]||key},{onConflict:"content_key"});
+  if(r.error)throw r.error;
+  if(file&&old&&old!==url)await deleteStoredImageIfOwned(old);
+  photoStatus(key,"Photo enregistrée et visible sur le site.");
+  await loadAdmin();await loadSite();
+ }catch(err){photoStatus(key,err.message||"Erreur de remplacement.",true);}finally{setBusy(button,false);}
+}
+async function clearSitePhoto(key,button){
+ const old=contentValue(key,"");
+ if(!old)return;
+ if(!confirm("Retirer cette photo personnalisée et revenir à l'image par défaut ?"))return;
+ try{
+  setBusy(button,true,"Retrait…");
+  const r=await sb.from("site_content").delete().eq("content_key",key);if(r.error)throw r.error;
+  await deleteStoredImageIfOwned(old);
+  photoStatus(key,"Photo personnalisée retirée.");
+  await loadAdmin();await loadSite();
+ }catch(err){photoStatus(key,err.message||"Erreur.",true);}finally{setBusy(button,false);}
+}
+async function replaceModelPhoto(id,button){
+ const file=document.querySelector(`.model-photo-file[data-id="${CSS.escape(id)}"]`)?.files?.[0];
+ const x=cache.models.find(v=>String(v.id)===String(id));if(!x)return;
+ const status=document.getElementById("model-photo-status-"+id);
+ try{
+  if(!file)throw new Error("Sélectionnez une photo.");
+  setBusy(button,true,"Remplacement…");
+  const url=await uploadSiteImage(file,"site/gallery");
+  const r=await sb.from("models").update({image_url:url}).eq("id",id);if(r.error)throw r.error;
+  await deleteStoredImageIfOwned(x.image_url);
+  if(status){status.textContent="Photo remplacée et enregistrée.";status.className="photo-manager-status ok";}
+  await loadAdmin();await loadSite();
+ }catch(err){if(status){status.textContent=err.message||"Erreur de remplacement.";status.className="photo-manager-status error";}}finally{setBusy(button,false);}
 }
 
 function updateHeroPreview(url){
